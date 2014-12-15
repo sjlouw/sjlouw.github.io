@@ -1,0 +1,54 @@
+---
+layout: default
+navbar: Blog
+---
+
+<div class="row">
+  <div class="page-content {% unless site.default_asides == empty and site.blog_index_asides == empty %}col-md-9{% endunless %}">
+    <div class="blog-index">
+      {% assign index = true %}
+      {% for post in paginator.posts %}
+      {% assign content = post.content %}
+        <article class="post">
+          {% include article.html %}
+        </article>
+      {% endfor %}
+    </div>
+
+<center>
+    <ul class="pagination pagination-lg">
+      {% if paginator.next_page %}
+        <li class="previous"><a href="{{paginator.next_page}}">&laquo;</a></li>
+      {% else %}
+        <li class="previous disabled"><span>&laquo;</span></li>
+      {% endif %}
+
+        <li><a href="/">1</a></li>
+        <li><a href="/blog/page/2/">2</a></li>
+        <li><a href="/blog/page/3/">3</a></li>
+        <li><a href="/blog/page/4/">4</a></li>
+
+      {% if paginator.previous_page %}
+        <li class="next"><a href="{{paginator.previous_page}}">&raquo;</a></li>
+      {% else %}
+        <li class="next disabled"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+
+    <div class="page">
+            <span class="page_number ">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+    </div>
+
+</center>
+  </div>
+
+  {% unless site.default_asides == empty and site.blog_index_asides == empty %}
+    <aside class="sidebar col-md-3">
+      {% if site.blog_index_asides.size %}
+        {% include_array blog_index_asides %}
+      {% else %}
+        {% include_array default_asides %}
+      {% endif %}
+    </aside>
+  {% endunless %}
+</div>

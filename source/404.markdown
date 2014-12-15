@@ -1,0 +1,11 @@
+---
+layout: page
+title: "404 Error"
+comments: false
+sharing: false
+footer: true
+---
+
+<p>Sorry, the page you&#8217;re looking for cannot be found.</p>
+
+<p>Please use the search function in the top navigation bar if you&#8217;re looking for something specific.</p>

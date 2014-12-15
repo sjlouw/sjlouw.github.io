@@ -1,0 +1,11 @@
+---
+layout: nil
+---
+User-agent: *
+Disallow: /assets/
+Disallow: /images/
+Disallow: /javascripts/
+Disallow: /search/
+Disallow: /stylesheets/
+
+Sitemap: {{ site.url }}/sitemap.xml 
