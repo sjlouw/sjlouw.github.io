@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>/blog/2014/12/14/ospf-lsas-areas-networks-timers/</loc>
+    
+    <lastmod>2014-12-14T22:41:32+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/</loc>
+    
+    <lastmod>2014-02-16T11:55:09+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2014/01/20/cisco-ios-and-dns-views/</loc>
+    
+    <lastmod>2014-01-20T22:01:30+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2014/01/20/adsl-setup-and-configuration-on-a-cisco-877-router/</loc>
+    
+    <lastmod>2014-01-20T17:16:40+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2014/01/20/cisco-ios-updating-multiple-no-ip-dynamic-dns-host-names/</loc>
+    
+    <lastmod>2014-01-20T00:27:31+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2014/01/13/installing-ruby-development-environment-on-mac-os-x-mavericks/</loc>
+    
+    <lastmod>2014-01-13T16:52:02+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2013/12/23/octopress-blogging-engine-on-github-pages/</loc>
+    
+    <lastmod>2013-12-23T00:44:45+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2012/03/02/centos-5-dot-7-build-and-install-bind-9-dot-9-0-1-dns-rpms/</loc>
+    
+    <lastmod>2012-03-02T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2012/02/21/apache-ldap-authentication/</loc>
+    
+    <lastmod>2012-02-21T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2012/02/20/bulk-user-account-migration-redhat-slash-centos/</loc>
+    
+    <lastmod>2012-02-20T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2012/02/19/asterisk-registered-useragent-audit/</loc>
+    
+    <lastmod>2012-02-19T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem/</loc>
+    
+    <lastmod>2012-02-18T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2012/02/18/fix-for-mac-os-x-not-resolving-fqdn-addresses-over-vpn/</loc>
+    
+    <lastmod>2012-02-18T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls/</loc>
+    
+    <lastmod>2012-02-12T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/05/03/applescript-applications-with-xcode-3-dot-2-2/</loc>
+    
+    <lastmod>2010-05-03T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/05/01/linksys-wrt54gl-dd-wrt-persistant-pppoe/</loc>
+    
+    <lastmod>2010-05-01T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/30/cisco-site-to-site-ipsec-vpn/</loc>
+    
+    <lastmod>2010-04-30T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/30/cisco-ios-dns-server/</loc>
+    
+    <lastmod>2010-04-30T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/29/snow-leopard-easy-tftp-server-and-serial-console/</loc>
+    
+    <lastmod>2010-04-29T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/29/cisco-ppp-with-authentication/</loc>
+    
+    <lastmod>2010-04-29T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/24/syslog-with-cisco-devices/</loc>
+    
+    <lastmod>2010-04-24T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-2/</loc>
+    
+    <lastmod>2010-04-24T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-1/</loc>
+    
+    <lastmod>2010-04-24T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/21/cisco-ios-ipsec-vpn-server-and-client-config/</loc>
+    
+    <lastmod>2010-04-21T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/13/getting-and-inserting-mysql-data-with-perl-cgi/</loc>
+    
+    <lastmod>2010-04-13T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/11/setup-the-cisco-ssh-server/</loc>
+    
+    <lastmod>2010-04-11T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/10/ssh-passwordless-public-private-key-authentication/</loc>
+    
+    <lastmod>2010-04-10T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/10/setup-putty-ssh-client-for-passwordless-key-based-authentication/</loc>
+    
+    <lastmod>2010-04-10T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/08/snmp-and-cisco-routers-or-switches/</loc>
+    
+    <lastmod>2010-04-08T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/08/dhcp-server-on-cisco-ios/</loc>
+    
+    <lastmod>2010-04-08T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/04/06/router-on-a-stick-cisco-router-and-a-3com-switch/</loc>
+    
+    <lastmod>2010-04-06T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/03/27/gns3-compatible-cisco-ios-router-images/</loc>
+    
+    <lastmod>2010-03-27T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/03/24/microsoft-exchange-mail-relay-for-elastix-1-dot-6/</loc>
+    
+    <lastmod>2010-03-24T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/03/23/mounting-lvm-volumes-from-live-cd/</loc>
+    
+    <lastmod>2010-03-23T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/03/23/decrypting-cisco-type-7-passwords-with-ios/</loc>
+    
+    <lastmod>2010-03-23T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/03/21/splitting-traffic-between-two-isps-dd-wrt-linksys-wrt54gl/</loc>
+    
+    <lastmod>2010-03-21T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/2010/03/20/mac-os-x-time-machine-backups-with-ubuntu/</loc>
+    
+    <lastmod>2010-03-20T00:00:00+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</urlset>

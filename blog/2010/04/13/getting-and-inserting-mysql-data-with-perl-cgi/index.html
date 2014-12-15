@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Getting and inserting MySQL data with perl CGI - Random Notes</title>
+  <meta name="author" content="S.J. Louw">
+
+  
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://devrandom.za.net/blog/2010/04/13/getting-and-inserting-mysql-data-with-perl-cgi">
+  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+
+  <link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
+
+
+  <script src="/javascripts/libs/jquery/jquery-2.0.3.min.js"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46683566-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+  <body   >
+    <div id="wrap">
+      <header role="banner">
+        <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Random Notes</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li >
+                    <a href="/blog/archives">Archives</a>
+                </li>
+                <li><a href="/about">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="subscribe-rss" href="/atom.xml" target="_blank" title="subscribe via RSS">
+                        <span class="ion-social-rss"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-twitter" href="http://twitter.com/sjlouw" target="_blank" title="Twitter">
+                        <span class="ion-social-twitter"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-facebook" href="http://www.facebook.com/devrandom.za.net" target="_blank" title="Facebook">
+                        <span class="ion-social-facebook"></span>
+                    </a>
+                </li>
+                
+            </ul>
+            
+                <form class="search navbar-form navbar-right" action="http://devrandom.za.net/search/" method="GET">
+                       <input type="hidden">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="q" placeholder="Search">
+                    </div>
+                </form>
+            
+        </div>
+    </div>
+</nav>
+
+
+      </header>
+      <div id="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content col-md-9">
+    <article class="hentry" role="article">
+      
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-13T00:00:00+02:00" pubdate data-updated="true">Apr 13<span>th</span>, 2010</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://devrandom.za.net">Comments</a>
+        
+      </p>
+    
+    
+    <h1 class="entry-title">
+        Getting and inserting MySQL data with perl CGI
+        
+    </h1>
+    
+  </header>
+
+
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/mysql.png"></p>
+
+<p>A handy way of capturing data with a browser and inserting into MySQL via form submit. Pulling the captured data from MySQL and displaying it with a browser is just as easy.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<h2>Creating the database and tables:</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span> <span class="o">-</span><span class="n">p</span>
+</span><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">tv</span><span class="p">;</span>
+</span><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">USE</span> <span class="n">tv</span><span class="p">;</span>
+</span><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="nf">episodeguide</span> <span class="p">(</span><span class="n">id</span> <span class="kt">INT</span> <span class="k">NOT</span> <span class="no">NULL</span> <span class="kp">AUTO_INCREMENT</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span> <span class="n">tvshow</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">shownumber</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">showtitle</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">aired</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">overview</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>NOTE:</strong> The database is set up to auto increment the row id, with every new row that&rsquo;s inserted.</p>
+
+<h2>Creating Indexes:</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='mysql'><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">tvshow</span> <span class="k">ON</span> <span class="nf">episodeguide</span> <span class="p">(</span><span class="n">tvshow</span><span class="p">);</span>
+</span><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">showtitle</span> <span class="k">ON</span> <span class="nf">episodeguide</span> <span class="p">(</span><span class="n">showtitle</span><span class="p">);</span>
+</span><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">overview</span> <span class="k">ON</span> <span class="nf">episodeguide</span> <span class="p">(</span><span class="n">overview</span><span class="p">);</span>
+</span><span class='line'><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">exit</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Inserting data into the MySQL database with Perl/CGI/HTML:</h3>
+
+<p>The HTML file; Call it insert.html and put it in the root of the website.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;https://192.168.1.1/cgi-bin/insertdata.pl&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;html&gt;</span>
+</span><span class='line'><span class="nt">&lt;head&gt;</span>
+</span><span class='line'>     <span class="nt">&lt;title&gt;</span>TV Episode Data Capture Form<span class="nt">&lt;/title&gt;</span>
+</span><span class='line'><span class="nt">&lt;/head&gt;</span>
+</span><span class='line'><span class="nt">&lt;body&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;H1&gt;</span>TV Episode Data Capture Form<span class="nt">&lt;/H1&gt;</span>
+</span><span class='line'> <span class="nt">&lt;P&gt;</span>
+</span><span class='line'> <span class="nt">&lt;HR&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;H2&gt;</span>Episode submission form: <span class="nt">&lt;/H2&gt;</span>
+</span><span class='line'>     TV Show Name:
+</span><span class='line'>       <span class="nt">&lt;select</span> <span class="na">name=</span><span class="s">&quot;tvshow&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;option</span> <span class="na">selected</span><span class="nt">&gt;</span>SHOW
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>TV Show 1
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>TV Show 2
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>TV Show 3
+</span><span class='line'>       <span class="nt">&lt;/select&gt;</span>
+</span><span class='line'> <span class="nt">&lt;P&gt;</span>
+</span><span class='line'>     Episode Number:
+</span><span class='line'>       <span class="nt">&lt;select</span> <span class="na">name=</span><span class="s">&quot;shownumber&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;option</span> <span class="na">selected</span><span class="nt">&gt;</span>NUMBER
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>01
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>02
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>03
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>04
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>05
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>06
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>07
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>08
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>09
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>10
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>11
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>12
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>13
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>14
+</span><span class='line'>        <span class="nt">&lt;option&gt;</span>15
+</span><span class='line'>       <span class="nt">&lt;/select&gt;</span>
+</span><span class='line'> <span class="nt">&lt;P&gt;</span>
+</span><span class='line'>     Episode Title: <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;showtitle&quot;</span><span class="nt">&gt;&lt;P&gt;</span>
+</span><span class='line'>     Original Aired: <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;aired&quot;</span><span class="nt">&gt;&lt;P&gt;</span>
+</span><span class='line'> <span class="nt">&lt;P&gt;</span>
+</span><span class='line'>     Episode Description:
+</span><span class='line'> <span class="nt">&lt;P&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;textarea</span> <span class="na">name=</span><span class="s">&quot;overview&quot;</span> <span class="na">rows=</span><span class="s">5</span> <span class="na">cols=</span><span class="s">60</span><span class="nt">&gt;&lt;/textarea&gt;</span>
+</span><span class='line'> <span class="nt">&lt;P&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">value=</span><span class="s">&quot;Click to submit entry&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The Perl/CGI file; This must be called insertdata.pl and be placed in the cgi-bin directory of your website.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="c1">#!/usr/bin/perl    </span>
+</span><span class='line'><span class="k">use</span> <span class="n">CGI</span> <span class="sx">qw(:standard)</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="n">DBI</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span> <span class="o">&lt;&lt;</span><span class="k">END</span><span class="p">;</span>
+</span><span class='line'><span class="n">Content</span><span class="o">-</span><span class="n">type:</span> <span class="n">text</span><span class="o">/</span><span class="n">html</span>
+</span><span class='line'><span class="sr">&lt;html&gt;</span>
+</span><span class='line'><span class="sr">&lt;head&gt;</span>
+</span><span class='line'><span class="sr">&lt;title&gt;</span><span class="n">TV</span> <span class="n">Episode</span> <span class="n">capture</span> <span class="n">Form</span><span class="sr">&lt;/title&gt;</span>
+</span><span class='line'><span class="sr">&lt;/head&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">body</span> <span class="n">bgcolor</span><span class="o">=</span><span class="s">&quot;white&quot;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">END</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># database connection info    </span>
+</span><span class='line'><span class="nv">$db</span><span class="o">=</span><span class="s">&quot;tv&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$host</span><span class="o">=</span><span class="s">&quot;localhost&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$userid</span><span class="o">=</span><span class="s">&quot;mysql_username&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$passwd</span><span class="o">=</span><span class="s">&quot;mysql_password&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$connectionInfo</span><span class="o">=</span><span class="s">&quot;dbi:mysql:$db;$host&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$tvshow</span> <span class="o">=</span> <span class="n">param</span><span class="p">(</span><span class="s">&#39;tvshow&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$shownumber</span> <span class="o">=</span> <span class="n">param</span><span class="p">(</span><span class="s">&#39;shownumber&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$showtitle</span> <span class="o">=</span> <span class="n">param</span><span class="p">(</span><span class="s">&#39;showtitle&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$aired</span> <span class="o">=</span> <span class="n">param</span><span class="p">(</span><span class="s">&#39;aired&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$overview</span> <span class="o">=</span> <span class="n">param</span><span class="p">(</span><span class="s">&#39;overview&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$year</span> <span class="o">=</span> <span class="n">param</span><span class="p">(</span><span class="s">&#39;minutesstart&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$month</span> <span class="o">=</span> <span class="n">param</span><span class="p">(</span><span class="s">&#39;yearstop&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$day</span> <span class="o">=</span> <span class="n">param</span><span class="p">(</span><span class="s">&#39;monthstop&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># connect to database    </span>
+</span><span class='line'><span class="nv">$dbh</span> <span class="o">=</span> <span class="n">DBI</span><span class="o">-&gt;</span><span class="nb">connect</span><span class="p">(</span><span class="nv">$connectionInfo</span><span class="p">,</span><span class="nv">$userid</span><span class="p">,</span><span class="nv">$passwd</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># prepare and execute query    </span>
+</span><span class='line'><span class="nv">$query</span> <span class="o">=</span> <span class="s">&quot;INSERT INTO episodeguide (tvshow,shownumber,showtitle,aired,overview) VALUES(\&quot;$tvshow\&quot;,\&quot;Episode $shownumber\&quot;,\&quot;$showtitle\&quot;,\&quot;$aired\&quot;,\&quot;$overview\&quot;);&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$sth</span> <span class="o">=</span> <span class="nv">$dbh</span><span class="o">-&gt;</span><span class="n">prepare</span><span class="p">(</span><span class="nv">$query</span><span class="p">)</span> <span class="o">||</span> <span class="nb">die</span> <span class="s">&quot;Could not prepare SQL statement ... maybe invalid?&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$sth</span><span class="o">-&gt;</span><span class="n">execute</span><span class="p">()</span> <span class="o">||</span> <span class="nb">die</span> <span class="s">&quot;Could not execute SQL statement ... maybe invalid?&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># assign fields to variables    </span>
+</span><span class='line'><span class="nv">$sth</span><span class="o">-&gt;</span><span class="n">bind_columns</span><span class="p">(</span><span class="o">\</span><span class="nv">$ID</span><span class="p">,</span> <span class="o">\</span><span class="nv">$tvshow</span><span class="p">,</span> <span class="o">\</span><span class="nv">$shownumber</span><span class="p">,</span> <span class="o">\</span><span class="nv">$showtitle</span><span class="p">,</span> <span class="o">\</span><span class="nv">$aired</span><span class="p">,</span> <span class="o">\</span><span class="nv">$overview</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># output thanks message to browser    </span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;b&gt;Your entry was sucessfully captured in the database!&lt;/b&gt;&lt;p&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;/table&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;/body&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;/html&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$sth</span><span class="o">-&gt;</span><span class="n">finish</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># disconnect from database    </span>
+</span><span class='line'><span class="nv">$dbh</span><span class="o">-&gt;</span><span class="n">disconnect</span><span class="p">;</span>
+</span><span class='line'><span class="k">sub </span><span class="nf">fail</span> <span class="p">{</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;title&gt;Error&lt;/title&gt;&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&quot;&lt;p&gt;ERROR: An error ocured, please try again!&lt;/p&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nb">exit</span><span class="p">;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Giving the Perl script execution permissions:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chmod 755 /var/www/cgi-bin/insertdata.pl
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Go to <code>http://192.168.1.1/insert.html</code> to test.</p>
+
+<h2>Displaying the inserted data with Perl/CGI:</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /var/www/cgi-bin/displaydata.pl
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+</pre></td><td class='code'><pre><code class='perl'><span class='line'><span class="c1">#!/usr/bin/perl -w </span>
+</span><span class='line'><span class="k">use</span> <span class="n">DBI</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span> <span class="o">&lt;&lt;</span><span class="k">END</span><span class="p">;</span>
+</span><span class='line'><span class="n">Content</span><span class="o">-</span><span class="n">type:</span> <span class="n">text</span><span class="o">/</span><span class="n">html</span>
+</span><span class='line'><span class="sr">&lt;html&gt;</span>
+</span><span class='line'><span class="sr">&lt;head&gt;</span>
+</span><span class='line'><span class="sr">&lt;title&gt;</span><span class="n">Display</span> <span class="k">my</span> <span class="n">data</span><span class="o">!</span><span class="sr">&lt;/title&gt;</span>
+</span><span class='line'><span class="sr">&lt;/head&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">body</span> <span class="n">bgcolor</span><span class="o">=</span><span class="s">&quot;white&quot;</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">END</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># database connection info    </span>
+</span><span class='line'><span class="nv">$db</span><span class="o">=</span><span class="s">&quot;tv&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$host</span><span class="o">=</span><span class="s">&quot;localhost&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$userid</span><span class="o">=</span><span class="s">&quot;mysql_username&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$passwd</span><span class="o">=</span><span class="s">&quot;mysql_password&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$connectionInfo</span><span class="o">=</span><span class="s">&quot;dbi:mysql:$db;$host&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># connect to database    </span>
+</span><span class='line'><span class="nv">$dbh</span> <span class="o">=</span> <span class="n">DBI</span><span class="o">-&gt;</span><span class="nb">connect</span><span class="p">(</span><span class="nv">$connectionInfo</span><span class="p">,</span><span class="nv">$userid</span><span class="p">,</span><span class="nv">$passwd</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># prepare and execute query    </span>
+</span><span class='line'><span class="nv">$query</span> <span class="o">=</span> <span class="s">&quot;SELECT * FROM episodeguide WHERE tvshow = &#39;Test TV Show&#39;&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$sth</span> <span class="o">=</span> <span class="nv">$dbh</span><span class="o">-&gt;</span><span class="n">prepare</span><span class="p">(</span><span class="nv">$query</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$sth</span><span class="o">-&gt;</span><span class="n">execute</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># assign fields to variables    </span>
+</span><span class='line'><span class="nv">$sth</span><span class="o">-&gt;</span><span class="n">bind_columns</span><span class="p">(</span><span class="o">\</span><span class="nv">$ID</span><span class="p">,</span> <span class="o">\</span><span class="nv">$tvshow</span><span class="p">,</span> <span class="o">\</span><span class="nv">$shownumber</span><span class="p">,</span> <span class="o">\</span><span class="nv">$showtitle</span><span class="p">,</span> <span class="o">\</span><span class="nv">$aired</span><span class="p">,</span> <span class="o">\</span><span class="nv">$overview</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># output result to browser    </span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;b&gt;Matches for this hardcoded query:&lt;/b&gt;&lt;p&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;table width=\&quot;100\%\&quot; border=\&quot;1\&quot; cellpadding=\&quot;2\&quot; cellspacing=\&quot;0\&quot;&gt; &lt;th&gt;ID&lt;/th&gt; &lt;th&gt;Show Name&lt;/th&gt; &lt;th&gt;Episode Number&lt;/th&gt; &lt;th&gt;Episode Title&lt;/th&gt; &lt;th&gt;Date Aired&lt;/th&gt; &lt;th&gt;Episode Overview&lt;/th&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">while</span><span class="p">(</span><span class="nv">$sth</span><span class="o">-&gt;</span><span class="n">fetch</span><span class="p">())</span> <span class="p">{</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;tr&gt;&lt;td&gt;$ID&lt;/td&gt; &lt;td&gt;$tvshow&lt;/td&gt; &lt;td&gt;$shownumber&lt;/td&gt; &lt;td&gt;$showtitle&lt;/td&gt; &lt;td&gt;$aired&lt;/td&gt; &lt;td&gt;$overview&lt;/td&gt; &lt;/tr&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;/table&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;/body&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;&lt;/html&gt;\n&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$sth</span><span class="o">-&gt;</span><span class="n">finish</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># disconnect from database    </span>
+</span><span class='line'><span class="nv">$dbh</span><span class="o">-&gt;</span><span class="n">disconnect</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Assign execution permissions to the Perl script.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chmod 755 /var/www/cgi-bin/displaydata.pl
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And test: <code>http://192.168.1.1/cgi-bin/displaydata.pl</code></p>
+</div>
+
+
+      <footer>
+        <p class="meta text-muted">
+          
+  
+
+<span class="glyphicon glyphicon-user"></span> <span class="byline author vcard">Posted by <span class="fn">S.J. Louw</span></span>
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-13T00:00:00+02:00" pubdate data-updated="true">Apr 13<span>th</span>, 2010</time>
+          
+
+<span class="glyphicon glyphicon-tags"></span>&nbsp;
+<span class="categories">
+  
+    <a class='category label label-primary' href='/blog/categories/linux/'>linux</a> <a class='category label label-primary' href='/blog/categories/other/'>other</a>
+  
+</span>
+
+
+        </p>
+        
+          <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2010/04/13/getting-and-inserting-mysql-data-with-perl-cgi/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2010/04/13/getting-and-inserting-mysql-data-with-perl-cgi/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+        
+        
+          <ul class="meta text-muted pager">
+            
+            <li class="previous"><a href="/blog/2010/04/11/setup-the-cisco-ssh-server/" title="Previous Post: Setup the Cisco SSH server">&laquo; Setup the Cisco SSH server</a></li>
+            
+            
+            <li class="next"><a href="/blog/2010/04/21/cisco-ios-ipsec-vpn-server-and-client-config/" title="Next Post: Cisco IOS IPSEC VPN server and client config">Cisco IOS IPSEC VPN server and client config &raquo;</a></li>
+            
+          </ul>
+        
+      </footer>
+    </article>
+    
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <aside class="sidebar col-md-3">
+    
+      <section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="6945851626"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section><section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Recent Posts</h3>
+  </div>
+  
+  <div id="recent_posts" class="list-group">
+    
+    <a class="list-group-item " href="/blog/2014/12/14/ospf-lsas-areas-networks-timers/">OSPF LSA's, Area Types, Network Types and Timers</a>
+    
+    <a class="list-group-item " href="/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/">Unlocking a TG589vn v3 VDSL ISP locked router</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-and-dns-views/">Cisco IOS and DNS views</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/adsl-setup-and-configuration-on-a-cisco-877-router/">ADSL setup and configuration on a Cisco 877 router</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-updating-multiple-no-ip-dynamic-dns-host-names/">Cisco IOS updating multiple no-ip dynamic DNS host names</a>
+    
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Referrals</h3>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item dropbox" href="https://db.tt/TKB3xRe4" target="_blank"><img src="/images/dropbox.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item onedrive" href="https://onedrive.live.com?invref=669d8ae4c3926268&invsrc=90" target="_blank"><img src="/images/onedrive.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item digitalocean" href="https://www.digitalocean.com/?refcode=60eb3063c38f " target="_blank"><img src="/images/digitalocean.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item streamnation" href="http://email.streamnation.com/wf/click?upn=cEcAemDWJufLyXTzv7xXpFG9eQ2DXQCCHTxLfSDvskIVba-2BBb-2FuJPCTH024I4Ze0EFaqx-2Bangd6h-2FKWKglaGIDXKkK7GDXWkA9Lj-2B-2FdwiC4suddHxIbgxnLg2tUkytGNISEtJegYwOqpi0wufw0iXMsKawNkB-2B4UoXJ6A3PqPoVYPV2QgOCMr2B2xwmDnr2a4v4N6xCIOL6fRTvx3rDqGw-3D-3D_XOv1M8oH3ndrE-2F-2B-2BVmrwVlkJDUIeWVNEKaogmpQGyBzl4xsiRyt6WwBbQQfHem45Zm24hl1cm3Ji3w1xZcPlEnLbUkcXwy1lugkQ83yt4APcZ0k9zgn3DH4ADwVohUoOnUkFBt-2FhcnNDMbN7YN08ZI9KkvcVXuzrjy4MMBnENXnFv9icSjHflzHIbvh3rwNqdQl1-2FD37blIt7MeqRSh1nmybaJMtbLRD6Nuo9Sd9fRH-2Bro7LD0wi1TXr3TOOtiGU" target="_blank"><img src="/images/streamnation.png" border="0"/></a>
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Categories</h3>
+  </div>
+  <div class="list-group">
+    
+    
+    <a class="list-group-item " href="/blog/categories/linux/index.html">
+        <span class="badge">14</span>
+        linux
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/macosx/index.html">
+        <span class="badge">7</span>
+        macosx
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/other/index.html">
+        <span class="badge">12</span>
+        other
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/cisco/index.html">
+        <span class="badge">15</span>
+        cisco
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/vpn/index.html">
+        <span class="badge">4</span>
+        vpn
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/dns/index.html">
+        <span class="badge">4</span>
+        dns
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/asterisk/index.html">
+        <span class="badge">1</span>
+        asterisk
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/networking/index.html">
+        <span class="badge">1</span>
+        networking
+      </a>
+    
+  </div>
+</section>
+
+<section class="panel panel-default clearfix">
+  <div class="panel-heading">
+      <h3 class="panel-title">GitHub Repos</h3>
+  </div>
+  <div class="list-group" id="gh_repos">
+    <p class="loading">Status updating...</p>
+  </div>
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sjlouw',
+            count: 5,
+            skip_forks: false,
+            skip_repos: [ "sjlouw.github.io" ],
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside Bottom -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="8422584828"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section>
+    
+  </aside>
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2014 - S.J. Louw<br>
+  <small>
+      <span class="credit">Another <a href="http://octopress.org">Octopress</a> blog</span>,
+      <span class="credit">customized with <a href="https://github.com/kAworu/octostrap3">octostrap3</a> and <a href="http://jasonbradley.me/bootstrap-ios7/">Bootstrap iOS7</a> theme</span>.
+  </small>
+</p>
+
+</div>
+</footer>
+    <script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr-2.0.js"></script>
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wwwdevrandomzanet';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://devrandom.za.net/blog/2010/04/13/getting-and-inserting-mysql-data-with-perl-cgi/';
+        var disqus_url = 'http://devrandom.za.net/blog/2010/04/13/getting-and-inserting-mysql-data-with-perl-cgi/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  </body>
+</html>

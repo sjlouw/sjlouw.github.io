@@ -1,0 +1,1000 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: other | Random Notes]]></title>
+  <link href="http://devrandom.za.net/blog/categories/other/atom.xml" rel="self"/>
+  <link href="http://devrandom.za.net/"/>
+  <updated>2014-12-15T15:55:21+02:00</updated>
+  <id>http://devrandom.za.net/</id>
+  <author>
+    <name><![CDATA[S.J. Louw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Unlocking a TG589vn v3 VDSL ISP locked router]]></title>
+    <link href="http://devrandom.za.net/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/"/>
+    <updated>2014-02-16T11:55:09+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/tg589vnv3_pwned.png"></p>
+
+<p>Unlocking a locked ISP, TG589vn v3 VDSL router by installing generic Technicolor firmware. The following procedure was what worked for me.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<p>First give your PC a static IP address 192.168.1.2 / 255.255.255.0</p>
+
+<p>Download and install <a href="http://www.jounin.net/tftpd32.html">Tftpd32</a></p>
+
+<p>Download the generic binary firmware file from <a href="http://www.mediafire.com/download/ku9yo2wsl577npf/MST_TG589vnv3_R10.5.2.F_BN.bin">here</a>, and put it under &ldquo;C:\Program Files\Tftpd32\&rdquo; or wherever your TFTP root is.</p>
+
+<h3>Configure the TFTP software as below:</h3>
+
+<p><img class="center" src="/images/blog_posts/tftpd32_1.png">
+<img class="center" src="/images/blog_posts/tftpd32_2.png"></p>
+
+<p>Plug the router in the ethernet port as shown below:
+<img class="center" src="/images/blog_posts/tg589vnv3_ports.png"></p>
+
+<h3>Make sure you can ping the router IP address from your PC.</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ping 192.168.1.1&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>PING 192.168.1.1 (192.168.1.1): 56 data bytes
+</span><span class='line'>64 bytes from 192.168.1.1: icmp_seq=0 ttl=255 time=1.075 ms
+</span><span class='line'>64 bytes from 192.168.1.1: icmp_seq=1 ttl=255 time=1.802 ms</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Resetting the router to the default settings and start flashing it:</h3>
+
+<p>Hold the small button in the hole on the back of the router for more than 16 seconds, while it&rsquo;s powered on. (Blue &ldquo;Upgrade&rdquo; light will come on) The router will restart and start the upgrade process with BOOTP / TFTP. You will see a small box pop up showing the binary file transfer to the router. After that is done, the router will unpack the new file and boot it. DO NOT RESTART your router at any point until you can see all lights in the front of the router showing the normal green status.</p>
+
+<p>The firmware flash will be done at this point and you should be able to ping your router at it&rsquo;s new default IP address, 192.168.1.254.</p>
+
+<p>Open your browser and and go to <a href="http://192.168.1.254,">http://192.168.1.254,</a> go to advanced settings and change the Administrator password.</p>
+
+<p>You should be able to SSH to your router now with full root access. Username: Administrator and password will be the one you set above. You will also see in the web interface that the branded ISP logo is gone and the generic Technicolor logo will show.
+<img class="center" src="/images/blog_posts/tg589vnv3_ssh.png">
+<img class="center" src="/images/blog_posts/tg589vnv3_web.png"></p>
+
+<h3>Here is some advanced CLI documentation for this router:</h3>
+
+<ul>
+<li><a href="http://www.mediafire.com/view/8hiaraeqx31d8hj/TG589vn-v3_EN_r10.4.B.B_mh.pdf">TG589vn-v3_EN_r10.4.B.B_mh.pdf</a></li>
+<li><a href="http://www.mediafire.com/view/3j6s1mmloottjbi/command_list_v2.txt">command_list_v2.txt</a></li>
+<li><a href="http://www.mediafire.com/view/vtdihfhs73ce5gb/command_mlp_v2.txt">command_mlp_v2.txt</a></li>
+</ul>
+
+
+<p>NOTE: Documentation mirrored from original site: <a href="http://download.modem-help.co.uk/mfcs-A/Alcatel/Modems/TG589vn/v3/">modem-help.co.uk</a></p>
+
+<p>You can also install some PINS on the router&rsquo;s mainboard and get serial console access, by following the below guide posted on youtube by someone else&hellip;
+<iframe width="640" height="360" src="http://www.youtube.com/embed/FwiosVp4Ra0 " frameborder="0" allowfullscreen></iframe></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Installing Ruby development environment on Mac OS X Mavericks]]></title>
+    <link href="http://devrandom.za.net/blog/2014/01/13/installing-ruby-development-environment-on-mac-os-x-mavericks/"/>
+    <updated>2014-01-13T16:52:02+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/01/13/installing-ruby-development-environment-on-mac-os-x-mavericks</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/ruby.png"></p>
+
+<p>Installing Ruby development environment on Mac OS X Mavericks. Ruby on rails with the Ruby version manager, MySQL server and Brew.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h2>Installing the prerequisites:</h2>
+
+<p>The Xcode command-line tools is required. This can be installed after you&rsquo;ve installed the full Xcode installation or as a standalone by running the following command:</p>
+
+<p><strong>Installing the Xcode command-line tools:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>xcode-select &amp;mdash;install
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><a href="http://brew.sh/">Homebrew</a> is my preferred package manager for Mac. It is similar to <a href="http://www.macports.org/">MacPorts</a>.</p>
+
+<p><strong>Installing Homebrew:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ruby -e &amp;ldquo;<span class="k">$(</span>curl -fsSL &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://raw.github.com/mxcl/homebrew/go/install&quot;</span>&gt;https://raw.github.com/mxcl/homebrew/go/install&lt;/a&gt;<span class="k">)</span>&amp;rdquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>&hellip;after the installation run the following command:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>brew doctor
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Installing MySQL server:</h2>
+
+<p>MySQL server can be installed via Homebrew or just by downloading and installing the <a href="http://dev.mysql.com/downloads/mysql/">official DMG</a> file.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>brew install mysql
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi ~/.bashrc
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>add <code>export PATH=$PATH:/usr/local/mysql/bin</code> for a DMG installation
+or
+add <code>export PATH=$PATH:$(brew --prefix mysql)/bin</code> if you installed via Homebrew.</p>
+
+<h2>Installing gcc 4.9</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>brew tap homebrew/versions
+</span><span class='line'>brew install gcc49
+</span><span class='line'>brew install autoconf automake libtool libyaml readline libksba openssl
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi ~/.bashrc
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Add the following three lines. Leave them commented out. You can uncomment them when you need gcc as compiler.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;export <span class="nv">CC</span><span class="o">=</span>/usr/local/bin/gcc-4.9&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;export <span class="nv">CPP</span><span class="o">=</span>/usr/local/bin/cpp-4.9&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;export <span class="nv">CXX</span><span class="o">=</span>/usr/local/bin/g++-4.9&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Installing <a href="http://rvm.io/">RVM</a>, the Ruby version manager:</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="se">\c</span>url -L &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://get.rvm.io&quot;</span>&gt;https://get.rvm.io&lt;/a&gt; | bash -s stable
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>Testing if installation was successfull:</strong></p>
+
+<p>After the installation is complete, restart the terminal App and type the following command:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">type </span>rvm | head -n 1
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>You should get the following response:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rvm is a <span class="k">function</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Installing Ruby:</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rvm install ruby-2.0.0-p247
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>Setting and verifying the used Ruby version:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rvm use 2.0.0-p247
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ruby -v
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Installing and verifying rails:</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>gem install rails
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rails -v
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Other Ruby gems can now also be installed by just running:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>gem install some_gem
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><a href="http://guides.rubygems.org/command-reference/">Here</a> is the command reference for the <code>gem</code> command.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress blogging engine on GitHub Pages]]></title>
+    <link href="http://devrandom.za.net/blog/2013/12/23/octopress-blogging-engine-on-github-pages/"/>
+    <updated>2013-12-23T00:44:45+02:00</updated>
+    <id>http://devrandom.za.net/blog/2013/12/23/octopress-blogging-engine-on-github-pages</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/octopress.png"></p>
+
+<p>This is a guide to install Octopress blogging framework on Mac OS X Mavericks. This was done and tested on OS X Mavericks version 10.9.1. You will need to have a GitHub account with SSH keys properly <a href="https://help.github.com/articles/generating-ssh-keys">configured</a> to sucessfully host the Octopress blog on GitHub Pages.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<h3>Getting and installing Octopress locally.</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/
+</span><span class='line'>git clone git://github.com/imathis/octopress.git octopress
+</span><span class='line'><span class="nb">cd </span>octopress&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;gem install bundler
+</span><span class='line'>bundle install
+</span><span class='line'>rake install
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Installing the <a href="https://github.com/kAworu/octostrap3">octostrap3</a> theme:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/kAworu/octostrap3&quot;</span>&gt;https://github.com/kAworu/octostrap3&lt;/a&gt; .themes/octostrap3
+</span><span class='line'>rake &amp;lsquo;install<span class="o">[</span>octostrap3<span class="o">]</span>&amp;rsquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Edit <code>_config.yml</code> with your parameters.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi ~/octopress/_config.yml
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Getting ready for deployment to GitHub Pages:</h3>
+
+<p>Follow this guide to setup SSH key based authentication to Github: <a href="https://help.github.com/articles/generating-ssh-keys">(Reference)</a></p>
+
+<p>Create a new Github repository and name the repository with the format <code>username.github.io</code>, where username is your GitHub user name.</p>
+
+<p>Github Pages for users uses the master branch like the public directory on a web server, serving the files at your Pages url <code>http://username.github.io</code>. As a result, you&rsquo;ll want to work on the source for your blog in the source branch and commit the generated content to the master branch. Octopress has a configuration task that helps you set all this up.</p>
+
+<h3>Prepare Octopress and deploy to GitHub Pages: <a href="http://octopress.org/docs/deploying/github/">(Reference)</a></h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>rake setup_github_pages
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Enter the following where <code>username</code> is your username.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git@github.com:username/username.github.io.git
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This will generate the blog, copy the generated files into <code>_deploy/</code>, add them to git, commit and push them to the master branch.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate
+</span><span class='line'>rake deploy
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Commit the source for your blog.
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git add .
+</span><span class='line'>git commit -m &amp;lsquo;source commit&amp;rsquo;
+</span><span class='line'>git push origin <span class="nb">source</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Using Bootstrap labels for categories:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>curl -s -S &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://kaworu.github.io/octopress/downloads/code/category-with-bs-label.patch&quot;</span>&gt;http://kaworu.github.io/octopress/downloads/code/category-with-bs-label.patch&lt;/a&gt; | patch -p1
+</span><span class='line'>curl -s -S &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://kaworu.github.io/octopress/downloads/code/category_list.html&quot;</span>&gt;http://kaworu.github.io/octopress/downloads/code/category_list.html&lt;/a&gt; &gt; <span class="nb">source</span>/_includes/custom/asides/category_list.html
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi _config.yml
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>In section <code>default_asides:</code>, add: <code>custom/asides/category_list.html</code></p>
+
+<h3>Replacing Google search with lunr.js javascript site-search:</h3>
+
+<p>Download some javascript files and move them to the correct path.
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>curl -s -S -L &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://raw.github.com/olivernn/lunr.js/master/lunr.min.js&quot;</span>&gt;http://raw.github.com/olivernn/lunr.js/master/lunr.min.js&lt;/a&gt; &gt; <span class="nb">source</span>/javascripts/lunr.min.js
+</span><span class='line'>curl -s -S -L &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://github.com/janl/mustache.js/raw/master/mustache.js&quot;</span>&gt;http://github.com/janl/mustache.js/raw/master/mustache.js&lt;/a&gt; &gt; <span class="nb">source</span>/javascripts/mustache.js
+</span><span class='line'>curl -s -S -L &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://github.com/medialize/URI.js/raw/gh-pages/src/URI.min.js&quot;</span>&gt;http://github.com/medialize/URI.js/raw/gh-pages/src/URI.min.js&lt;/a&gt; &gt; <span class="nb">source</span>/javascripts/URI.min.js
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Create a <code>search.json</code> file.</p>
+
+<p><strong>NOTE:</strong> The <code>content</code> line can cause problems and make the search not working. If this is the case, remove the whole <code>content...</code> line from below. This will make only post titles searchable.</p>
+
+<p><code>vi source/search.json</code></p>
+
+<h2><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="err">&lt;/h</span><span class="mi">2</span><span class="err">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;hr</span> <span class="err">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;p&gt;</span><span class="p">[</span>
+</span><span class='line'><span class="p">{</span><span class="err">%</span> <span class="err">for</span> <span class="err">post</span> <span class="err">in</span> <span class="err">site.posts</span> <span class="err">%</span><span class="p">}</span><span class="err">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;pre&gt;&lt;code&gt;</span><span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ &quot;</span><span class="p">{</span><span class="err">{</span><span class="nt">&quot; }} post.url }}&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ &quot;</span><span class="p">{</span><span class="err">{</span><span class="nt">&quot; }} post.title }}&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ &quot;</span><span class="p">{</span><span class="err">{</span><span class="nt">&quot; }} post.content | strip_html | strip_newlines | remove:&#39;&quot;</span><span class="err">&#39;</span> <span class="p">}}</span><span class="s2">&quot;,</span>
+</span><span class='line'><span class="s2">    &quot;</span><span class="err">date</span><span class="s2">&quot;: &quot;</span><span class="p">{</span><span class="err">{</span> <span class="nt">&quot;{{&quot;</span> <span class="p">}}</span> <span class="err">post.date</span> <span class="err">|</span> <span class="err">date</span><span class="p">:</span><span class="err">&#39;%d</span> <span class="err">%B</span> <span class="err">%Y&#39;</span> <span class="p">}</span><span class="err">}&quot;</span>
+</span><span class='line'><span class="err">}</span><span class="p">{</span><span class="err">%</span>  <span class="err">unless</span> <span class="err">forloop.last</span> <span class="err">%</span><span class="p">},{</span><span class="err">%</span> <span class="err">endunless</span> <span class="err">%</span><span class="p">}</span>
+</span><span class='line'><span class="err">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">&lt;p&gt;</span><span class="p">{</span><span class="err">%</span> <span class="err">endfor</span> <span class="err">%</span><span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Create a <code>search.js</code> file.
+<code>vi source/javascripts/search.js</code>
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">pre</span><span class="o">&gt;&lt;</span><span class="nx">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">lunr</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">field</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">boost</span><span class="o">:</span> <span class="mi">10</span><span class="p">});</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">field</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">ref</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s1">&#39;/search.json&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">post</span> <span class="k">in</span> <span class="nx">json</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">index</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="nx">post</span><span class="p">]);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">uri</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URI</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">queryString</span> <span class="o">=</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">queryString</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">index</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">queryString</span><span class="p">.</span><span class="nx">q</span><span class="p">.</span><span class="nx">toString</span><span class="p">()).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="nx">json</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">p</span><span class="p">.</span><span class="nx">url</span> <span class="o">==</span> <span class="nx">result</span><span class="p">.</span><span class="nx">ref</span><span class="p">;</span> <span class="p">})[</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">});</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;</span><span class="nx">gt</span><span class="p">;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#search-results&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">to_html</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#search-results-template&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(),</span> <span class="p">{</span><span class="nx">posts</span><span class="o">:</span> <span class="nx">results</span><span class="p">}));</span>
+</span><span class='line'>        <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="mi">1</span><span class="p">){</span>
+</span><span class='line'>            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#no-results&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">to_html</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#no-results-template&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(),</span> <span class="p">{</span><span class="nx">noposts</span><span class="o">:</span> <span class="nx">results</span><span class="p">}));</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Create new search page.
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake new_page<span class="o">[</span>&amp;lsquo;search&amp;rsquo;<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Edit the newly created search page.
+<code>vi source/search/index.markdown</code></p>
+
+<h2><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/h2&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>layout: default
+</span><span class='line'>title: Search<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h2&gt;</span>footer: true<span class="nt">&lt;/h2&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://devrandom.za.net/javascripts/libs/jquery.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://devrandom.za.net/javascripts/lunr.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://devrandom.za.net/javascripts/URI.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://devrandom.za.net/javascripts/mustache.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://devrandom.za.net/javascripts/search.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;page-header&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;h1&gt;</span>Search Results<span class="nt">&lt;/h1&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">id=</span><span class="s">&quot;search-results-template&quot;</span> <span class="na">type=</span><span class="s">&quot;text/mustache&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">{</span><span class="o">%</span> <span class="nx">raw</span> <span class="o">%</span><span class="p">}</span>
+</span><span class='line'><span class="p">{{</span> <span class="err">#</span><span class="nx">posts</span> <span class="p">}}</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;{{ url }}&quot;</span><span class="o">&gt;</span><span class="p">{{</span> <span class="nx">title</span> <span class="p">}}</span><span class="o">&lt;</span><span class="err">/a&gt; - {{ date }}&lt;/li&gt;</span>
+</span><span class='line'><span class="p">{{</span> <span class="err">/posts }}</span>
+</span><span class='line'><span class="p">{</span><span class="o">%</span> <span class="nx">endraw</span> <span class="o">%</span><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">id=</span><span class="s">&quot;no-results-template&quot;</span> <span class="na">type=</span><span class="s">&quot;text/mustache&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">{</span><span class="o">%</span> <span class="nx">raw</span> <span class="o">%</span><span class="p">}</span>
+</span><span class='line'><span class="p">{{</span> <span class="err">#</span><span class="nx">noposts</span> <span class="p">}}</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">No</span> <span class="nx">search</span> <span class="nx">results</span> <span class="nx">found</span><span class="p">.</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'><span class="p">{{</span> <span class="err">/noposts }}</span>
+</span><span class='line'><span class="p">{</span><span class="o">%</span> <span class="nx">endraw</span> <span class="o">%</span><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;no-results&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;search-results&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Modify the <code>navigation.html</code> file.
+<code>vi source/_includes/custom/navigation.html</code> and replace the line:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;hidden&quot;</span> <span class="na">name=</span><span class="s">&quot;q&quot;</span> <span class="na">value=</span><span class="s">&quot;site:{{ site.url | shorthand_url }}&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+with
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;hidden&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><code>vi _config.yml</code> and replace the line:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>simple_search: &lt;a href="http://google.com/search">http://google.com/search&lt;/a></span></code></pre></td></tr></table></div></figure></notextile></div>
+with
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>simple_search: &lt;a href="http://username.github.io/search">http://username.github.io/search&lt;/a></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Hiding the <code>username.github.io</code> repo from the GitHub aside: <a href="http://blog.codebykat.com/2013/05/20/three-octopress-tweaks/">(Reference)</a></h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<code>vi _config.yml</code></p>
+
+<p>Add the following below the <code>github_skip_forks:</code> tag:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>github_skip_repos: [username.github.io]</span></code></pre></td></tr></table></div></figure></notextile></div>
+If you want to hide more than your GitHub page repo, you can specify all repos that you want to hide like below.
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>github_skip_repos: [username.github.io, another_repo, whatever_repo]</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><code>vi source/_includes/asides/github.html</code>
+Add the following line below <code>skip_forks: {{site.github_skip_forks}},</code>
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">skip_repos</span><span class="o">:</span> <span class="p">[</span>  <span class="k">for</span> <span class="nx">repo</span> <span class="k">in</span> <span class="nx">site</span><span class="p">.</span><span class="nx">github_skip_repos</span> <span class="o">%</span><span class="p">}</span><span class="o">&amp;</span><span class="nx">ldquo</span><span class="p">;</span><span class="nx">repo</span><span class="p">}}</span><span class="o">&amp;</span><span class="nx">rdquo</span><span class="p">;</span> <span class="nx">unless</span> <span class="nx">forloop</span><span class="p">.</span><span class="nx">last</span> <span class="o">%</span><span class="p">},</span>  <span class="nx">endunless</span> <span class="o">%</span><span class="p">}</span> <span class="nx">endfor</span> <span class="o">%</span><span class="p">}</span> <span class="p">],</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><code>vi source/javascripts/github.js</code>
+Add the following line below <code>if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }</code>
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="k">if</span> <span class="p">(</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">inArray</span><span class="p">(</span> <span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">,</span> <span class="nx">options</span><span class="p">.</span><span class="nx">skip_repos</span> <span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Custom 404 error page:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><code>vi source/404.markdown</code></p>
+
+<h2><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/h2&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>layout: page
+</span><span class='line'>title: <span class="ni">&amp;ldquo;</span>404 Error<span class="ni">&amp;rdquo;</span>
+</span><span class='line'>comments: true
+</span><span class='line'>sharing: false<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;h2&gt;</span>footer: true<span class="nt">&lt;/h2&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>Sorry, the page you<span class="ni">&amp;#8217;</span>re looking for cannot be found.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>Please use the search function in the top navigation bar if you<span class="ni">&amp;#8217;</span>re looking for something specific.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Custom Domain:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> &amp;lsquo;your-domain.com&amp;rsquo; &gt;&gt; <span class="nb">source</span>/CNAME
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Visit your domain registrar or DNS host and add a record for your domain name.
+For a sub-domain like <code>www.example.com</code> you would create a <code>CNAME</code> record pointing to <code>username.github.io</code>.
+If you are using a top-level domain like <code>example.com</code>, you must use an <code>A</code> record pointing to <code>204.232.175.78</code>.</p>
+
+<h3>Easy deploy/upload new pages script:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo vi /usr/local/bin/octoupload
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;cd ~/octopress/&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;rake generate
+</span><span class='line'>rake deploy
+</span><span class='line'>git add .
+</span><span class='line'>git commit -m &amp;lsquo;source commit&amp;rsquo;
+</span><span class='line'>git push origin <span class="nb">source</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo chmod +x /usr/local/bin/octoupload
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>New posts:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>rake new_post<span class="o">[</span>&amp;ldquo;My New Post&amp;rdquo;<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Edit the <code>source/_posts/my-new-post.markdown</code> with any text editor.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate
+</span><span class='line'>rake preview
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Open <code>http://localhost:4000</code> to see a preview of the blog. When satisfied, the previously created, <code>/usr/local/bin/octoupload</code>, script can be executed to automatically commit all changes and upload to GitHub Pages.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>octoupload
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Free mardown text editors for Mac OS X:</h3>
+
+<ol>
+<li><a href="http://mouapp.com/">Mou</a></li>
+<li><a href="http://clockworkengine.com/lightpaper-mac/">LightPaper</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[On-the-Fly Read-Write compressed filesystem]]></title>
+    <link href="http://devrandom.za.net/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem/"/>
+    <updated>2012-02-18T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/zip.png"></p>
+
+<p>I recently had a problem where <a href="http://sourceforge.net/projects/sarg/">&ldquo;SARG&rdquo;</a> completely chew up all root filesystem space as reports was generated daily and stored under /var/www/html/sarg. Quick solution&hellip; I thought this can also come in handy for future reference&hellip; &ldquo;On-the-Fly read-write compressed filesystem&rdquo;</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<p>I did the following on CentOS 5.5:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rpm -Uhv &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://apt.sw.be/redhat/el5/en/x86_64/rpmforge/RPMS//rpmforge-release-0.3.6-1.el5.rf.x86_64.rpm&quot;</span>&gt;http://apt.sw.be/redhat/el5/en/x86_64/rpmforge/RPMS//rpmforge-release-0.3.6-1.el5.rf.x86_64.rpm&lt;/a&gt;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;yum -y install squashfs-tools fuse-unionfs&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;mv /var/www/html/sarg /root/sarg-old
+</span><span class='line'>mkdir /var/www/html/sarg&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;mksquashfs /root/sarg-old /.sarg-compressed.sqfs -check_data&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;mkdir -p /var/squashed/<span class="o">{</span>ro,rw<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Add the following to /etc/fstab:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/.sarg-compressed.sqfs  /var/squashed/ro  squashfs  loop,ro  0 0
+</span><span class='line'>unionfs#/var/squashed/rw=rw:/var/squashed/ro=ro /var/www/html/sarg fuse default_permissions,allow_other,use_ino,nonempty,suid,cow 0 0</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mount -all&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;touch /var/www/html/sarg/test
+</span><span class='line'>rm -rf /var/www/html/sarg-old
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Check that your new fuse filesystem is mounted:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>df -h
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>By doing this, all files written to /var/www/html/sarg is actually being written &ldquo;inside&rdquo; /.sarg-compressed.sqfs (The compressed filesystem) Files like text, or html in this instance, are compressed at a massive ratio.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Linksys WRT54GL, DD-WRT persistant PPPOE]]></title>
+    <link href="http://devrandom.za.net/blog/2010/05/01/linksys-wrt54gl-dd-wrt-persistant-pppoe/"/>
+    <updated>2010-05-01T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2010/05/01/linksys-wrt54gl-dd-wrt-persistant-pppoe</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/ddwrt.png"></p>
+
+<p>A script I’ve put together to make my DSL PPPOE dialup persistant. First open the DD-WRT web interface, set WAN to PPPOE and configure a dummy username and password. Then go to Administration, Commands and paste the following script. Change your DSL username and password and save it, Startup Script.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/sh&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;PATH<span class="o">=</span>/usr/sbin:/sbin:/usr/bin:<span class="nv">$PATH</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;ISP&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;USER<span class="o">=</span>myispusername
+</span><span class='line'><span class="nv">PASS</span><span class="o">=</span>myisppassword&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;OTHER SETTINGS&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;INTRFACE<span class="o">=</span>nic-vlan1
+</span><span class='line'><span class="nv">TIMEOUT</span><span class="o">=</span>120&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;setdefaultroute <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="nb">echo</span> …applying default route
+</span><span class='line'>route del default
+</span><span class='line'>route del default
+</span><span class='line'>route del default
+</span><span class='line'>route add default ppp0
+</span><span class='line'><span class="o">}</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;connect <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>gpio disable 3; sleep 1
+</span><span class='line'>pppd plugin /usr/lib/rp-pppoe.so <span class="nv">$INTRFACE</span> noipdefault noauth nodefaultroute noaccomp noccp nobsdcomp nodeflate nopcomp novj novjccomp nomppe nomppc usepeerdns user <span class="nv">$1</span> password <span class="nv">$2</span> default-asyncmap mtu 1492 mru 1492 persist lcp-echo-interval 60 lcp-echo-failure 10 maxfail 0 unit <span class="nv">$3</span>
+</span><span class='line'>gpio <span class="nb">enable </span>3; sleep 1
+</span><span class='line'><span class="o">}</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;connlinkppp <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="k">while </span><span class="nb">true</span>
+</span><span class='line'><span class="nb"> </span><span class="k">do</span>
+</span><span class='line'><span class="k"> if</span> <span class="o">[</span> ip link show dev ppp0 |grep ppp0 |awk &amp;lsquo;<span class="o">{</span> print <span class="nv">$2</span> <span class="o">}</span>&amp;rsquo; <span class="o">==</span> “ppp0:” <span class="o">]</span>
+</span><span class='line'> <span class="k">then</span>
+</span><span class='line'><span class="k"> </span><span class="nb">echo</span> …ppp link is up
+</span><span class='line'> <span class="nb">break</span>
+</span><span class='line'><span class="nb"> </span><span class="k">else</span>
+</span><span class='line'><span class="k"> </span><span class="nb">echo</span> …waiting <span class="k">for </span>ppp to connect
+</span><span class='line'> gpio disable 3; sleep 1
+</span><span class='line'> gpio <span class="nb">enable </span>3; sleep 1
+</span><span class='line'> <span class="k">fi</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'><span class="o">}</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;echo Starting link checking procedure… Please <span class="nb">wait</span>…
+</span><span class='line'>sleep 40&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;while <span class="nb">true</span>
+</span><span class='line'><span class="nb"> </span><span class="k">do</span>
+</span><span class='line'><span class="k"> if</span> <span class="o">[</span> ip link show dev ppp0 |grep ppp0 |awk &amp;lsquo;<span class="o">{</span> print <span class="nv">$2</span> <span class="o">}</span>&amp;rsquo; <span class="o">==</span> “ppp0:” <span class="o">]</span>
+</span><span class='line'> <span class="k">then</span>
+</span><span class='line'><span class="k"> </span><span class="nb">echo</span> …ppp link is up
+</span><span class='line'> <span class="k">else</span>
+</span><span class='line'><span class="k"> </span>connect <span class="nv">$USER</span> <span class="nv">$PASS</span> 0
+</span><span class='line'> connlinkppp
+</span><span class='line'> sleep 10
+</span><span class='line'> setdefaultroute
+</span><span class='line'> <span class="k">fi</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt; <span class="k">if</span> <span class="o">[</span> ip link show dev ppp1 |grep ppp1 |awk &amp;lsquo;<span class="o">{</span> print <span class="nv">$2</span> <span class="o">}</span>&amp;rsquo; <span class="o">==</span> “ppp1:” <span class="o">]</span>
+</span><span class='line'> <span class="k">then</span>
+</span><span class='line'><span class="k"> </span><span class="nb">echo</span> …Resetting all ppp connections
+</span><span class='line'> killall redial
+</span><span class='line'> killall pppd
+</span><span class='line'> <span class="k">else</span>
+</span><span class='line'><span class="k"> </span><span class="nb">echo </span>all ppp connections seems good
+</span><span class='line'> <span class="k">fi</span>
+</span><span class='line'><span class="k"> </span><span class="nb">echo </span>returning to main loop…
+</span><span class='line'> sleep <span class="nv">$TIMEOUT</span>
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Reboot the router!</p>
+]]></content>
+  </entry>
+  
+</feed>

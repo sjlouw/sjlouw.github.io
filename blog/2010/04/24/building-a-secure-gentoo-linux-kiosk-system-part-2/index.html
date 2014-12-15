@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Building a secure Gentoo Linux kiosk system - part 2 - Random Notes</title>
+  <meta name="author" content="S.J. Louw">
+
+  
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://devrandom.za.net/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-2">
+  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+
+  <link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
+
+
+  <script src="/javascripts/libs/jquery/jquery-2.0.3.min.js"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46683566-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+  <body   >
+    <div id="wrap">
+      <header role="banner">
+        <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Random Notes</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li >
+                    <a href="/blog/archives">Archives</a>
+                </li>
+                <li><a href="/about">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="subscribe-rss" href="/atom.xml" target="_blank" title="subscribe via RSS">
+                        <span class="ion-social-rss"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-twitter" href="http://twitter.com/sjlouw" target="_blank" title="Twitter">
+                        <span class="ion-social-twitter"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-facebook" href="http://www.facebook.com/devrandom.za.net" target="_blank" title="Facebook">
+                        <span class="ion-social-facebook"></span>
+                    </a>
+                </li>
+                
+            </ul>
+            
+                <form class="search navbar-form navbar-right" action="http://devrandom.za.net/search/" method="GET">
+                       <input type="hidden">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="q" placeholder="Search">
+                    </div>
+                </form>
+            
+        </div>
+    </div>
+</nav>
+
+
+      </header>
+      <div id="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content col-md-9">
+    <article class="hentry" role="article">
+      
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-24T00:00:00+02:00" pubdate data-updated="true">Apr 24<span>th</span>, 2010</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://devrandom.za.net">Comments</a>
+        
+      </p>
+    
+    
+    <h1 class="entry-title">
+        Building a secure Gentoo Linux kiosk system - part 2
+        
+    </h1>
+    
+  </header>
+
+
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/gentoo.png"></p>
+
+<p>This is part 2 of 2 in building and setting up a secure Gentoo Linux kiosk system. Here I will configure the X system, extras and lock the system down. Part one can be followed <a href="/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-1/">here</a>.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h2>Installing and configuring the X system:</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>emerge xorg-server <span class="o">(</span><span class="k">if </span>you get <span class="s2">&quot;A file is not listed in the Manifest&quot;</span>... <span class="k">do</span>, vi /etc/make.conf and <span class="nv">FEATURES</span><span class="o">=</span>-strict<span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>env-update
+</span><span class='line'><span class="nb">source</span> /etc/profile
+</span><span class='line'>
+</span><span class='line'>/etc/init.d/hald start
+</span><span class='line'>rc-update add hald default
+</span><span class='line'>
+</span><span class='line'>Xorg -configure
+</span><span class='line'>
+</span><span class='line'>cp /root/xorg.conf.new /etc/X11/xorg.conf
+</span><span class='line'>rm -rf /root/xorg.conf.new
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /etc/X11/xorg.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the Section &ldquo;<code>Screen</code>&rdquo; add the following under Monitor:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>DefaultDepth 24
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then in SubSection &ldquo;<code>Display</code>&rdquo;, Depth 24 add the following under <code>Depth 24</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Modes <span class="s2">&quot;1024x768&quot;</span> <span class="s2">&quot;800x600&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Under Section &ldquo;<code>InputDevice</code>&rdquo;, replace:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Driver <span class="s2">&quot;kbd&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>with</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Driver <span class="s2">&quot;evdev&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Driver <span class="s2">&quot;mouse&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>with</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Driver <span class="s2">&quot;evdev&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Adding the client user:</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>useradd -m -G users,audio,wheel clientsales
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Automatic login the client user:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /etc/inittab
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and replace</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>c1:12345:respawn:/sbin/agetty 38400 tty1 linux
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>with</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>c1:12345:respawn:/sbin/mingetty --autologin clientsales --noclear tty1
+</span><span class='line'>
+</span><span class='line'><span class="c">#Disable ctrl+alt+delete key combination</span>
+</span><span class='line'><span class="c"># What to do at the &quot;Three Finger Salute&quot;.</span>
+</span><span class='line'><span class="c">#ca:12345:ctrlaltdel:/sbin/shutdown -r now</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /etc/sudoers
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Under the &ldquo;<code># User privilege specification</code>&rdquo; section add the following:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>clientsales <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: ALL
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Installaing a VNC server:</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>emerge net-misc/tigervnc
+</span><span class='line'>vncpasswd
+</span><span class='line'>su clientsales
+</span><span class='line'>vncpasswd
+</span><span class='line'><span class="nb">exit</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /etc/X11/xorg.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Add the following to Section &ldquo;Module&rdquo;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>        Load  <span class="s2">&quot;vnc&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Add the following to Section &ldquo;Screen&rdquo;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>        Option     <span class="s2">&quot;PasswordFile&quot;</span>    <span class="s2">&quot;/home/clientsales/.vnc/passwd&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Installing sound:</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>emerge alsa-utils
+</span><span class='line'>alsamixer to configure sound levels
+</span><span class='line'>alsaconf
+</span><span class='line'>rc-update add alsasound boot
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Note:</strong> Firefox 3.6 and newer does NOT work as below with the Java plugin.</p>
+
+<h2>Installing the Firefox browser with all dependencies:</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>emerge mozilla-firefox
+</span><span class='line'>emerge -C mozilla-firefox
+</span><span class='line'><span class="nb">cd</span> /opt
+</span><span class='line'>wget http://mirror.atratoip.net/mozilla/firefox/releases/3.5.7/linux-i686/is/firefox-3.5.7.tar.bz2
+</span><span class='line'>bzip2 firefox-3.5.7.tar.bz2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Installing Adobe Flash plugin:</strong></p>
+
+<p>Download the tar.gz version from Adobe and copy the gz file to <code>/opt/</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>tar -zxvf install_flash_player_10_linux.tar
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>move the .so file to <code>/opt/firefox/plugins/</code></p>
+
+<p><strong>Installing Sun Java Runtime Environment:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>emerge -C dev-java/icedtea6-bin
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Download Sun JRE bin file and install in <code>/opt/</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chmod +x jre-6u20-linux-i586.bin
+</span><span class='line'>./jre-6u20-linux-i586.bin
+</span><span class='line'>ln -s /opt/jre1.6.0_18/plugin/i386/ns7/libjavaplugin_oji.so /opt/firefox/plugins/libjavaplugin_oji.so
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Adding environment variables for JAVA, lockdown and make X automatically start at boot for the clientsales user profile.</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>su clientsales
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /home/clientsales/.bashrc <span class="o">(</span>Add the following:<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export J2RE_HOME=/opt/jre1.6.0_18
+</span><span class='line'>export PATH=$J2RE_HOME/bin:$PATH
+</span><span class='line'>sudo /bin/stty intr undef
+</span><span class='line'>sudo /bin/stty kill undef
+</span><span class='line'>sudo /bin/stty quit undef
+</span><span class='line'>sudo /bin/stty susp undef
+</span><span class='line'>sudo startx &>/dev/null</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">exit</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi startx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Paste the following code and save:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">userclientrc</span><span class="o">=</span><span class="nv">$HOME</span>/.xinitrc
+</span><span class='line'><span class="nv">sysclientrc</span><span class="o">=</span>/etc/X11/xinit/xinitrc
+</span><span class='line'>
+</span><span class='line'><span class="nv">userserverrc</span><span class="o">=</span><span class="nv">$HOME</span>/.xserverrc
+</span><span class='line'><span class="nv">sysserverrc</span><span class="o">=</span>/etc/X11/xinit/xserverrc
+</span><span class='line'><span class="nv">defaultclientargs</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+</span><span class='line'><span class="nv">defaultserverargs</span><span class="o">=</span><span class="s2">&quot;-nolisten tcp -br&quot;</span>
+</span><span class='line'><span class="nv">clientargs</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+</span><span class='line'><span class="nv">serverargs</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -f <span class="nv">$userclientrc</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span><span class="nv">defaultclientargs</span><span class="o">=</span><span class="nv">$userclientrc</span>
+</span><span class='line'><span class="k">elif</span> <span class="o">[</span> -f <span class="nv">$sysclientrc</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span><span class="nv">defaultclientargs</span><span class="o">=</span><span class="nv">$sysclientrc</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -f <span class="nv">$userserverrc</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span><span class="nv">defaultserverargs</span><span class="o">=</span><span class="nv">$userserverrc</span>
+</span><span class='line'><span class="k">elif</span> <span class="o">[</span> -f <span class="nv">$sysserverrc</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span><span class="nv">defaultserverargs</span><span class="o">=</span><span class="nv">$sysserverrc</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">whoseargs</span><span class="o">=</span><span class="s2">&quot;client&quot;</span>
+</span><span class='line'><span class="k">while</span> <span class="o">[</span> x<span class="s2">&quot;$1&quot;</span> !<span class="o">=</span> x <span class="o">]</span>; <span class="k">do</span>
+</span><span class='line'><span class="k">    case</span> <span class="s2">&quot;$1&quot;</span> in
+</span><span class='line'>      /<span class="s1">&#39;&#39;</span>*|<span class="se">\.</span>*<span class="o">)</span> <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$whoseargs&quot;</span> <span class="o">=</span> <span class="s2">&quot;client&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">                  if</span> <span class="o">[</span> <span class="s2">&quot;x$clientargs&quot;</span> <span class="o">=</span> x <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">                      </span><span class="nv">clientargs</span><span class="o">=</span><span class="s2">&quot;$1&quot;</span>
+</span><span class='line'>                  <span class="k">else</span>
+</span><span class='line'><span class="k">                      </span><span class="nv">clientargs</span><span class="o">=</span><span class="s2">&quot;$clientargs $1&quot;</span>
+</span><span class='line'>                  <span class="k">fi</span>
+</span><span class='line'><span class="k">              else</span>
+</span><span class='line'><span class="k">                  if</span> <span class="o">[</span> <span class="s2">&quot;x$serverargs&quot;</span> <span class="o">=</span> x <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">                      </span><span class="nv">serverargs</span><span class="o">=</span><span class="s2">&quot;$1&quot;</span>
+</span><span class='line'>                  <span class="k">else</span>
+</span><span class='line'><span class="k">                      </span><span class="nv">serverargs</span><span class="o">=</span><span class="s2">&quot;$serverargs $1&quot;</span>
+</span><span class='line'>                  <span class="k">fi</span>
+</span><span class='line'><span class="k">              fi</span> ;;
+</span><span class='line'>      --<span class="o">)</span> <span class="nv">whoseargs</span><span class="o">=</span><span class="s2">&quot;server&quot;</span> ;;
+</span><span class='line'>      *<span class="o">)</span> <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$whoseargs&quot;</span> <span class="o">=</span> <span class="s2">&quot;client&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">                  if</span> <span class="o">[</span> <span class="s2">&quot;x$clientargs&quot;</span> <span class="o">=</span> x <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">                      </span><span class="nv">clientargs</span><span class="o">=</span><span class="s2">&quot;$defaultclientargs $1&quot;</span>
+</span><span class='line'>                  <span class="k">else</span>
+</span><span class='line'><span class="k">                      </span><span class="nv">clientargs</span><span class="o">=</span><span class="s2">&quot;$clientargs $1&quot;</span>
+</span><span class='line'>                  <span class="k">fi</span>
+</span><span class='line'><span class="k">              else</span>
+</span><span class='line'><span class="k">                  case</span> <span class="s2">&quot;$1&quot;</span> in
+</span><span class='line'>                      :<span class="o">[</span>0-9<span class="o">]</span>*<span class="o">)</span> <span class="nv">display</span><span class="o">=</span><span class="s2">&quot;$1&quot;</span>; <span class="nv">serverargs</span><span class="o">=</span><span class="s2">&quot;$serverargs $1&quot;</span>;;
+</span><span class='line'>                      *<span class="o">)</span> <span class="nv">serverargs</span><span class="o">=</span><span class="s2">&quot;$serverargs $1&quot;</span> ;;
+</span><span class='line'>                  <span class="k">esac</span>
+</span><span class='line'><span class="k">              fi</span> ;;
+</span><span class='line'>    <span class="k">esac</span>
+</span><span class='line'><span class="k">    </span><span class="nb">shift</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> x<span class="s2">&quot;$clientargs&quot;</span> <span class="o">=</span> x <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k"> </span><span class="nv">clientargs</span><span class="o">=</span><span class="s2">&quot;$defaultclientargs&quot;</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> x<span class="s2">&quot;$serverargs&quot;</span> <span class="o">=</span> x <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k"> </span><span class="nv">serverargs</span><span class="o">=</span><span class="s2">&quot;$defaultserverargs&quot;</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> x<span class="s2">&quot;$XAUTHORITY&quot;</span> <span class="o">=</span> x <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span><span class="nv">XAUTHORITY</span><span class="o">=</span><span class="nv">$HOME</span>/.Xauthority
+</span><span class='line'>    <span class="nb">export </span>XAUTHORITY
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">removelist</span><span class="o">=</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># set up default Xauth info for this machine</span>
+</span><span class='line'><span class="k">case</span> <span class="sb">`</span>uname<span class="sb">`</span> in
+</span><span class='line'>Linux*<span class="o">)</span>
+</span><span class='line'> <span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;`hostname --version 2&gt;&amp;1 | grep GNU`&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nv">hostname</span><span class="o">=</span><span class="sb">`</span>hostname -f<span class="sb">`</span>
+</span><span class='line'> <span class="k">else</span>
+</span><span class='line'><span class="k">  </span><span class="nv">hostname</span><span class="o">=</span><span class="sb">`</span>hostname<span class="sb">`</span>
+</span><span class='line'> <span class="k">fi</span>
+</span><span class='line'> ;;
+</span><span class='line'>*<span class="o">)</span>
+</span><span class='line'> <span class="nv">hostname</span><span class="o">=</span><span class="sb">`</span>hostname<span class="sb">`</span>
+</span><span class='line'> ;;
+</span><span class='line'><span class="k">esac</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">authdisplay</span><span class="o">=</span><span class="k">${</span><span class="nv">display</span><span class="k">:-</span><span class="p">:</span><span class="nv">0</span><span class="k">}</span>
+</span><span class='line'><span class="nv">mcookie</span><span class="o">=</span><span class="sb">`</span>/usr/bin/mcookie<span class="sb">`</span>
+</span><span class='line'><span class="nv">dummy</span><span class="o">=</span>0
+</span><span class='line'>
+</span><span class='line'><span class="c"># create a file with auth information for the server. &#39;:0&#39; is a dummy.</span>
+</span><span class='line'><span class="nv">xserverauthfile</span><span class="o">=</span><span class="nv">$HOME</span>/.serverauth.<span class="nv">$$</span>
+</span><span class='line'>xauth -q -f <span class="nv">$xserverauthfile</span> <span class="s">&lt;&lt; EOF</span>
+</span><span class='line'><span class="s">add :$dummy . $mcookie</span>
+</span><span class='line'><span class="s">EOF</span>
+</span><span class='line'><span class="nv">serverargs</span><span class="o">=</span><span class="k">${</span><span class="nv">serverargs</span><span class="k">}</span><span class="s2">&quot; -auth &quot;</span><span class="k">${</span><span class="nv">xserverauthfile</span><span class="k">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># now add the same credentials to the client authority file</span>
+</span><span class='line'><span class="c"># if &#39;$displayname&#39; already exists don&#39;t overwrite it as another</span>
+</span><span class='line'><span class="c"># server man need it. Add them to the &#39;$xserverauthfile&#39; instead.</span>
+</span><span class='line'><span class="k">for </span>displayname in <span class="nv">$authdisplay</span> <span class="nv">$hostname$authdisplay</span>; <span class="k">do</span>
+</span><span class='line'><span class="k">     </span><span class="nv">authcookie</span><span class="o">=</span><span class="sb">`</span>xauth list <span class="s2">&quot;$displayname&quot;</span> <span class="se">\</span>
+</span><span class='line'>       | sed -n <span class="s2">&quot;s/.*$displayname[[:space:]*].*[[:space:]*]//p&quot;</span><span class="sb">`</span> 2&gt;/dev/null;
+</span><span class='line'>    <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;z${authcookie}&quot;</span> <span class="o">=</span> <span class="s2">&quot;z&quot;</span> <span class="o">]</span> ; <span class="k">then</span>
+</span><span class='line'><span class="k">        </span>xauth -q <span class="s">&lt;&lt; EOF</span>
+</span><span class='line'><span class="s">add $displayname . $mcookie</span>
+</span><span class='line'><span class="s">EOF</span>
+</span><span class='line'> <span class="nv">removelist</span><span class="o">=</span><span class="s2">&quot;$displayname $removelist&quot;</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'><span class="k">        </span><span class="nv">dummy</span><span class="o">=</span><span class="k">$((</span><span class="nv">$dummy</span><span class="o">+</span><span class="m">1</span><span class="k">))</span>;
+</span><span class='line'>        xauth -q -f <span class="nv">$xserverauthfile</span> <span class="s">&lt;&lt; EOF</span>
+</span><span class='line'><span class="s">add :$dummy . $authcookie</span>
+</span><span class='line'><span class="s">EOF</span>
+</span><span class='line'>    <span class="k">fi</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'>
+</span><span class='line'>cleanup<span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">[</span> -n <span class="s2">&quot;$PID&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">kill</span> <span class="nv">$PID</span> &gt; /dev/null 2&gt;&amp;1
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> x<span class="s2">&quot;$removelist&quot;</span> !<span class="o">=</span> x <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span>xauth remove <span class="nv">$removelist</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> x<span class="s2">&quot;$xserverauthfile&quot;</span> !<span class="o">=</span> x <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span>rm -f <span class="nv">$xserverauthfile</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if </span><span class="nb">command</span> -v deallocvt &gt; /dev/null 2&gt;&amp;1; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span>deallocvt
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">trap </span>cleanup 0
+</span><span class='line'>
+</span><span class='line'>xinit <span class="nv">$clientargs</span> -- <span class="nv">$serverargs</span> -deferglyphs 16 &amp;
+</span><span class='line'>
+</span><span class='line'><span class="nv">PID</span><span class="o">=</span><span class="nv">$!</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">wait</span> <span class="nv">$PID</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">unset </span>PID
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chmod +x startx
+</span><span class='line'>cp startx /usr/bin/startx
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi xinitrc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Paste the following code and save:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">userresources</span><span class="o">=</span><span class="nv">$HOME</span>/.Xresources
+</span><span class='line'><span class="nv">usermodmap</span><span class="o">=</span><span class="nv">$HOME</span>/.Xmodmap
+</span><span class='line'><span class="nv">xinitdir</span><span class="o">=</span>/etc/X11
+</span><span class='line'><span class="nv">sysresources</span><span class="o">=</span><span class="nv">$xinitdir</span>/Xresources
+</span><span class='line'><span class="nv">sysmodmap</span><span class="o">=</span><span class="nv">$xinitdir</span>/Xmodmap
+</span><span class='line'>
+</span><span class='line'><span class="c"># merge in defaults and keymaps</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -f <span class="nv">$sysresources</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span>xrdb -merge <span class="nv">$sysresources</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -f <span class="nv">$sysmodmap</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span>xmodmap <span class="nv">$sysmodmap</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -f <span class="nv">$userresources</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span>xrdb -merge <span class="nv">$userresources</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -f <span class="nv">$usermodmap</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">    </span>xmodmap <span class="nv">$usermodmap</span>
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># First try ~/.xinitrc</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> -f <span class="s2">&quot;$HOME/.xinitrc&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k"> </span><span class="nv">XINITRC</span><span class="o">=</span><span class="s2">&quot;$HOME/.xinitrc&quot;</span>
+</span><span class='line'> <span class="k">if</span> <span class="o">[</span> -x <span class="nv">$XINITRC</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'>  <span class="c"># if the x bit is set on .xinitrc</span>
+</span><span class='line'>  <span class="c"># it means the xinitrc is not a</span>
+</span><span class='line'>  <span class="c"># shell script but something else</span>
+</span><span class='line'>  <span class="nb">exec</span> <span class="nv">$XINITRC</span>
+</span><span class='line'> <span class="k">else</span>
+</span><span class='line'><span class="k">  </span><span class="nb">exec</span> /bin/sh <span class="s2">&quot;$HOME/.xinitrc&quot;</span>
+</span><span class='line'> <span class="k">fi</span>
+</span><span class='line'><span class="c"># If not present, try the system default</span>
+</span><span class='line'><span class="k">elif</span> <span class="o">[</span> -n <span class="s2">&quot;`/etc/X11/chooser.sh`&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k"> </span><span class="nb">exec</span> <span class="s2">&quot;`/etc/X11/chooser.sh`&quot;</span>
+</span><span class='line'><span class="c"># Failsafe</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'> <span class="c"># start some nice programs</span>
+</span><span class='line'>        <span class="c">#twm &amp;</span>
+</span><span class='line'>        <span class="c">#xclock -geometry 50x50-1+1 &amp;</span>
+</span><span class='line'>        <span class="c">#xterm -geometry 80x50+494+51 &amp;</span>
+</span><span class='line'>        <span class="c">#xterm -geometry 80x20+494-0 &amp;</span>
+</span><span class='line'>        <span class="c">#exec xterm -geometry 80x66+0+0 -name login</span>
+</span><span class='line'>        <span class="nb">exec</span> /opt/firefox/firefox
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chmod +x xinitrc
+</span><span class='line'>cp xinitrc /etc/X11/xinit/xinitrc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Adding some cron entries if needed:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>crontab -e
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Reboot the system:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>init 6
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When the system returns from boot, first set all Firefox preferences. Not saving passwords, not using cookies, exc. Set the following URL as the default homepage: <code>file:///home/clientsales/index.html</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /home/clientsales/.mozilla/firefox/THIS_WILL_BE_DIFFERENT.default/localstore.rdf
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sizemode="maximized"
+</span><span class='line'>width="1024"
+</span><span class='line'>height="768"</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /home/clientsales/.mozilla/firefox/THIS_WILL_BE_DIFFERENT.default/prefs.js
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Add the following 3 lines and save:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>user_pref("accessibility.browsewithcaret", false);
+</span><span class='line'>user_pref("accessibility.warn_on_browsewithcaret", false);
+</span><span class='line'>user_pref("browser.startup.homepage", "file:///home/clientsales/index.html");</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir /home/clientsales/.startpage
+</span><span class='line'>mkdir /home/clientsales/.startpage/images
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /home/clientsales/.startpage/defaulthtml
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Paste the following code and save:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="cp">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;html&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;title&gt;</span>Unconfigured System!<span class="nt">&lt;/title&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/head&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;body</span> <span class="na">bgcolor=</span><span class="s">&quot;#000000&quot;</span> <span class="na">text=</span><span class="s">&quot;#FFFFFF&quot;</span> <span class="na">link=</span><span class="s">&quot;#FFFFFF&quot;</span> <span class="na">vlink=</span><span class="s">&quot;#FFFFFF&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;center&gt;&lt;img</span> <span class="na">src=</span><span class="s">&quot;./.startpage/images/stop.png&quot;</span> <span class="nt">/&gt;&lt;/center&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;center&gt;&lt;font</span> <span class="na">size=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;&lt;b&gt;</span>This system needs to be configured.
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;font</span> <span class="na">size=</span><span class="s">&quot;8&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    Network problem detected!
+</span><span class='line'>    <span class="nt">&lt;/font&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;br&gt;</span>
+</span><span class='line'>    Please contact the HELPDESK for support!<span class="nt">&lt;/b&gt;&lt;/b&gt;&lt;/font&gt;&lt;/center&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Save the 2 images below to <code>/home/clientsales/.startpage/images/</code> with names <code>exclam.png</code> and <code>stop.png</code></p>
+
+<p><img src="/images/blog_posts/stop.png">
+<img src="/images/blog_posts/exclam.png"></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chown -R clientsales:clientsales /home/clientsales/
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /etc/prep_default_page.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And paste the following code:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">##URL in prefs.js must be pointing to: file:////home/clientsales/index.html</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">ipaddr</span><span class="o">=</span><span class="sb">`</span>ifconfig |grep Bcast |sed <span class="s1">&#39;s/Bcast.*//&#39;</span> |sed <span class="s1">&#39;s/          inet addr://&#39;</span><span class="sb">`</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$ipaddr&quot;</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="o">]</span>
+</span><span class='line'>   <span class="k">then</span>
+</span><span class='line'><span class="k">      </span>cat /home/clientsales/.startpage/defaulthtml &gt; /home/clientsales/index.html
+</span><span class='line'>   <span class="k">else</span>
+</span><span class='line'><span class="k">      </span>cat /home/clientsales/.startpage/defaulthtml |sed <span class="s2">&quot;s/Network problem detected!/IP Address: $ipaddr/&quot;</span> |sed <span class="s1">&#39;s/stop.png/exclam.png/&#39;</span> &gt; /home/clientsales/index.html
+</span><span class='line'><span class="k">fi</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chmod +x /etc/prep_default_page.sh
+</span><span class='line'>chown root:root /etc/prep_default_page.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /etc/conf.d/local.start
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Add the following line:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>/etc/prep_default_page.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi /etc/conf.d/rc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Make the following two changes:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>RC_PARALLEL_STARTUP="yes"
+</span><span class='line'>RC_INTERACTIVE="no"</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Cleaning up the system and make it smaller:</h2>
+
+<p><strong>Purge unused locales:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>vi /etc/locale.gen</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Uncomment the following entries:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>en_US ISO-8859-1
+</span><span class='line'>en_US.UTF-8 UTF-8</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>locale-gen</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>The following will remove features not needed and gain space:</strong></p>
+
+<p><strong>NOTE:</strong> After these commands ran, kernel source, portage, man pages, exc will be removed. You will not be able to add more software to this system via emerge anymore.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rm -rf /home/clientsales/.serverauth.*
+</span><span class='line'>rm -rf /usr/portage/*
+</span><span class='line'>rm -rf /var/tmp/portage/*
+</span><span class='line'>rm -rf /usr/share/man/*
+</span><span class='line'>rm -rf /usr/src/linux-*
+</span><span class='line'>rm -rf /usr/share/portage/*
+</span><span class='line'>rm -rf /usr/share/man/*
+</span><span class='line'>rm -rf /var/tmp/*
+</span><span class='line'>rm -rf /usr/share/doc
+</span><span class='line'>rm -rf /var/log/*
+</span><span class='line'>rm -rf /var/db/pkg/*
+</span><span class='line'>rm -rf /root/.mozilla
+</span><span class='line'>rm -rf /usr/share/locale/a*
+</span><span class='line'>rm -rf /usr/share/locale/b*
+</span><span class='line'>rm -rf /usr/share/locale/c*
+</span><span class='line'>rm -rf /usr/share/locale/d*
+</span><span class='line'>rm -rf /usr/share/locale/f*
+</span><span class='line'>rm -rf /usr/share/locale/g*
+</span><span class='line'>rm -rf /usr/share/locale/h*
+</span><span class='line'>rm -rf /usr/share/locale/i*
+</span><span class='line'>rm -rf /usr/share/locale/j*
+</span><span class='line'>rm -rf /usr/share/locale/k*
+</span><span class='line'>rm -rf /usr/share/locale/m*
+</span><span class='line'>rm -rf /usr/share/locale/n*
+</span><span class='line'>rm -rf /usr/share/locale/o*
+</span><span class='line'>rm -rf /usr/share/locale/p*
+</span><span class='line'>rm -rf /usr/share/locale/q*
+</span><span class='line'>rm -rf /usr/share/locale/r*
+</span><span class='line'>rm -rf /usr/share/locale/s*
+</span><span class='line'>rm -rf /usr/share/locale/t*
+</span><span class='line'>rm -rf /usr/share/locale/v*
+</span><span class='line'>rm -rf /usr/share/locale/w*
+</span><span class='line'>rm -rf /usr/share/locale/x*
+</span><span class='line'>rm -rf /usr/share/locale/y*
+</span><span class='line'>rm -rf /usr/share/locale/z*
+</span><span class='line'>rm -rf /usr/share/locale/el*
+</span><span class='line'>rm -rf /usr/share/locale/eo*
+</span><span class='line'>rm -rf /usr/share/locale/es*
+</span><span class='line'>rm -rf /usr/share/locale/et*
+</span><span class='line'>rm -rf /usr/share/locale/lg*
+</span><span class='line'>rm -rf /usr/share/locale/li*
+</span><span class='line'>rm -rf /usr/share/locale/lt*
+</span><span class='line'>rm -rf /usr/share/locale/lv*
+</span><span class='line'>rm -rf /usr/share/locale/ug*
+</span><span class='line'>rm -rf /usr/share/locale/ur*
+</span><span class='line'>rm -rf /usr/share/locale/uz*
+</span><span class='line'>find / <span class="se">\(</span> -iname <span class="s2">&quot;.serverauth.*&quot;</span> <span class="se">\)</span> -delete
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Give this build a version number:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="s2">&quot;1.000-2.6.31r6-i686&quot;</span> &gt; /etc/build
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Install Firefox kiosk mode plugin:</h2>
+
+<p>Install the Firefox r-kiosk plugin from <a href="https://addons.mozilla.org/en-US/firefox/addon/1659">here</a>.</p>
+
+<p>Reboot your system!</p>
+
+<p>This can now be packaged into a nice self-installer CD for rapid deployment to similar hardware.</p>
+
+<p><strong>HINT:</strong> The default homepage URL can be changed in batch with scripting. The URL and all other Firefox specific settings can be altered inside <code>/home/clientsales/.mozilla/firefox/-somenumber-/prefs.js</code></p>
+</div>
+
+
+      <footer>
+        <p class="meta text-muted">
+          
+  
+
+<span class="glyphicon glyphicon-user"></span> <span class="byline author vcard">Posted by <span class="fn">S.J. Louw</span></span>
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-24T00:00:00+02:00" pubdate data-updated="true">Apr 24<span>th</span>, 2010</time>
+          
+
+<span class="glyphicon glyphicon-tags"></span>&nbsp;
+<span class="categories">
+  
+    <a class='category label label-primary' href='/blog/categories/linux/'>linux</a> <a class='category label label-primary' href='/blog/categories/other/'>other</a>
+  
+</span>
+
+
+        </p>
+        
+          <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-2/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-2/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+        
+        
+          <ul class="meta text-muted pager">
+            
+            <li class="previous"><a href="/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-1/" title="Previous Post: Building a secure Gentoo Linux kiosk system - part 1">&laquo; Building a secure Gentoo Linux kiosk system - part 1</a></li>
+            
+            
+            <li class="next"><a href="/blog/2010/04/24/syslog-with-cisco-devices/" title="Next Post: Syslog with Cisco devices">Syslog with Cisco devices &raquo;</a></li>
+            
+          </ul>
+        
+      </footer>
+    </article>
+    
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <aside class="sidebar col-md-3">
+    
+      <section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="6945851626"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section><section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Recent Posts</h3>
+  </div>
+  
+  <div id="recent_posts" class="list-group">
+    
+    <a class="list-group-item " href="/blog/2014/12/14/ospf-lsas-areas-networks-timers/">OSPF LSA's, Area Types, Network Types and Timers</a>
+    
+    <a class="list-group-item " href="/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/">Unlocking a TG589vn v3 VDSL ISP locked router</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-and-dns-views/">Cisco IOS and DNS views</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/adsl-setup-and-configuration-on-a-cisco-877-router/">ADSL setup and configuration on a Cisco 877 router</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-updating-multiple-no-ip-dynamic-dns-host-names/">Cisco IOS updating multiple no-ip dynamic DNS host names</a>
+    
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Referrals</h3>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item dropbox" href="https://db.tt/TKB3xRe4" target="_blank"><img src="/images/dropbox.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item onedrive" href="https://onedrive.live.com?invref=669d8ae4c3926268&invsrc=90" target="_blank"><img src="/images/onedrive.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item digitalocean" href="https://www.digitalocean.com/?refcode=60eb3063c38f " target="_blank"><img src="/images/digitalocean.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item streamnation" href="http://email.streamnation.com/wf/click?upn=cEcAemDWJufLyXTzv7xXpFG9eQ2DXQCCHTxLfSDvskIVba-2BBb-2FuJPCTH024I4Ze0EFaqx-2Bangd6h-2FKWKglaGIDXKkK7GDXWkA9Lj-2B-2FdwiC4suddHxIbgxnLg2tUkytGNISEtJegYwOqpi0wufw0iXMsKawNkB-2B4UoXJ6A3PqPoVYPV2QgOCMr2B2xwmDnr2a4v4N6xCIOL6fRTvx3rDqGw-3D-3D_XOv1M8oH3ndrE-2F-2B-2BVmrwVlkJDUIeWVNEKaogmpQGyBzl4xsiRyt6WwBbQQfHem45Zm24hl1cm3Ji3w1xZcPlEnLbUkcXwy1lugkQ83yt4APcZ0k9zgn3DH4ADwVohUoOnUkFBt-2FhcnNDMbN7YN08ZI9KkvcVXuzrjy4MMBnENXnFv9icSjHflzHIbvh3rwNqdQl1-2FD37blIt7MeqRSh1nmybaJMtbLRD6Nuo9Sd9fRH-2Bro7LD0wi1TXr3TOOtiGU" target="_blank"><img src="/images/streamnation.png" border="0"/></a>
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Categories</h3>
+  </div>
+  <div class="list-group">
+    
+    
+    <a class="list-group-item " href="/blog/categories/linux/index.html">
+        <span class="badge">14</span>
+        linux
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/macosx/index.html">
+        <span class="badge">7</span>
+        macosx
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/other/index.html">
+        <span class="badge">12</span>
+        other
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/cisco/index.html">
+        <span class="badge">15</span>
+        cisco
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/vpn/index.html">
+        <span class="badge">4</span>
+        vpn
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/dns/index.html">
+        <span class="badge">4</span>
+        dns
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/asterisk/index.html">
+        <span class="badge">1</span>
+        asterisk
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/networking/index.html">
+        <span class="badge">1</span>
+        networking
+      </a>
+    
+  </div>
+</section>
+
+<section class="panel panel-default clearfix">
+  <div class="panel-heading">
+      <h3 class="panel-title">GitHub Repos</h3>
+  </div>
+  <div class="list-group" id="gh_repos">
+    <p class="loading">Status updating...</p>
+  </div>
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sjlouw',
+            count: 5,
+            skip_forks: false,
+            skip_repos: [ "sjlouw.github.io" ],
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside Bottom -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="8422584828"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section>
+    
+  </aside>
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2014 - S.J. Louw<br>
+  <small>
+      <span class="credit">Another <a href="http://octopress.org">Octopress</a> blog</span>,
+      <span class="credit">customized with <a href="https://github.com/kAworu/octostrap3">octostrap3</a> and <a href="http://jasonbradley.me/bootstrap-ios7/">Bootstrap iOS7</a> theme</span>.
+  </small>
+</p>
+
+</div>
+</footer>
+    <script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr-2.0.js"></script>
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wwwdevrandomzanet';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://devrandom.za.net/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-2/';
+        var disqus_url = 'http://devrandom.za.net/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-2/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  </body>
+</html>

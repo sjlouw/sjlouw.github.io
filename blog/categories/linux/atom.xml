@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: linux | Random Notes]]></title>
+  <link href="http://devrandom.za.net/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http://devrandom.za.net/"/>
+  <updated>2014-12-15T15:55:21+02:00</updated>
+  <id>http://devrandom.za.net/</id>
+  <author>
+    <name><![CDATA[S.J. Louw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[CentOS 5.7 - Build and install BIND DNS RPMS]]></title>
+    <link href="http://devrandom.za.net/blog/2012/03/02/centos-5-dot-7-build-and-install-bind-9-dot-9-0-1-dns-rpms/"/>
+    <updated>2012-03-02T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2012/03/02/centos-5-dot-7-build-and-install-bind-9-dot-9-0-1-dns-rpms</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/dns.png"></p>
+
+<p>This guide is just a quick howto compile and build the Linux DNS server, BIND, version 9.9.0-1 RPMS from the source RPM.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Building BIND 9.9.0-1 DNS server RPMS on CentOS 5.7:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum -y install make gcc rpm-build libtool autoconf openssl-devel libcap-devel libidn-devel libxml2-devel openldap-devel postgresql-devel sqlite-devel mysql-devel krb5-devel xmlto openscap-devel&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;cd /usr/src/redhat/SRPMS
+</span><span class='line'>wget &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://centos.alt.ru/pub/repository/centos/5/SRPMS/bind-9.9.0-1.el5.src.rpm&quot;</span>&gt;http://centos.alt.ru/pub/repository/centos/5/SRPMS/bind-9.9.0-1.el5.src.rpm&lt;/a&gt;
+</span><span class='line'>rpm -ivh &amp;mdash;nomd5 <span class="nb">bind</span>-9.9.0-1.el5.src.rpm&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;cd /usr/src/redhat/SPECS
+</span><span class='line'>rpmbuild -ba ./bind9_9.spec&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;cd /usr/src/redhat/RPMS/x86_64/
+</span><span class='line'>rpm -Uvh <span class="nb">bind</span>-9.9.0-1.x86_64.rpm <span class="nb">bind</span>-chroot-9.9.0-1.x86_64.rpm <span class="nb">bind</span>-utils-9.9.0-1.x86_64.rpm <span class="nb">bind</span>-libs-9.9.0-1.x86_64.rpm <span class="nb">bind</span>-devel-9.9.0-1.x86_64.rpm
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Apache LDAP authentication]]></title>
+    <link href="http://devrandom.za.net/blog/2012/02/21/apache-ldap-authentication/"/>
+    <updated>2012-02-21T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2012/02/21/apache-ldap-authentication</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/apache.png"></p>
+
+<p>This guide will show how to configure the Apache web server to authenticate users against Microsoft Active Directory. The most difficult part was to get the correct LDAP path for the <code>AuthLDAPUrl</code> and <code>AuthLDAPBindDN</code> parameters. Without the exact correct path it will NOT work, because LDAP does not traverse the Active Directoy for specified users, but relies on the exact full path specified.</p>
+
+<!--more-->
+
+
+<h3>CentOS &ndash; Apache, authenticating Microsoft Active Directory users:</h3>
+
+<p><code>vi /etc/httpd/conf/httpd.conf</code></p>
+
+<p>Make sure the following 3 lines are NOT hashed out:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>LoadModule authnz_ldap_module modules/mod_authnz_ldap.so
+</span><span class='line'>LoadModule ldap_module modules/mod_ldap.so
+</span><span class='line'>LoadModule auth_basic_module modules/mod_auth_basic.so</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Wherever your web directory is, still in <code>/etc/httpd/conf/httpd.conf</code>:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;Directory "/var/www/html">&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>Options Indexes FollowSymLinks
+</span><span class='line'>Order deny,allow
+</span><span class='line'>Deny from All
+</span><span class='line'>AuthName &ldquo;AD Username Password please&rdquo;
+</span><span class='line'>AuthType Basic
+</span><span class='line'>AuthBasicProvider ldap
+</span><span class='line'>AuthzLDAPAuthoritative off
+</span><span class='line'>AuthLDAPUrl &ldquo;ldap://your_dc_fqdn:389/OU=SOME_OU,DC=yourdomain,DC=com?sAMAccountName?sub?(objectClass=*)&rdquo; NONE
+</span><span class='line'>AuthLDAPBindDN &ldquo;CN=your_AD_user,CN=Users,DC=yourdomain,DC=com&rdquo;
+</span><span class='line'>AuthLDAPBindPassword your_AD_user_password
+</span><span class='line'>Require valid-user
+</span><span class='line'>Satisfy any&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>&lt;/Directory></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><code>vi /etc/openldap/ldap.conf</code></p>
+
+<p>Hash everything out and add the following line:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>REFERRALS off</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Restart Apache
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>/etc/init.d/httpd restart
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now if you go to your web server&rsquo;s root with your browser, you will be prompted for a username and password. If you do have a valid Active Directory user account, you will be authenticated against AD.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Bulk user account migration - RedHat/CentOS]]></title>
+    <link href="http://devrandom.za.net/blog/2012/02/20/bulk-user-account-migration-redhat-slash-centos/"/>
+    <updated>2012-02-20T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2012/02/20/bulk-user-account-migration-redhat-slash-centos</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/useraccounts.png"></p>
+
+<p>Here are two scripts to transfer user accounts from one RedHat/CentOS server to another. All home directory files, mail, group settings, passwords stays in tact. The first script needs to be executed on the source server and the second script needs to be executed on the destination server:</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Run on <span class="nb">source </span>server&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;DESTSERVER<span class="o">=</span>&amp;lt;destination_server_ip&gt;
+</span><span class='line'><span class="nb">export </span><span class="nv">UGIDLIMIT</span><span class="o">=</span>500
+</span><span class='line'>mkdir /root/usersmigrate&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;awk -v <span class="nv">LIMIT</span><span class="o">=</span><span class="nv">$UGIDLIMIT</span> -F: &amp;lsquo;<span class="o">(</span><span class="nv">$3</span>&gt;<span class="o">=</span>LIMIT<span class="o">)</span> &amp;amp;&amp;amp; <span class="o">(</span><span class="nv">$3</span>!<span class="o">=</span>65534<span class="o">)</span>&amp;rsquo; /etc/passwd &gt; /root/usersmigrate/passwd.mig
+</span><span class='line'>awk -v <span class="nv">LIMIT</span><span class="o">=</span><span class="nv">$UGIDLIMIT</span> -F: &amp;lsquo;<span class="o">(</span><span class="nv">$3</span>&gt;<span class="o">=</span>LIMIT<span class="o">)</span> &amp;amp;&amp;amp; <span class="o">(</span><span class="nv">$3</span>!<span class="o">=</span>65534<span class="o">)</span>&amp;rsquo; /etc/group &gt; /root/usersmigrate/group.mig
+</span><span class='line'>awk -v <span class="nv">LIMIT</span><span class="o">=</span><span class="nv">$UGIDLIMIT</span> -F: &amp;lsquo;<span class="o">(</span><span class="nv">$3</span>&gt;<span class="o">=</span>LIMIT<span class="o">)</span> &amp;amp;&amp;amp; <span class="o">(</span><span class="nv">$3</span>!<span class="o">=</span>65534<span class="o">)</span> <span class="o">{</span>print <span class="nv">$1</span><span class="o">}</span>&amp;rsquo; /etc/passwd | tee &amp;ndash; |egrep -f &amp;ndash; /etc/shadow &gt; /root/usersmigrate/shadow.mig
+</span><span class='line'>cp /etc/gshadow /root/usersmigrate/gshadow.mig&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;scp -rp /root/usersmigrate root@<span class="nv">$DESTSERVER</span>:/root/&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;tar zcvf &amp;ndash; /home/ | ssh root@<span class="nv">$DESTSERVER</span> &amp;lsquo;cd /; tar zxvf &amp;ndash; &amp;rsquo;
+</span><span class='line'>tar zcvf &amp;ndash; /var/spool/mail/ | ssh root@<span class="nv">$DESTSERVER</span> &amp;lsquo;cd /; tar zxvf &amp;ndash; &amp;rsquo;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Run on destination server&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;export <span class="nv">UGIDLIMIT</span><span class="o">=</span>500&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;awk -v <span class="nv">LIMIT</span><span class="o">=</span><span class="nv">$UGIDLIMIT</span> -F: &amp;lsquo;<span class="o">(</span><span class="nv">$3</span>&amp;lt;<span class="o">=</span>LIMIT<span class="o">)</span> &amp;amp;&amp;amp; <span class="o">(</span><span class="nv">$3</span>!<span class="o">=</span>500<span class="o">)</span>&amp;rsquo; /etc/passwd &gt; /etc/passwdnew
+</span><span class='line'>awk -v <span class="nv">LIMIT</span><span class="o">=</span><span class="nv">$UGIDLIMIT</span> -F: &amp;lsquo;<span class="o">(</span><span class="nv">$3</span>&amp;lt;<span class="o">=</span>LIMIT<span class="o">)</span> &amp;amp;&amp;amp; <span class="o">(</span><span class="nv">$3</span>!<span class="o">=</span>500<span class="o">)</span>&amp;rsquo; /etc/group &gt; /etc/groupnew
+</span><span class='line'>awk -v <span class="nv">LIMIT</span><span class="o">=</span><span class="nv">$UGIDLIMIT</span> -F: &amp;lsquo;<span class="o">(</span><span class="nv">$3</span>&amp;lt;<span class="o">=</span>LIMIT<span class="o">)</span> &amp;amp;&amp;amp; <span class="o">(</span><span class="nv">$3</span>!<span class="o">=</span>500<span class="o">)</span> <span class="o">{</span>print <span class="nv">$1</span><span class="o">}</span>&amp;rsquo; /etc/passwd | tee &amp;ndash; |egrep -f &amp;ndash; /etc/shadow &gt; /etc/shadownew&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;cat /root/usersmigrate/passwd.mig &gt;&gt; /etc/passwdnew
+</span><span class='line'>mv -f /etc/passwdnew /etc/passwd
+</span><span class='line'>cat /root/usersmigrate/group.mig &gt;&gt; /etc/groupnew
+</span><span class='line'>mv -f /etc/groupnew /etc/group
+</span><span class='line'>cat /root/usersmigrate/shadow.mig &gt;&gt; /etc/shadownew
+</span><span class='line'>mv -f /etc/shadownew /etc/shadow
+</span><span class='line'>cp /root/usersmigrate/gshadow.mig /etc/gshadow
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Asterisk - registered Useragent audit]]></title>
+    <link href="http://devrandom.za.net/blog/2012/02/19/asterisk-registered-useragent-audit/"/>
+    <updated>2012-02-19T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2012/02/19/asterisk-registered-useragent-audit</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/asterisk.png"></p>
+
+<p>Here is a quick script I put together to get a list of all phone types currently registered to a Asterisk box:</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;for i in &lt;code&gt;asterisk -rx <span class="s2">&quot;sip show peers&quot;</span> | grep -av Unspecified | grep -a <span class="s2">&quot;/&quot;</span> | grep -a <span class="s2">&quot;^[0-9]&quot;</span> | cut -f 1 -d <span class="s1">&#39;/&#39;</span>&lt;/code&gt;
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="nv">user</span><span class="o">=</span>&lt;code&gt;asterisk -rx <span class="s2">&quot;sip show peer $i&quot;</span> | grep -a <span class="s2">&quot;Useragent&quot;</span>&lt;/code&gt;
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$i</span> <span class="o">=</span> <span class="nv">$user</span> |awk &amp;lsquo;<span class="o">{</span> print <span class="nv">$1</span><span class="err">&quot;</span>,&amp;ldquo;<span class="nv">$5</span> <span class="o">}</span>&amp;rsquo;
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[On-the-Fly Read-Write compressed filesystem]]></title>
+    <link href="http://devrandom.za.net/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem/"/>
+    <updated>2012-02-18T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/zip.png"></p>
+
+<p>I recently had a problem where <a href="http://sourceforge.net/projects/sarg/">&ldquo;SARG&rdquo;</a> completely chew up all root filesystem space as reports was generated daily and stored under /var/www/html/sarg. Quick solution&hellip; I thought this can also come in handy for future reference&hellip; &ldquo;On-the-Fly read-write compressed filesystem&rdquo;</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<p>I did the following on CentOS 5.5:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rpm -Uhv &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://apt.sw.be/redhat/el5/en/x86_64/rpmforge/RPMS//rpmforge-release-0.3.6-1.el5.rf.x86_64.rpm&quot;</span>&gt;http://apt.sw.be/redhat/el5/en/x86_64/rpmforge/RPMS//rpmforge-release-0.3.6-1.el5.rf.x86_64.rpm&lt;/a&gt;&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;yum -y install squashfs-tools fuse-unionfs&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;mv /var/www/html/sarg /root/sarg-old
+</span><span class='line'>mkdir /var/www/html/sarg&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;mksquashfs /root/sarg-old /.sarg-compressed.sqfs -check_data&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;mkdir -p /var/squashed/<span class="o">{</span>ro,rw<span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Add the following to /etc/fstab:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/.sarg-compressed.sqfs  /var/squashed/ro  squashfs  loop,ro  0 0
+</span><span class='line'>unionfs#/var/squashed/rw=rw:/var/squashed/ro=ro /var/www/html/sarg fuse default_permissions,allow_other,use_ino,nonempty,suid,cow 0 0</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mount -all&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;touch /var/www/html/sarg/test
+</span><span class='line'>rm -rf /var/www/html/sarg-old
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Check that your new fuse filesystem is mounted:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>df -h
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>By doing this, all files written to /var/www/html/sarg is actually being written &ldquo;inside&rdquo; /.sarg-compressed.sqfs (The compressed filesystem) Files like text, or html in this instance, are compressed at a massive ratio.</p>
+]]></content>
+  </entry>
+  
+</feed>

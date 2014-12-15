@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cisco IOS and DNS views - Random Notes</title>
+  <meta name="author" content="S.J. Louw">
+
+  
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://devrandom.za.net/blog/2014/01/20/cisco-ios-and-dns-views">
+  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+
+  <link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
+
+
+  <script src="/javascripts/libs/jquery/jquery-2.0.3.min.js"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46683566-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+  <body   >
+    <div id="wrap">
+      <header role="banner">
+        <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Random Notes</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li >
+                    <a href="/blog/archives">Archives</a>
+                </li>
+                <li><a href="/about">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="subscribe-rss" href="/atom.xml" target="_blank" title="subscribe via RSS">
+                        <span class="ion-social-rss"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-twitter" href="http://twitter.com/sjlouw" target="_blank" title="Twitter">
+                        <span class="ion-social-twitter"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-facebook" href="http://www.facebook.com/devrandom.za.net" target="_blank" title="Facebook">
+                        <span class="ion-social-facebook"></span>
+                    </a>
+                </li>
+                
+            </ul>
+            
+                <form class="search navbar-form navbar-right" action="http://devrandom.za.net/search/" method="GET">
+                       <input type="hidden">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="q" placeholder="Search">
+                    </div>
+                </form>
+            
+        </div>
+    </div>
+</nav>
+
+
+      </header>
+      <div id="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content col-md-9">
+    <article class="hentry" role="article">
+      
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-01-20T22:01:30+02:00" pubdate data-updated="true">Jan 20<span>th</span>, 2014</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://devrandom.za.net">Comments</a>
+        
+      </p>
+    
+    
+    <h1 class="entry-title">
+        Cisco IOS and DNS views
+        
+    </h1>
+    
+  </header>
+
+
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/cisco14.png"></p>
+
+<p>Using DNS views on a Cisco router to query specific DNS servers for specified domains. In my case I&rsquo;m using it to direct all DNS queries to a service such as <a href="http://www.unotelly.com/unodns/">Unotelly</a> for accessing region locked web content (<a href="https://signup.netflix.com">Netflix</a>, <a href="http://www.hulu.com">Hulu</a> and <a href="http://www.pandora.com">Pandora</a> Internet Radio).</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<h3>Variables used:</h3>
+
+<ul>
+<li><strong>UnoDNS Server 1:</strong> UnoDNS_server1</li>
+<li><strong>UnoDNS Server 2:</strong> UnoDNS_server2</li>
+<li><strong>Vlan1</strong> is the local subnet</li>
+<li><strong>8.8.8.8</strong> and <strong>4.4.4.4</strong> is the default DNS servers</li>
+</ul>
+
+
+<h3>Create the alternate DNS view:</h3>
+
+<p>These DNS servers will be used for the specified domains.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip dns view GEOLOCKBYPASS
+</span><span class='line'>dns forwarder UnoDNS_server1
+</span><span class='line'>dns forwarder UnoDNS_server2
+</span><span class='line'>dns forwarding source-interface Vlan1</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Create the default DNS view:</h3>
+
+<p>These DNS servers will be the default for all other queries.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip dns view default
+</span><span class='line'> domain timeout 2
+</span><span class='line'> dns forwarder 8.8.8.8
+</span><span class='line'> dns forwarder 4.4.4.4</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Create a view-list and add the above created view:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip dns view-list DNS
+</span><span class='line'> view GEOLOCKBYPASS 10
+</span><span class='line'>  restrict name-group 1
+</span><span class='line'> view default 1000</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Specify what domains will use the alternate DNS view:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip dns name-list 1 permit \.HULU\.COM
+</span><span class='line'>ip dns name-list 1 permit \.PANDORA\.COM
+</span><span class='line'>ip dns name-list 1 permit \.NETFLIX\.COM
+</span><span class='line'>ip dns server view-group DNS
+</span><span class='line'>ip dns server</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+      <footer>
+        <p class="meta text-muted">
+          
+  
+
+<span class="glyphicon glyphicon-user"></span> <span class="byline author vcard">Posted by <span class="fn">S.J. Louw</span></span>
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-01-20T22:01:30+02:00" pubdate data-updated="true">Jan 20<span>th</span>, 2014</time>
+          
+
+<span class="glyphicon glyphicon-tags"></span>&nbsp;
+<span class="categories">
+  
+    <a class='category label label-primary' href='/blog/categories/cisco/'>cisco</a> <a class='category label label-primary' href='/blog/categories/dns/'>dns</a>
+  
+</span>
+
+
+        </p>
+        
+          <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2014/01/20/cisco-ios-and-dns-views/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2014/01/20/cisco-ios-and-dns-views/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+        
+        
+          <ul class="meta text-muted pager">
+            
+            <li class="previous"><a href="/blog/2014/01/20/adsl-setup-and-configuration-on-a-cisco-877-router/" title="Previous Post: ADSL setup and configuration on a Cisco 877 router">&laquo; ADSL setup and configuration on a Cisco 877 router</a></li>
+            
+            
+            <li class="next"><a href="/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/" title="Next Post: Unlocking a TG589vn v3 VDSL ISP locked router">Unlocking a TG589vn v3 VDSL ISP locked router &raquo;</a></li>
+            
+          </ul>
+        
+      </footer>
+    </article>
+    
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <aside class="sidebar col-md-3">
+    
+      <section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="6945851626"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section><section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Recent Posts</h3>
+  </div>
+  
+  <div id="recent_posts" class="list-group">
+    
+    <a class="list-group-item " href="/blog/2014/12/14/ospf-lsas-areas-networks-timers/">OSPF LSA's, Area Types, Network Types and Timers</a>
+    
+    <a class="list-group-item " href="/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/">Unlocking a TG589vn v3 VDSL ISP locked router</a>
+    
+    <a class="list-group-item active" href="/blog/2014/01/20/cisco-ios-and-dns-views/">Cisco IOS and DNS views</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/adsl-setup-and-configuration-on-a-cisco-877-router/">ADSL setup and configuration on a Cisco 877 router</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-updating-multiple-no-ip-dynamic-dns-host-names/">Cisco IOS updating multiple no-ip dynamic DNS host names</a>
+    
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Referrals</h3>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item dropbox" href="https://db.tt/TKB3xRe4" target="_blank"><img src="/images/dropbox.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item onedrive" href="https://onedrive.live.com?invref=669d8ae4c3926268&invsrc=90" target="_blank"><img src="/images/onedrive.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item digitalocean" href="https://www.digitalocean.com/?refcode=60eb3063c38f " target="_blank"><img src="/images/digitalocean.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item streamnation" href="http://email.streamnation.com/wf/click?upn=cEcAemDWJufLyXTzv7xXpFG9eQ2DXQCCHTxLfSDvskIVba-2BBb-2FuJPCTH024I4Ze0EFaqx-2Bangd6h-2FKWKglaGIDXKkK7GDXWkA9Lj-2B-2FdwiC4suddHxIbgxnLg2tUkytGNISEtJegYwOqpi0wufw0iXMsKawNkB-2B4UoXJ6A3PqPoVYPV2QgOCMr2B2xwmDnr2a4v4N6xCIOL6fRTvx3rDqGw-3D-3D_XOv1M8oH3ndrE-2F-2B-2BVmrwVlkJDUIeWVNEKaogmpQGyBzl4xsiRyt6WwBbQQfHem45Zm24hl1cm3Ji3w1xZcPlEnLbUkcXwy1lugkQ83yt4APcZ0k9zgn3DH4ADwVohUoOnUkFBt-2FhcnNDMbN7YN08ZI9KkvcVXuzrjy4MMBnENXnFv9icSjHflzHIbvh3rwNqdQl1-2FD37blIt7MeqRSh1nmybaJMtbLRD6Nuo9Sd9fRH-2Bro7LD0wi1TXr3TOOtiGU" target="_blank"><img src="/images/streamnation.png" border="0"/></a>
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Categories</h3>
+  </div>
+  <div class="list-group">
+    
+    
+    <a class="list-group-item " href="/blog/categories/linux/index.html">
+        <span class="badge">14</span>
+        linux
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/macosx/index.html">
+        <span class="badge">7</span>
+        macosx
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/other/index.html">
+        <span class="badge">12</span>
+        other
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/cisco/index.html">
+        <span class="badge">15</span>
+        cisco
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/vpn/index.html">
+        <span class="badge">4</span>
+        vpn
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/dns/index.html">
+        <span class="badge">4</span>
+        dns
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/asterisk/index.html">
+        <span class="badge">1</span>
+        asterisk
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/networking/index.html">
+        <span class="badge">1</span>
+        networking
+      </a>
+    
+  </div>
+</section>
+
+<section class="panel panel-default clearfix">
+  <div class="panel-heading">
+      <h3 class="panel-title">GitHub Repos</h3>
+  </div>
+  <div class="list-group" id="gh_repos">
+    <p class="loading">Status updating...</p>
+  </div>
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sjlouw',
+            count: 5,
+            skip_forks: false,
+            skip_repos: [ "sjlouw.github.io" ],
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside Bottom -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="8422584828"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section>
+    
+  </aside>
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2014 - S.J. Louw<br>
+  <small>
+      <span class="credit">Another <a href="http://octopress.org">Octopress</a> blog</span>,
+      <span class="credit">customized with <a href="https://github.com/kAworu/octostrap3">octostrap3</a> and <a href="http://jasonbradley.me/bootstrap-ios7/">Bootstrap iOS7</a> theme</span>.
+  </small>
+</p>
+
+</div>
+</footer>
+    <script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr-2.0.js"></script>
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wwwdevrandomzanet';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://devrandom.za.net/blog/2014/01/20/cisco-ios-and-dns-views/';
+        var disqus_url = 'http://devrandom.za.net/blog/2014/01/20/cisco-ios-and-dns-views/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  </body>
+</html>

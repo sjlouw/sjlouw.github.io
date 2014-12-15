@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: vpn | Random Notes]]></title>
+  <link href="http://devrandom.za.net/blog/categories/vpn/atom.xml" rel="self"/>
+  <link href="http://devrandom.za.net/"/>
+  <updated>2014-12-15T15:55:21+02:00</updated>
+  <id>http://devrandom.za.net/</id>
+  <author>
+    <name><![CDATA[S.J. Louw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Fix for Mac OS X not resolving FQDN addresses over VPN]]></title>
+    <link href="http://devrandom.za.net/blog/2012/02/18/fix-for-mac-os-x-not-resolving-fqdn-addresses-over-vpn/"/>
+    <updated>2012-02-18T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2012/02/18/fix-for-mac-os-x-not-resolving-fqdn-addresses-over-vpn</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/dns2.png"></p>
+
+<p>On Mac OS X Lion (This also apply to all later versions of OSX), while connected to VPN, I was not able to resolve hostnames on a remote site. The solution was to create domain resolver files in <code>/etc/resolver</code> named for the different domains the I wanted resolved<!--more-->, for example:</p>
+
+<br>
+
+
+<br>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo mkdir /etc/resolver&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;vi /etc/resolver/yourdomain.com
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Add the following content and save the file:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>nameserver x.x.x.x &lt;&ndash; the DNS server to resolve hosts for yourdomain.com
+</span><span class='line'>domain yourdomain.com
+</span><span class='line'>port 53</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>You can create as much as needed custom domain resolver files, one for each domain.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mac OS X Lion and Cisco IPSEC VPN pitfalls]]></title>
+    <link href="http://devrandom.za.net/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls/"/>
+    <updated>2012-02-12T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/cisco_vpn.png"></p>
+
+<p>The Mac OS X Lion, Native VPN client, with Cisco IPSEC EasyVPN Server was NOT working properly for myself. The problem I faced was that traffic was NOT passed to the remote LAN when connected to VPN. Split-tunnel and normal EasyVPN setups did NOT work.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<ol>
+<li><p><strong>When presented with a split-tunnel ACL the Apple client will create a proxy pair for each line.</strong></p>
+
+<ul>
+<li><p>i.e. VPN IP address of A with a split ACL of:</p>
+
+<ul>
+<li>permit B</li>
+<li>permit C</li>
+<li>permit D</li>
+</ul>
+</li>
+</ul>
+
+
+<p> You would see an ipsec sa from A to B, A to C, and A to D.</p></li>
+<li><p><strong>When presented with a split-tunnel ACL the Cisco client will create a single ipsec sa:</strong></p>
+
+<ul>
+<li>i.e. A to any</li>
+</ul>
+
+
+<p>However the client will only route traffic to B, C, D over the tunnel.</p></li>
+</ol>
+
+
+<p>This is fine and has no problems when using a crypto map style setup for Cisco EasyVPN.</p>
+
+<p>However when you configure the use of dVTI this becomes difficult.  This is because the VTI can only support 1 ipsec sa built to it.  As a results when the Apple client tries to propose the proxy pair for the A to C entry it is rejected.</p>
+
+<p>This leaves you with two options here:</p>
+
+<ol>
+<li>Switch to a tunnel-all configuration</li>
+<li>Switch back to the crypto map configuration rather than the virtual-template configuration.</li>
+</ol>
+
+
+<p><a href="https://supportforums.cisco.com/thread/2095921">Reference</a></p>
+
+<h3>I chose to take the &ldquo;old&rdquo; crypto map style setup. Here&rsquo;s how I made it work on a Cisco 877 DSL router:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip nat inside source route-map NAT interface Dialer0 overload&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>route-map NAT permit 10
+</span><span class='line'>match ip address 111
+</span><span class='line'>exit&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>access-list 101  remark &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
+</span><span class='line'>access-list 101  remark &lt;strong>&lt;strong>&lt;em>VPN Access-list&lt;/em>&lt;/strong>&lt;/strong>
+</span><span class='line'>access-list 101  permit ip 172.16.20.0 0.0.0.255 172.16.40.0 0.0.0.15
+</span><span class='line'>!
+</span><span class='line'>access-list 111  remark &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
+</span><span class='line'>access-list 111  remark &lt;strong>&lt;strong>&lt;em>DENY Local LAN to VPN Traffic&lt;/em>&lt;/strong>&lt;/strong>
+</span><span class='line'>access-list 111  deny ip 172.16.20.0 0.0.0.255 172.16.40.0 0.0.0.15
+</span><span class='line'>access-list 111  remark &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
+</span><span class='line'>access-list 111  remark &lt;strong>&lt;strong>&lt;em>PERMIT Networks Internet Access&lt;/em>&lt;/strong>&lt;/strong>
+</span><span class='line'>access-list 111  permit ip 172.16.20.0 0.0.0.255 any
+</span><span class='line'>access-list 111  permit ip any any&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>aaa new-model
+</span><span class='line'>aaa authentication login userauth local
+</span><span class='line'>aaa authorization network groupauth local&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>username myusername password 0 mypassword&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>crypto isakmp policy 3
+</span><span class='line'>encryption 3des
+</span><span class='line'>authentication pre-share
+</span><span class='line'>group 2
+</span><span class='line'>lifetime 86400
+</span><span class='line'>exit&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>crypto isakmp client configuration group my_vpn
+</span><span class='line'>key mysecretgroupkey
+</span><span class='line'>dns 172.16.20.1 8.8.8.8
+</span><span class='line'>domain my.domain
+</span><span class='line'>pool my_vpn_pool
+</span><span class='line'>acl 101
+</span><span class='line'>max-logins 10
+</span><span class='line'>max users 10
+</span><span class='line'>save-password
+</span><span class='line'>split-dns my.domain
+</span><span class='line'>include-local-lan
+</span><span class='line'>exit&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>crypto ipsec transform-set my_set esp-3des esp-md5-hmac
+</span><span class='line'>exit&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>crypto dynamic-map dynmap 10
+</span><span class='line'>set transform-set my_set
+</span><span class='line'>set security-association idle-time 900
+</span><span class='line'>reverse-route
+</span><span class='line'>exit&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>crypto map clientmap client authentication list userauth
+</span><span class='line'>crypto map clientmap isakmp authorization list groupauth
+</span><span class='line'>crypto map clientmap client configuration address respond
+</span><span class='line'>crypto map clientmap 10 ipsec-isakmp dynamic dynmap&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>ip local pool my_vpn_pool 172.16.40.2 172.16.40.8&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Dialer0
+</span><span class='line'>ip nat outside
+</span><span class='line'>crypto map clientmap&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface vlan1
+</span><span class='line'>no autostate
+</span><span class='line'>ip nat inside</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>I have tested this setup with Mac OS X Lion VPN client and with iPhone IOS 5.0.1. All is working well now. Yeeaay!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cisco site-to-site IPSEC VPN]]></title>
+    <link href="http://devrandom.za.net/blog/2010/04/30/cisco-site-to-site-ipsec-vpn/"/>
+    <updated>2010-04-30T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2010/04/30/cisco-site-to-site-ipsec-vpn</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/cisco2.png"></p>
+
+<p>Setting up a &ldquo;site-to-site&rdquo; IPSEC VPN between two Cisco routers.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>The following will be assumed:</h3>
+
+<ul>
+<li>Router01 inside IP address = <strong>192.168.0.1 255.255.255.0</strong></li>
+<li>Router01 outside IP address = <strong>192.168.255.1 255.255.255.252</strong></li>
+<li>Router02 inside IP address = <strong>192.168.1.1 255.255.255.0</strong></li>
+<li>Router02 outside IP address = <strong>192.168.255.2 255.255.255.252</strong></li>
+<li><strong>mysecretkey</strong> = can be anything, must be the same on both routers.</li>
+<li><strong>mytransform</strong> = can be anything, must be the same on both routers.</li>
+<li><strong>mycryptomap</strong> = can be anything, must be the same on both routers.</li>
+<li><strong>12345</strong> = any number between 1-65535, sequence to insert into crypto map entry</li>
+</ul>
+
+
+<h3>Router01 setup:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Router01(config)#crypto isakmp policy 1
+</span><span class='line'>Router01(config-isakmp)#encryption 3des
+</span><span class='line'>Router01(config-isakmp)#authentication pre-share
+</span><span class='line'>Router01(config-isakmp)#group 2
+</span><span class='line'>Router01(config-isakmp)#exit
+</span><span class='line'>Router01(config)#crypto isakmp key mysecretkey address 192.168.255.2 no-xauth
+</span><span class='line'>Router01(config)#crypto ipsec transform-set mytransform esp-3des esp-sha-hmac
+</span><span class='line'>Router01(cfg-crypto-trans)#exit
+</span><span class='line'>Router01(config)#crypto map mycryptomap 12345 ipsec-isakmp
+</span><span class='line'>Router01(config-crypto-map)#set peer 192.168.255.2
+</span><span class='line'>Router01(config-crypto-map)#set transform-set mytransform
+</span><span class='line'>Router01(config-crypto-map)#match address ACL2Router02
+</span><span class='line'>Router01(config-crypto-map)#exit
+</span><span class='line'>Router01(config)#int s1/0
+</span><span class='line'>Router01(config-if)#crypto map mycryptomap
+</span><span class='line'>Router01(config-if)#no shut
+</span><span class='line'>Router01(config-if)#exit
+</span><span class='line'>Router01(config)#ip access-list extended ACL2Router02
+</span><span class='line'>Router01(config-ext-nacl)#20 permit ip 192.168.0.0 0.0.0.255 192.168.1.0 0.0.0.255
+</span><span class='line'>Router01(config-ext-nacl)#exit
+</span><span class='line'>Router01(config)#exit</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Router02 setup:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Router02(config)#crypto isakmp policy 1
+</span><span class='line'>Router02(config-isakmp)#encryption 3des
+</span><span class='line'>Router02(config-isakmp)#authentication pre-share
+</span><span class='line'>Router02(config-isakmp)#group 2
+</span><span class='line'>Router02(config-isakmp)#exit
+</span><span class='line'>Router02(config)#crypto isakmp key mysecretkey address 192.168.255.1 no-xauth
+</span><span class='line'>Router02(config)#crypto ipsec transform-set mytransform esp-3des esp-sha-hmac
+</span><span class='line'>Router02(cfg-crypto-trans)#exit
+</span><span class='line'>Router02(config)#crypto map mycryptomap 12345 ipsec-isakmp
+</span><span class='line'>Router02(config-crypto-map)#set peer 192.168.255.1
+</span><span class='line'>Router02(config-crypto-map)#set transform-set mytransform
+</span><span class='line'>Router02(config-crypto-map)#match address ACL2Router01
+</span><span class='line'>Router02(config-crypto-map)#exit
+</span><span class='line'>Router02(config)#int s1/0
+</span><span class='line'>Router02(config-if)#crypto map mycryptomap
+</span><span class='line'>Router02(config-if)#no shut
+</span><span class='line'>Router02(config-if)#exit
+</span><span class='line'>Router02(config)#ip access-list extended ACL2Router01
+</span><span class='line'>Router02(config-ext-nacl)#20 permit ip 192.168.1.0 0.0.0.255 192.168.0.0 0.0.0.255
+</span><span class='line'>Router02(config-ext-nacl)#exit
+</span><span class='line'>Router02(config)#exit</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Verfify setup on both routers:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Router#show crypto isakmp policy
+</span><span class='line'>Router#show crypto map
+</span><span class='line'>Router#show crypto ipsec transform-set</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cisco IOS IPSEC VPN server and client config]]></title>
+    <link href="http://devrandom.za.net/blog/2010/04/21/cisco-ios-ipsec-vpn-server-and-client-config/"/>
+    <updated>2010-04-21T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2010/04/21/cisco-ios-ipsec-vpn-server-and-client-config</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/cisco9.png"></p>
+
+<p>Configuring a Cisco IOS VPN server and allowing VPN clients to connect encrypted IPSEC. This setup still allows Internet access using a Split Tunneling configuration.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<h2>This configuration assumes the following:</h2>
+
+<ul>
+<li>VPN Client Username: myusername</li>
+<li>VPN Client Password: mypassword</li>
+<li>VPN Group authentication name: mygroupname</li>
+<li>VPN Group authentication password: mygroupkey</li>
+<li>Your internal DNS: 192.168.1.100</li>
+<li>Your domain: mydomain</li>
+<li>IPs to be assigned to VPN clients: 192.168.1.5 to 192.168.1.10/24</li>
+<li>FastEthernet0/0 is the router&rsquo;s outside interface</li>
+</ul>
+
+
+<h2>Router configuration:</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Router(config)#aaa new-model
+</span><span class='line'>Router(config)#aaa authentication login userauth local-case
+</span><span class='line'>Router(config)#aaa authorization network groupauth local
+</span><span class='line'>Router(config)#username myusername password 0 mypassword
+</span><span class='line'>Router(config)#crypto isakmp policy 3
+</span><span class='line'>Router(config-isakmp)#encryption 3des
+</span><span class='line'>Router(config-isakmp)#authentication pre-share
+</span><span class='line'>Router(config-isakmp)#group 2
+</span><span class='line'>Router(config-isakmp)#exit
+</span><span class='line'>Router(config)#crypto isakmp client configuration group mygroupname
+</span><span class='line'>Router(config-isakmp-group)#key mygroupkey
+</span><span class='line'>Router(config-isakmp-group)#dns 192.168.1.100
+</span><span class='line'>Router(config-isakmp-group)#domain mydomain
+</span><span class='line'>Router(config-isakmp-group)#pool myvpnpool
+</span><span class='line'>Router(config-isakmp-group)#acl 101
+</span><span class='line'>Router(config-isakmp-group)#exit
+</span><span class='line'>Router(config)#crypto ipsec transform-set myset esp-3des esp-md5-hmac
+</span><span class='line'>Router(cfg-crypto-trans)#exit
+</span><span class='line'>Router(config)#crypto dynamic-map dynmap 10
+</span><span class='line'>Router(config-crypto-map)#set transform-set myset
+</span><span class='line'>Router(config-crypto-map)#reverse-route
+</span><span class='line'>Router(config-crypto-map)#exit
+</span><span class='line'>Router(config)#crypto map clientmap client authentication list userauth
+</span><span class='line'>Router(config)#crypto map clientmap isakmp authorization list groupauth
+</span><span class='line'>Router(config)#crypto map clientmap client configuration address respond
+</span><span class='line'>Router(config)#crypto map clientmap 10 ipsec-isakmp dynamic dynmap
+</span><span class='line'>Router(config)#int fa0/0
+</span><span class='line'>Router(config-if)#ip address &lt;outside_IP_address> &lt;subnet_mask>
+</span><span class='line'>Router(config-if)#no shut
+</span><span class='line'>Router(config-if)#ip nat outside
+</span><span class='line'>Router(config-if)#crypto map clientmap
+</span><span class='line'>Router(config-if)#exit
+</span><span class='line'>Router(config)#ip local pool myvpnpool 192.168.1.5 192.168.1.10
+</span><span class='line'>Router(config)#ip nat inside source list 111 interface FastEthernet0/0 overload
+</span><span class='line'>Router(config)#access-list 111 deny ip &lt;local_network_IP> &lt;inverted mask> 192.168.1.0 0.0.0.255
+</span><span class='line'>Router(config)#access-list 111 permit ip any any
+</span><span class='line'>Router(config)#access-list 101 permit ip &lt;local_network_IP> &lt;inverted mask> 192.168.1.0 0.0.0.255</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Remember to save your config!</p>
+
+<p>Install the Cisco VPN client. Restart your computer. Open the VPN client and click &ldquo;New&rdquo;. Fill out the details you just configured on your router:</p>
+
+<p><strong>Still getting Error 2738 with a Windows 7 install?</strong></p>
+
+<p>Bring up an administrative terminal:</p>
+
+<p>**Start &mdash;> Run &mdash;> Type &ldquo;cmd&rdquo; hold ctrl+shift and press ENTER</p>
+
+<p>Re-register VBScript engine:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>reg delete &ldquo;HKCU\SOFTWARE\Classes\CLSID{B54F3741-5B07-11CF-A4B0-00AA004A55E8}&rdquo; /f
+</span><span class='line'>%systemroot%\system32\regsvr32 vbscript.dll</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><img class="center" src="/images/blog_posts/vpnclient.png"></p>
+
+<p>Click &ldquo;Save&rdquo;. Double click your new connection entry and supply your configured Username and Password.</p>
+
+<h2>Verifying that the VPN server is working:</h2>
+
+<p><strong>Show all current IKE Security Associations (SAs) at a peer.</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Router#show crypto isakmp sa</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>Show the settings used by current SAs:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Router#show crypto ipsec sa</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+</feed>

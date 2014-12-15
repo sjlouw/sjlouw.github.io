@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Splitting traffic between two ISPs DD-WRT Linksys WRT54GL - Random Notes</title>
+  <meta name="author" content="S.J. Louw">
+
+  
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://devrandom.za.net/blog/2010/03/21/splitting-traffic-between-two-isps-dd-wrt-linksys-wrt54gl">
+  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+
+  <link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
+
+
+  <script src="/javascripts/libs/jquery/jquery-2.0.3.min.js"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46683566-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+  <body   >
+    <div id="wrap">
+      <header role="banner">
+        <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Random Notes</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li >
+                    <a href="/blog/archives">Archives</a>
+                </li>
+                <li><a href="/about">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="subscribe-rss" href="/atom.xml" target="_blank" title="subscribe via RSS">
+                        <span class="ion-social-rss"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-twitter" href="http://twitter.com/sjlouw" target="_blank" title="Twitter">
+                        <span class="ion-social-twitter"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-facebook" href="http://www.facebook.com/devrandom.za.net" target="_blank" title="Facebook">
+                        <span class="ion-social-facebook"></span>
+                    </a>
+                </li>
+                
+            </ul>
+            
+                <form class="search navbar-form navbar-right" action="http://devrandom.za.net/search/" method="GET">
+                       <input type="hidden">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="q" placeholder="Search">
+                    </div>
+                </form>
+            
+        </div>
+    </div>
+</nav>
+
+
+      </header>
+      <div id="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content col-md-9">
+    <article class="hentry" role="article">
+      
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-03-21T00:00:00+02:00" pubdate data-updated="true">Mar 21<span>st</span>, 2010</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://devrandom.za.net">Comments</a>
+        
+      </p>
+    
+    
+    <h1 class="entry-title">
+        Splitting traffic between two ISPs DD-WRT Linksys WRT54GL
+        
+    </h1>
+    
+  </header>
+
+
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/ddwrt2.png"></p>
+
+<p>Setting up a Linksys WRT-54GL 1.1 wireless router to split traffic between two ISPs and do traffic accounting. This was done to least cost route data, in South Africa, due to much cheaper local bandwidth and over priced international bandwidth.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<p><strong>NOTE:</strong> You will need to have the <a href="http://www.hendlsofen.de/WRT54GL/eng/WRT54GL_SDMod.html">SD mod</a> installed on your router:</p>
+
+<p><strong>Firmware used, DD-WRT, eko branch:</strong>
+<a href="http://www.dd-wrt.com/dd-wrtv2/downloads/others/eko/V24_TNG/svn13491-snow/NEWD/dd-wrt.v24-13491_NEWD_std.bin">http://www.dd-wrt.com/dd-wrtv2/downloads/others/eko/V24_TNG/svn13491-snow/NEWD/dd-wrt.v24-13491_NEWD_std.bin</a></p>
+
+<p><strong>MMC/SD Card Support must be enabled on the router&rsquo;s web interface:</strong></p>
+
+<ul>
+<li>GPIO pins select Manual</li>
+<li>GPIO pins DI:2  D0:4  CLK:3  CS:7</li>
+</ul>
+
+
+<h2>Installing BWLOG for traffic accounting:</h2>
+
+<p>SSH to your router</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> /mmc/jffs/scripts
+</span><span class='line'>wget http://www.krikkit.net/download/wrtbwlog_cust_exp.tgz
+</span><span class='line'>
+</span><span class='line'>tar -zxvf wrtbwlog_cust_exp.tgz
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The web page will be accessible by going to <code>http://your_router_ip:8000</code></p>
+
+<h2>Installing scripts for traffic splitting:</h2>
+
+<p>On the router&rsquo;s web interface:</p>
+
+<ul>
+<li>Administration &mdash;> Commands &mdash;> Startup</li>
+</ul>
+
+
+<p><strong>Startup script:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="nv">PATH</span><span class="o">=</span>/usr/sbin:/sbin:/usr/bin:<span class="nv">$PATH</span>
+</span><span class='line'>
+</span><span class='line'>umount /jffs
+</span><span class='line'>mount --bind /mmc/jffs /jffs
+</span><span class='line'>
+</span><span class='line'>killall redial
+</span><span class='line'>killall pppd
+</span><span class='line'>
+</span><span class='line'><span class="c">#INTERNATIONAL</span>
+</span><span class='line'><span class="nv">INTLUSER</span><span class="o">=</span>isp1_username
+</span><span class='line'><span class="nv">INTLPASS</span><span class="o">=</span>isp1_password
+</span><span class='line'><span class="c">#LOCAL</span>
+</span><span class='line'><span class="nv">LOCALUSER</span><span class="o">=</span>isp2_username
+</span><span class='line'><span class="nv">LOCALPASS</span><span class="o">=</span>isp2_password
+</span><span class='line'><span class="c">#OTHER SETTINGS</span>
+</span><span class='line'><span class="nv">INTRFACE</span><span class="o">=</span>nic-vlan1
+</span><span class='line'><span class="nv">SAIXSMTP</span><span class="o">=</span>196.43.2.142
+</span><span class='line'><span class="nv">ROUTESERVER</span><span class="o">=</span>196.38.40.110
+</span><span class='line'><span class="nv">INTL</span><span class="o">=</span>ppp0
+</span><span class='line'><span class="nv">LOCL</span><span class="o">=</span>ppp1
+</span><span class='line'><span class="nv">TIMEOUT</span><span class="o">=</span>120
+</span><span class='line'>
+</span><span class='line'>setintlroutes <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="nb">echo</span> ...setting International routes
+</span><span class='line'>route add -host <span class="nv">$ROUTESERVER</span> <span class="nv">$INTL</span>
+</span><span class='line'>route add -host <span class="nv">$SAIXSMTP</span> <span class="nv">$INTL</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>setdefaultroute <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="nb">echo</span> ...applying default route
+</span><span class='line'>route del default
+</span><span class='line'>route del default
+</span><span class='line'>route del default
+</span><span class='line'>route add default <span class="nv">$INTL</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>getloclroutes <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="nb">echo </span>Downloading Local routes...
+</span><span class='line'>sleep 5
+</span><span class='line'>wget -T 15 <span class="s2">&quot;http://developers.locality.co.za/routes.txt&quot;</span> -O /tmp/routes.dat
+</span><span class='line'>sleep 7
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> ! -f /tmp/routes.dat <span class="o">]</span>
+</span><span class='line'>  <span class="k">then</span>
+</span><span class='line'><span class="k">    </span><span class="nb">echo</span> ...restoring backup routes.txt file
+</span><span class='line'>    cp /mmc/jffs/scripts/routes.dat.bak /tmp/routes.dat
+</span><span class='line'>    sleep 7
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>backuploclroutes <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="nb">echo</span> ...backing up existing routes.txt file
+</span><span class='line'>cp /tmp/routes.dat /mmc/jffs/scripts/routes.dat.bak
+</span><span class='line'>rm -rf /tmp/routes.dat
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>setloclroutes <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="nb">echo</span> ...setting Local routes
+</span><span class='line'><span class="k">for </span>IP in <span class="sb">`</span>cat /tmp/routes.dat<span class="sb">`</span>
+</span><span class='line'>  <span class="k">do</span>
+</span><span class='line'><span class="k">    </span>gpio <span class="nb">enable </span>7
+</span><span class='line'>    route add -net <span class="nv">$IP</span> <span class="nv">$LOCL</span>
+</span><span class='line'>    gpio disable 7
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>connect <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>gpio disable 3; sleep 1
+</span><span class='line'>pppd plugin /usr/lib/rp-pppoe.so <span class="nv">$INTRFACE</span> noipdefault noauth nodefaultroute noaccomp noccp nobsdcomp nodeflate nopcomp novj novjccomp nomppe nomppc usepeerdns user <span class="nv">$1</span> password <span class="nv">$2</span> default-asyncmap mtu 1492 mru 1492 persist lcp-echo-interval 60 lcp-echo-failure 10 maxfail 0 unit <span class="nv">$3</span>
+</span><span class='line'>gpio <span class="nb">enable </span>3; sleep 1
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>connlinkintl <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="k">while </span><span class="nb">true</span>
+</span><span class='line'><span class="nb">  </span><span class="k">do</span>
+</span><span class='line'><span class="k">    if</span> <span class="o">[</span> <span class="sb">`</span>ip link show dev ppp0 |grep ppp0 |awk <span class="s1">&#39;{ print $2 }&#39;</span><span class="sb">`</span> <span class="o">==</span> <span class="s2">&quot;ppp0:&quot;</span> <span class="o">]</span>
+</span><span class='line'>      <span class="k">then</span>
+</span><span class='line'><span class="k">        </span><span class="nb">echo</span> ...International ppp link is up
+</span><span class='line'>        <span class="nb">break</span>
+</span><span class='line'><span class="nb">      </span><span class="k">else</span>
+</span><span class='line'><span class="k">        </span><span class="nb">echo</span> ...waiting <span class="k">for </span>International to connect
+</span><span class='line'>        gpio disable 3; sleep 1
+</span><span class='line'>        gpio <span class="nb">enable </span>3; sleep 1
+</span><span class='line'>    <span class="k">fi</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>connlinklocl <span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="k">while </span><span class="nb">true</span>
+</span><span class='line'><span class="nb">  </span><span class="k">do</span>
+</span><span class='line'><span class="k">     if</span> <span class="o">[</span> <span class="sb">`</span>ip link show dev ppp1 |grep ppp1 |awk <span class="s1">&#39;{ print $2 }&#39;</span><span class="sb">`</span> <span class="o">==</span> <span class="s2">&quot;ppp1:&quot;</span> <span class="o">]</span>
+</span><span class='line'>       <span class="k">then</span>
+</span><span class='line'><span class="k">         </span><span class="nb">echo</span> ...Local ppp link is up
+</span><span class='line'>         <span class="nb">break</span>
+</span><span class='line'><span class="nb">       </span><span class="k">else</span>
+</span><span class='line'><span class="k">         </span><span class="nb">echo</span> ...waiting <span class="k">for </span>Local to connect
+</span><span class='line'>         gpio disable 3; sleep 1
+</span><span class='line'>         gpio <span class="nb">enable </span>3; sleep 1
+</span><span class='line'>     <span class="k">fi</span>
+</span><span class='line'><span class="k">done</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>sleep 20
+</span><span class='line'><span class="nb">cd</span> /mmc/jffs/scripts/bwlog/
+</span><span class='line'>./start.sh &amp;
+</span><span class='line'>
+</span><span class='line'><span class="nb">echo </span>Starting up Traffic Splitting... Please wait...
+</span><span class='line'>sleep 40
+</span><span class='line'>
+</span><span class='line'><span class="k">while </span><span class="nb">true</span>
+</span><span class='line'><span class="nb">  </span><span class="k">do</span>
+</span><span class='line'><span class="k">    if</span> <span class="o">[</span> <span class="sb">`</span>ip link show dev ppp0 |grep ppp0 |awk <span class="s1">&#39;{ print $2 }&#39;</span><span class="sb">`</span> <span class="o">==</span> <span class="s2">&quot;ppp0:&quot;</span> <span class="o">]</span>
+</span><span class='line'>      <span class="k">then</span>
+</span><span class='line'><span class="k">         </span><span class="nb">echo</span> ...International ppp link is up
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'><span class="k">         </span>connect <span class="nv">$INTLUSER</span> <span class="nv">$INTLPASS</span> 0
+</span><span class='line'>         connlinkintl
+</span><span class='line'>         sleep 10
+</span><span class='line'>         setintlroutes
+</span><span class='line'>         setdefaultroute
+</span><span class='line'>    <span class="k">fi </span>
+</span><span class='line'><span class="k">    if</span> <span class="o">[</span> <span class="sb">`</span>ip link show dev ppp1 |grep ppp1 |awk <span class="s1">&#39;{ print $2 }&#39;</span><span class="sb">`</span> <span class="o">==</span> <span class="s2">&quot;ppp1:&quot;</span> <span class="o">]</span>
+</span><span class='line'>      <span class="k">then</span>
+</span><span class='line'><span class="k">         </span><span class="nb">echo</span> ...Local ppp link is up
+</span><span class='line'>      <span class="k">else </span>
+</span><span class='line'><span class="k">         </span>connect <span class="nv">$LOCALUSER</span> <span class="nv">$LOCALPASS</span> 1
+</span><span class='line'>         connlinklocl
+</span><span class='line'>         sleep 10
+</span><span class='line'>         setdefaultroute
+</span><span class='line'>         getloclroutes
+</span><span class='line'>         setloclroutes
+</span><span class='line'>         backuploclroutes
+</span><span class='line'>         setdefaultroute
+</span><span class='line'>    <span class="k">fi</span>
+</span><span class='line'><span class="k">    if</span> <span class="o">[</span> <span class="sb">`</span>ip link show dev ppp2 |grep ppp2 |awk <span class="s1">&#39;{ print $2 }&#39;</span><span class="sb">`</span> <span class="o">==</span> <span class="s2">&quot;ppp2:&quot;</span> <span class="o">]</span>
+</span><span class='line'>      <span class="k">then</span>
+</span><span class='line'><span class="k">         </span><span class="nb">echo</span> ...Resetting all ppp connections
+</span><span class='line'>         killall redial
+</span><span class='line'>         killall pppd
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'><span class="k">         </span><span class="nb">echo </span>all ppp connections seems good
+</span><span class='line'>    <span class="k">fi</span>
+</span><span class='line'><span class="k">   </span><span class="nb">echo </span>returning to main loop...
+</span><span class='line'>   sleep <span class="nv">$TIMEOUT</span>
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Click Save Startup.</p>
+
+<p><strong>Firewall script:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="nv">PATH</span><span class="o">=</span>/usr/sbin:/sbin:/usr/bin:<span class="nv">$PATH</span>
+</span><span class='line'>
+</span><span class='line'>iptables -t nat -I POSTROUTING -o ppp+ -j MASQUERADE
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Click Save Firewall.</p>
+
+<p>Reboot the router!</p>
+</div>
+
+
+      <footer>
+        <p class="meta text-muted">
+          
+  
+
+<span class="glyphicon glyphicon-user"></span> <span class="byline author vcard">Posted by <span class="fn">S.J. Louw</span></span>
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-03-21T00:00:00+02:00" pubdate data-updated="true">Mar 21<span>st</span>, 2010</time>
+          
+
+<span class="glyphicon glyphicon-tags"></span>&nbsp;
+<span class="categories">
+  
+    <a class='category label label-primary' href='/blog/categories/linux/'>linux</a> <a class='category label label-primary' href='/blog/categories/other/'>other</a>
+  
+</span>
+
+
+        </p>
+        
+          <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2010/03/21/splitting-traffic-between-two-isps-dd-wrt-linksys-wrt54gl/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2010/03/21/splitting-traffic-between-two-isps-dd-wrt-linksys-wrt54gl/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+        
+        
+          <ul class="meta text-muted pager">
+            
+            <li class="previous"><a href="/blog/2010/03/20/mac-os-x-time-machine-backups-with-ubuntu/" title="Previous Post: Mac OS X Time Machine backups with Ubuntu">&laquo; Mac OS X Time Machine backups with Ubuntu</a></li>
+            
+            
+            <li class="next"><a href="/blog/2010/03/23/decrypting-cisco-type-7-passwords-with-ios/" title="Next Post: Decrypting Cisco type-7 passwords with IOS">Decrypting Cisco type-7 passwords with IOS &raquo;</a></li>
+            
+          </ul>
+        
+      </footer>
+    </article>
+    
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <aside class="sidebar col-md-3">
+    
+      <section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="6945851626"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section><section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Recent Posts</h3>
+  </div>
+  
+  <div id="recent_posts" class="list-group">
+    
+    <a class="list-group-item " href="/blog/2014/12/14/ospf-lsas-areas-networks-timers/">OSPF LSA's, Area Types, Network Types and Timers</a>
+    
+    <a class="list-group-item " href="/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/">Unlocking a TG589vn v3 VDSL ISP locked router</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-and-dns-views/">Cisco IOS and DNS views</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/adsl-setup-and-configuration-on-a-cisco-877-router/">ADSL setup and configuration on a Cisco 877 router</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-updating-multiple-no-ip-dynamic-dns-host-names/">Cisco IOS updating multiple no-ip dynamic DNS host names</a>
+    
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Referrals</h3>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item dropbox" href="https://db.tt/TKB3xRe4" target="_blank"><img src="/images/dropbox.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item onedrive" href="https://onedrive.live.com?invref=669d8ae4c3926268&invsrc=90" target="_blank"><img src="/images/onedrive.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item digitalocean" href="https://www.digitalocean.com/?refcode=60eb3063c38f " target="_blank"><img src="/images/digitalocean.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item streamnation" href="http://email.streamnation.com/wf/click?upn=cEcAemDWJufLyXTzv7xXpFG9eQ2DXQCCHTxLfSDvskIVba-2BBb-2FuJPCTH024I4Ze0EFaqx-2Bangd6h-2FKWKglaGIDXKkK7GDXWkA9Lj-2B-2FdwiC4suddHxIbgxnLg2tUkytGNISEtJegYwOqpi0wufw0iXMsKawNkB-2B4UoXJ6A3PqPoVYPV2QgOCMr2B2xwmDnr2a4v4N6xCIOL6fRTvx3rDqGw-3D-3D_XOv1M8oH3ndrE-2F-2B-2BVmrwVlkJDUIeWVNEKaogmpQGyBzl4xsiRyt6WwBbQQfHem45Zm24hl1cm3Ji3w1xZcPlEnLbUkcXwy1lugkQ83yt4APcZ0k9zgn3DH4ADwVohUoOnUkFBt-2FhcnNDMbN7YN08ZI9KkvcVXuzrjy4MMBnENXnFv9icSjHflzHIbvh3rwNqdQl1-2FD37blIt7MeqRSh1nmybaJMtbLRD6Nuo9Sd9fRH-2Bro7LD0wi1TXr3TOOtiGU" target="_blank"><img src="/images/streamnation.png" border="0"/></a>
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Categories</h3>
+  </div>
+  <div class="list-group">
+    
+    
+    <a class="list-group-item " href="/blog/categories/linux/index.html">
+        <span class="badge">14</span>
+        linux
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/macosx/index.html">
+        <span class="badge">7</span>
+        macosx
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/other/index.html">
+        <span class="badge">12</span>
+        other
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/cisco/index.html">
+        <span class="badge">15</span>
+        cisco
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/vpn/index.html">
+        <span class="badge">4</span>
+        vpn
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/dns/index.html">
+        <span class="badge">4</span>
+        dns
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/asterisk/index.html">
+        <span class="badge">1</span>
+        asterisk
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/networking/index.html">
+        <span class="badge">1</span>
+        networking
+      </a>
+    
+  </div>
+</section>
+
+<section class="panel panel-default clearfix">
+  <div class="panel-heading">
+      <h3 class="panel-title">GitHub Repos</h3>
+  </div>
+  <div class="list-group" id="gh_repos">
+    <p class="loading">Status updating...</p>
+  </div>
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sjlouw',
+            count: 5,
+            skip_forks: false,
+            skip_repos: [ "sjlouw.github.io" ],
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside Bottom -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="8422584828"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section>
+    
+  </aside>
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2014 - S.J. Louw<br>
+  <small>
+      <span class="credit">Another <a href="http://octopress.org">Octopress</a> blog</span>,
+      <span class="credit">customized with <a href="https://github.com/kAworu/octostrap3">octostrap3</a> and <a href="http://jasonbradley.me/bootstrap-ios7/">Bootstrap iOS7</a> theme</span>.
+  </small>
+</p>
+
+</div>
+</footer>
+    <script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr-2.0.js"></script>
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wwwdevrandomzanet';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://devrandom.za.net/blog/2010/03/21/splitting-traffic-between-two-isps-dd-wrt-linksys-wrt54gl/';
+        var disqus_url = 'http://devrandom.za.net/blog/2010/03/21/splitting-traffic-between-two-isps-dd-wrt-linksys-wrt54gl/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  </body>
+</html>

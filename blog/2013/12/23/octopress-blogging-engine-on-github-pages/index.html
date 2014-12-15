@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Octopress blogging engine on GitHub Pages - Random Notes</title>
+  <meta name="author" content="S.J. Louw">
+
+  
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://devrandom.za.net/blog/2013/12/23/octopress-blogging-engine-on-github-pages">
+  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
+
+  <link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
+
+
+  <script src="/javascripts/libs/jquery/jquery-2.0.3.min.js"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46683566-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+  <body   >
+    <div id="wrap">
+      <header role="banner">
+        <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Random Notes</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li >
+                    <a href="/blog/archives">Archives</a>
+                </li>
+                <li><a href="/about">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="subscribe-rss" href="/atom.xml" target="_blank" title="subscribe via RSS">
+                        <span class="ion-social-rss"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-twitter" href="http://twitter.com/sjlouw" target="_blank" title="Twitter">
+                        <span class="ion-social-twitter"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="subscribe-facebook" href="http://www.facebook.com/devrandom.za.net" target="_blank" title="Facebook">
+                        <span class="ion-social-facebook"></span>
+                    </a>
+                </li>
+                
+            </ul>
+            
+                <form class="search navbar-form navbar-right" action="http://devrandom.za.net/search/" method="GET">
+                       <input type="hidden">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="q" placeholder="Search">
+                    </div>
+                </form>
+            
+        </div>
+    </div>
+</nav>
+
+
+      </header>
+      <div id="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content col-md-9">
+    <article class="hentry" role="article">
+      
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2013-12-23T00:44:45+02:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://devrandom.za.net">Comments</a>
+        
+      </p>
+    
+    
+    <h1 class="entry-title">
+        Octopress blogging engine on GitHub Pages
+        
+    </h1>
+    
+  </header>
+
+
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/octopress.png"></p>
+
+<p>This is a guide to install Octopress blogging framework on Mac OS X Mavericks. This was done and tested on OS X Mavericks version 10.9.1. You will need to have a GitHub account with SSH keys properly <a href="https://help.github.com/articles/generating-ssh-keys">configured</a> to sucessfully host the Octopress blog on GitHub Pages.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<h3>Getting and installing Octopress locally.</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/
+</span><span class='line'>git clone git://github.com/imathis/octopress.git octopress
+</span><span class='line'><span class="nb">cd </span>octopress
+</span><span class='line'>
+</span><span class='line'>gem install bundler
+</span><span class='line'>bundle install
+</span><span class='line'>rake install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Installing the <a href="https://github.com/kAworu/octostrap3">octostrap3</a> theme:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>git clone https://github.com/kAworu/octostrap3 .themes/octostrap3
+</span><span class='line'>rake <span class="s1">&#39;install[octostrap3]&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Edit <code>_config.yml</code> with your parameters.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi ~/octopress/_config.yml
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Getting ready for deployment to GitHub Pages:</h3>
+
+<p>Follow this guide to setup SSH key based authentication to Github: <a href="https://help.github.com/articles/generating-ssh-keys">(Reference)</a></p>
+
+<p>Create a new Github repository and name the repository with the format <code>username.github.io</code>, where username is your GitHub user name.</p>
+
+<p>Github Pages for users uses the master branch like the public directory on a web server, serving the files at your Pages url <code>http://username.github.io</code>. As a result, you&rsquo;ll want to work on the source for your blog in the source branch and commit the generated content to the master branch. Octopress has a configuration task that helps you set all this up.</p>
+
+<h3>Prepare Octopress and deploy to GitHub Pages: <a href="http://octopress.org/docs/deploying/github/">(Reference)</a></h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>rake setup_github_pages
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Enter the following where <code>username</code> is your username.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git@github.com:username/username.github.io.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will generate the blog, copy the generated files into <code>_deploy/</code>, add them to git, commit and push them to the master branch.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate
+</span><span class='line'>rake deploy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Commit the source for your blog.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git add .
+</span><span class='line'>git commit -m <span class="s1">&#39;source commit&#39;</span>
+</span><span class='line'>git push origin <span class="nb">source</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Using Bootstrap labels for categories:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>curl -s -S http://kaworu.github.io/octopress/downloads/code/category-with-bs-label.patch | patch -p1
+</span><span class='line'>curl -s -S http://kaworu.github.io/octopress/downloads/code/category_list.html &gt; <span class="nb">source</span>/_includes/custom/asides/category_list.html
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>vi _config.yml
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In section <code>default_asides:</code>, add: <code>custom/asides/category_list.html</code></p>
+
+<h3>Replacing Google search with lunr.js javascript site-search:</h3>
+
+<p>Download some javascript files and move them to the correct path.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>curl -s -S -L http://raw.github.com/olivernn/lunr.js/master/lunr.min.js &gt; <span class="nb">source</span>/javascripts/lunr.min.js
+</span><span class='line'>curl -s -S -L http://github.com/janl/mustache.js/raw/master/mustache.js &gt; <span class="nb">source</span>/javascripts/mustache.js
+</span><span class='line'>curl -s -S -L http://github.com/medialize/URI.js/raw/gh-pages/src/URI.min.js &gt; <span class="nb">source</span>/javascripts/URI.min.js
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Create a <code>search.json</code> file.</p>
+
+<p><strong>NOTE:</strong> The <code>content</code> line can cause problems and make the search not working. If this is the case, remove the whole <code>content...</code> line from below. This will make only post titles searchable.</p>
+
+<p><code>vi source/search.json</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="err">---</span>
+</span><span class='line'><span class="err">---</span>
+</span><span class='line'><span class="p">[</span>
+</span><span class='line'><span class="p">{</span><span class="err">%</span> <span class="err">for</span> <span class="err">post</span> <span class="err">in</span> <span class="err">site.posts</span> <span class="err">%</span><span class="p">}</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ &quot;</span><span class="p">{</span><span class="err">{</span><span class="nt">&quot; }} post.url }}&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ &quot;</span><span class="p">{</span><span class="err">{</span><span class="nt">&quot; }} post.title }}&quot;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ &quot;</span><span class="p">{</span><span class="err">{</span><span class="nt">&quot; }} post.content | strip_html | strip_newlines | remove:&#39;&quot;</span><span class="err">&#39;</span> <span class="p">}}</span><span class="s2">&quot;,</span>
+</span><span class='line'><span class="s2">        &quot;</span><span class="err">date</span><span class="s2">&quot;: &quot;</span><span class="p">{</span><span class="err">{</span> <span class="nt">&quot;{{&quot;</span> <span class="p">}}</span> <span class="err">post.date</span> <span class="err">|</span> <span class="err">date</span><span class="p">:</span><span class="err">&#39;%d</span> <span class="err">%B</span> <span class="err">%Y&#39;</span> <span class="p">}</span><span class="err">}&quot;</span>
+</span><span class='line'>    <span class="err">}</span><span class="p">{</span><span class="err">%</span>  <span class="err">unless</span> <span class="err">forloop.last</span> <span class="err">%</span><span class="p">},{</span><span class="err">%</span> <span class="err">endunless</span> <span class="err">%</span><span class="p">}</span>
+</span><span class='line'><span class="p">{</span><span class="err">%</span> <span class="err">endfor</span> <span class="err">%</span><span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Create a <code>search.js</code> file.
+<code>vi source/javascripts/search.js</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">lunr</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="p">.</span><span class="nx">field</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">boost</span><span class="o">:</span> <span class="mi">10</span><span class="p">});</span>
+</span><span class='line'>        <span class="k">this</span><span class="p">.</span><span class="nx">field</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">this</span><span class="p">.</span><span class="nx">ref</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s1">&#39;/search.json&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">post</span> <span class="k">in</span> <span class="nx">json</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">index</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">json</span><span class="p">[</span><span class="nx">post</span><span class="p">]);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">uri</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">URI</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">queryString</span> <span class="o">=</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span><span class="nx">queryString</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>            <span class="kd">var</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">index</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">queryString</span><span class="p">.</span><span class="nx">q</span><span class="p">.</span><span class="nx">toString</span><span class="p">()).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="k">return</span> <span class="nx">json</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">p</span><span class="p">.</span><span class="nx">url</span> <span class="o">==</span> <span class="nx">result</span><span class="p">.</span><span class="nx">ref</span><span class="p">;</span> <span class="p">})[</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>            <span class="p">});</span>
+</span><span class='line'>            <span class="k">if</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#search-results&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">to_html</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#search-results-template&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(),</span> <span class="p">{</span><span class="nx">posts</span><span class="o">:</span> <span class="nx">results</span><span class="p">}));</span>
+</span><span class='line'>            <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="mi">1</span><span class="p">){</span>
+</span><span class='line'>                <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#no-results&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">to_html</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#no-results-template&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(),</span> <span class="p">{</span><span class="nx">noposts</span><span class="o">:</span> <span class="nx">results</span><span class="p">}));</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Create new search page.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake new_page<span class="o">[</span><span class="s1">&#39;search&#39;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Edit the newly created search page.
+<code>vi source/search/index.markdown</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>---
+</span><span class='line'>layout: default
+</span><span class='line'>title: Search
+</span><span class='line'>footer: true
+</span><span class='line'>---
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/javascripts/libs/jquery.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/javascripts/lunr.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/javascripts/URI.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/javascripts/mustache.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/javascripts/search.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;page-header&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;h1&gt;</span>Search Results<span class="nt">&lt;/h1&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">id=</span><span class="s">&quot;search-results-template&quot;</span> <span class="na">type=</span><span class="s">&quot;text/mustache&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">{</span><span class="o">%</span> <span class="nx">raw</span> <span class="o">%</span><span class="p">}</span>
+</span><span class='line'><span class="p">{{</span> <span class="err">#</span><span class="nx">posts</span> <span class="p">}}</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;{{ url }}&quot;</span><span class="o">&gt;</span><span class="p">{{</span> <span class="nx">title</span> <span class="p">}}</span><span class="o">&lt;</span><span class="err">/a&gt; - {{ date }}&lt;/li&gt;</span>
+</span><span class='line'><span class="p">{{</span> <span class="err">/posts }}</span>
+</span><span class='line'><span class="p">{</span><span class="o">%</span> <span class="nx">endraw</span> <span class="o">%</span><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">id=</span><span class="s">&quot;no-results-template&quot;</span> <span class="na">type=</span><span class="s">&quot;text/mustache&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">{</span><span class="o">%</span> <span class="nx">raw</span> <span class="o">%</span><span class="p">}</span>
+</span><span class='line'><span class="p">{{</span> <span class="err">#</span><span class="nx">noposts</span> <span class="p">}}</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">No</span> <span class="nx">search</span> <span class="nx">results</span> <span class="nx">found</span><span class="p">.</span><span class="o">&lt;</span><span class="err">/p&gt;</span>
+</span><span class='line'><span class="p">{{</span> <span class="err">/noposts }}</span>
+</span><span class='line'><span class="p">{</span><span class="o">%</span> <span class="nx">endraw</span> <span class="o">%</span><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;</span><span class="err">/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;no-results&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;search-results&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Modify the <code>navigation.html</code> file.
+<code>vi source/_includes/custom/navigation.html</code> and replace the line:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;hidden&quot;</span> <span class="na">name=</span><span class="s">&quot;q&quot;</span> <span class="na">value=</span><span class="s">&quot;site:{{ site.url | shorthand_url }}&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>with</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;hidden&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>vi _config.yml</code> and replace the line:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>simple_search: http://google.com/search</span></code></pre></td></tr></table></div></figure>
+
+
+<p>with</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>simple_search: http://username.github.io/search</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Hiding the <code>username.github.io</code> repo from the GitHub aside: <a href="http://blog.codebykat.com/2013/05/20/three-octopress-tweaks/">(Reference)</a></h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>vi _config.yml</code></p>
+
+<p>Add the following below the <code>github_skip_forks:</code> tag:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>github_skip_repos: [username.github.io]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you want to hide more than your GitHub page repo, you can specify all repos that you want to hide like below.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>github_skip_repos: [username.github.io, another_repo, whatever_repo]</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>vi source/_includes/asides/github.html</code>
+Add the following line below <code>skip_forks: {{site.github_skip_forks}},</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">skip_repos</span><span class="o">:</span> <span class="p">[</span> <span class="p">{</span><span class="o">%</span> <span class="k">for</span> <span class="nx">repo</span> <span class="k">in</span> <span class="nx">site</span><span class="p">.</span><span class="nx">github_skip_repos</span> <span class="o">%</span><span class="p">}</span><span class="s2">&quot;{{repo}}&quot;</span><span class="p">{</span><span class="o">%</span> <span class="nx">unless</span> <span class="nx">forloop</span><span class="p">.</span><span class="nx">last</span> <span class="o">%</span><span class="p">},</span> <span class="p">{</span><span class="o">%</span> <span class="nx">endunless</span> <span class="o">%</span><span class="p">}{</span><span class="o">%</span> <span class="nx">endfor</span> <span class="o">%</span><span class="p">}</span> <span class="p">],</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>vi source/javascripts/github.js</code>
+Add the following line below <code>if (options.skip_forks &amp;&amp; data.data[i].fork) { continue; }</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="k">if</span> <span class="p">(</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">inArray</span><span class="p">(</span> <span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span><span class="p">,</span> <span class="nx">options</span><span class="p">.</span><span class="nx">skip_repos</span> <span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Custom 404 error page:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>vi source/404.markdown</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>---
+</span><span class='line'>layout: page
+</span><span class='line'>title: &quot;404 Error&quot;
+</span><span class='line'>comments: true
+</span><span class='line'>sharing: false
+</span><span class='line'>footer: true
+</span><span class='line'>---
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>Sorry, the page you<span class="ni">&amp;#8217;</span>re looking for cannot be found.<span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>Please use the search function in the top navigation bar if you<span class="ni">&amp;#8217;</span>re looking for something specific.<span class="nt">&lt;/p&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Custom Domain:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">echo</span> <span class="s1">&#39;your-domain.com&#39;</span> &gt;&gt; <span class="nb">source</span>/CNAME
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Visit your domain registrar or DNS host and add a record for your domain name.
+For a sub-domain like <code>www.example.com</code> you would create a <code>CNAME</code> record pointing to <code>username.github.io</code>.
+If you are using a top-level domain like <code>example.com</code>, you must use an <code>A</code> record pointing to <code>204.232.175.78</code>.</p>
+
+<h3>Easy deploy/upload new pages script:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo vi /usr/local/bin/octoupload
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>
+</span><span class='line'>rake generate
+</span><span class='line'>rake deploy
+</span><span class='line'>git add .
+</span><span class='line'>git commit -m <span class="s1">&#39;source commit&#39;</span>
+</span><span class='line'>git push origin <span class="nb">source</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo chmod +x /usr/local/bin/octoupload
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>New posts:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/octopress/
+</span><span class='line'>rake new_post<span class="o">[</span><span class="s2">&quot;My New Post&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Edit the <code>source/_posts/my-new-post.markdown</code> with any text editor.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake generate
+</span><span class='line'>rake preview
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Open <code>http://localhost:4000</code> to see a preview of the blog. When satisfied, the previously created, <code>/usr/local/bin/octoupload</code>, script can be executed to automatically commit all changes and upload to GitHub Pages.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>octoupload
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Free mardown text editors for Mac OS X:</h3>
+
+<ol>
+<li><a href="http://mouapp.com/">Mou</a></li>
+<li><a href="http://clockworkengine.com/lightpaper-mac/">LightPaper</a></li>
+</ol>
+
+</div>
+
+
+      <footer>
+        <p class="meta text-muted">
+          
+  
+
+<span class="glyphicon glyphicon-user"></span> <span class="byline author vcard">Posted by <span class="fn">S.J. Louw</span></span>
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2013-12-23T00:44:45+02:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
+          
+
+<span class="glyphicon glyphicon-tags"></span>&nbsp;
+<span class="categories">
+  
+    <a class='category label label-primary' href='/blog/categories/macosx/'>macosx</a> <a class='category label label-primary' href='/blog/categories/other/'>other</a>
+  
+</span>
+
+
+        </p>
+        
+          <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2013/12/23/octopress-blogging-engine-on-github-pages/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2013/12/23/octopress-blogging-engine-on-github-pages/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+        
+        
+          <ul class="meta text-muted pager">
+            
+            <li class="previous"><a href="/blog/2012/03/02/centos-5-dot-7-build-and-install-bind-9-dot-9-0-1-dns-rpms/" title="Previous Post: CentOS 5.7 - Build and install BIND DNS RPMS">&laquo; CentOS 5.7 - Build and install BIND DNS RPMS</a></li>
+            
+            
+            <li class="next"><a href="/blog/2014/01/13/installing-ruby-development-environment-on-mac-os-x-mavericks/" title="Next Post: Installing Ruby development environment on Mac OS X Mavericks">Installing Ruby development environment on Mac OS X Mavericks &raquo;</a></li>
+            
+          </ul>
+        
+      </footer>
+    </article>
+    
+      <section>
+        <h1>Comments</h1>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <aside class="sidebar col-md-3">
+    
+      <section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="6945851626"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section><section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Recent Posts</h3>
+  </div>
+  
+  <div id="recent_posts" class="list-group">
+    
+    <a class="list-group-item " href="/blog/2014/12/14/ospf-lsas-areas-networks-timers/">OSPF LSA's, Area Types, Network Types and Timers</a>
+    
+    <a class="list-group-item " href="/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/">Unlocking a TG589vn v3 VDSL ISP locked router</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-and-dns-views/">Cisco IOS and DNS views</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/adsl-setup-and-configuration-on-a-cisco-877-router/">ADSL setup and configuration on a Cisco 877 router</a>
+    
+    <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-updating-multiple-no-ip-dynamic-dns-host-names/">Cisco IOS updating multiple no-ip dynamic DNS host names</a>
+    
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Referrals</h3>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item dropbox" href="https://db.tt/TKB3xRe4" target="_blank"><img src="/images/dropbox.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item onedrive" href="https://onedrive.live.com?invref=669d8ae4c3926268&invsrc=90" target="_blank"><img src="/images/onedrive.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item digitalocean" href="https://www.digitalocean.com/?refcode=60eb3063c38f " target="_blank"><img src="/images/digitalocean.png" border="0"/></a>
+  </div>
+  <div class="list-group">
+    <a class="list-group-item streamnation" href="http://email.streamnation.com/wf/click?upn=cEcAemDWJufLyXTzv7xXpFG9eQ2DXQCCHTxLfSDvskIVba-2BBb-2FuJPCTH024I4Ze0EFaqx-2Bangd6h-2FKWKglaGIDXKkK7GDXWkA9Lj-2B-2FdwiC4suddHxIbgxnLg2tUkytGNISEtJegYwOqpi0wufw0iXMsKawNkB-2B4UoXJ6A3PqPoVYPV2QgOCMr2B2xwmDnr2a4v4N6xCIOL6fRTvx3rDqGw-3D-3D_XOv1M8oH3ndrE-2F-2B-2BVmrwVlkJDUIeWVNEKaogmpQGyBzl4xsiRyt6WwBbQQfHem45Zm24hl1cm3Ji3w1xZcPlEnLbUkcXwy1lugkQ83yt4APcZ0k9zgn3DH4ADwVohUoOnUkFBt-2FhcnNDMbN7YN08ZI9KkvcVXuzrjy4MMBnENXnFv9icSjHflzHIbvh3rwNqdQl1-2FD37blIt7MeqRSh1nmybaJMtbLRD6Nuo9Sd9fRH-2Bro7LD0wi1TXr3TOOtiGU" target="_blank"><img src="/images/streamnation.png" border="0"/></a>
+  </div>
+</section>
+<section class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Categories</h3>
+  </div>
+  <div class="list-group">
+    
+    
+    <a class="list-group-item " href="/blog/categories/linux/index.html">
+        <span class="badge">14</span>
+        linux
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/macosx/index.html">
+        <span class="badge">7</span>
+        macosx
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/other/index.html">
+        <span class="badge">12</span>
+        other
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/cisco/index.html">
+        <span class="badge">15</span>
+        cisco
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/vpn/index.html">
+        <span class="badge">4</span>
+        vpn
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/dns/index.html">
+        <span class="badge">4</span>
+        dns
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/asterisk/index.html">
+        <span class="badge">1</span>
+        asterisk
+      </a>
+    
+    
+    <a class="list-group-item " href="/blog/categories/networking/index.html">
+        <span class="badge">1</span>
+        networking
+      </a>
+    
+  </div>
+</section>
+
+<section class="panel panel-default clearfix">
+  <div class="panel-heading">
+      <h3 class="panel-title">GitHub Repos</h3>
+  </div>
+  <div class="list-group" id="gh_repos">
+    <p class="loading">Status updating...</p>
+  </div>
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'sjlouw',
+            count: 5,
+            skip_forks: false,
+            skip_repos: [ "sjlouw.github.io" ],
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section class="panel panel-default">
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Aside Bottom -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:250px;height:250px"
+     data-ad-client="ca-pub-4811106528817141"
+     data-ad-slot="8422584828"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+</section>
+    
+  </aside>
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2014 - S.J. Louw<br>
+  <small>
+      <span class="credit">Another <a href="http://octopress.org">Octopress</a> blog</span>,
+      <span class="credit">customized with <a href="https://github.com/kAworu/octostrap3">octostrap3</a> and <a href="http://jasonbradley.me/bootstrap-ios7/">Bootstrap iOS7</a> theme</span>.
+  </small>
+</p>
+
+</div>
+</footer>
+    <script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr-2.0.js"></script>
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wwwdevrandomzanet';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://devrandom.za.net/blog/2013/12/23/octopress-blogging-engine-on-github-pages/';
+        var disqus_url = 'http://devrandom.za.net/blog/2013/12/23/octopress-blogging-engine-on-github-pages/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+  </body>
+</html>

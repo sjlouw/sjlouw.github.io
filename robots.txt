@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /assets/
+Disallow: /images/
+Disallow: /javascripts/
+Disallow: /search/
+Disallow: /stylesheets/
+
+Sitemap: http://devrandom.za.net/sitemap.xml 

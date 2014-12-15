@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: asterisk | Random Notes]]></title>
+  <link href="http://devrandom.za.net/blog/categories/asterisk/atom.xml" rel="self"/>
+  <link href="http://devrandom.za.net/"/>
+  <updated>2014-12-15T15:55:21+02:00</updated>
+  <id>http://devrandom.za.net/</id>
+  <author>
+    <name><![CDATA[S.J. Louw]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Asterisk - registered Useragent audit]]></title>
+    <link href="http://devrandom.za.net/blog/2012/02/19/asterisk-registered-useragent-audit/"/>
+    <updated>2012-02-19T00:00:00+02:00</updated>
+    <id>http://devrandom.za.net/blog/2012/02/19/asterisk-registered-useragent-audit</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/asterisk.png"></p>
+
+<p>Here is a quick script I put together to get a list of all phone types currently registered to a Asterisk box:</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;for i in &lt;code&gt;asterisk -rx <span class="s2">&quot;sip show peers&quot;</span> | grep -av Unspecified | grep -a <span class="s2">&quot;/&quot;</span> | grep -a <span class="s2">&quot;^[0-9]&quot;</span> | cut -f 1 -d <span class="s1">&#39;/&#39;</span>&lt;/code&gt;
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'><span class="nv">user</span><span class="o">=</span>&lt;code&gt;asterisk -rx <span class="s2">&quot;sip show peer $i&quot;</span> | grep -a <span class="s2">&quot;Useragent&quot;</span>&lt;/code&gt;
+</span><span class='line'><span class="nb">echo</span> <span class="nv">$i</span> <span class="o">=</span> <span class="nv">$user</span> |awk &amp;lsquo;<span class="o">{</span> print <span class="nv">$1</span><span class="err">&quot;</span>,&amp;ldquo;<span class="nv">$5</span> <span class="o">}</span>&amp;rsquo;
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+</feed>

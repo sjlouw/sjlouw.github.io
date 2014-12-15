@@ -1,0 +1,225 @@
+[
+
+    {
+        "url": "/blog/2014/12/14/ospf-lsas-areas-networks-timers/",
+        "title": "OSPF LSA's, Area Types, Network Types and Timers",
+        "date": "14 December 2014"
+    },
+
+    {
+        "url": "/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/",
+        "title": "Unlocking a TG589vn v3 VDSL ISP locked router",
+        "date": "16 February 2014"
+    },
+
+    {
+        "url": "/blog/2014/01/20/cisco-ios-and-dns-views/",
+        "title": "Cisco IOS and DNS views",
+        "date": "20 January 2014"
+    },
+
+    {
+        "url": "/blog/2014/01/20/adsl-setup-and-configuration-on-a-cisco-877-router/",
+        "title": "ADSL setup and configuration on a Cisco 877 router",
+        "date": "20 January 2014"
+    },
+
+    {
+        "url": "/blog/2014/01/20/cisco-ios-updating-multiple-no-ip-dynamic-dns-host-names/",
+        "title": "Cisco IOS updating multiple no-ip dynamic DNS host names",
+        "date": "20 January 2014"
+    },
+
+    {
+        "url": "/blog/2014/01/13/installing-ruby-development-environment-on-mac-os-x-mavericks/",
+        "title": "Installing Ruby development environment on Mac OS X Mavericks",
+        "date": "13 January 2014"
+    },
+
+    {
+        "url": "/blog/2013/12/23/octopress-blogging-engine-on-github-pages/",
+        "title": "Octopress blogging engine on GitHub Pages",
+        "date": "23 December 2013"
+    },
+
+    {
+        "url": "/blog/2012/03/02/centos-5-dot-7-build-and-install-bind-9-dot-9-0-1-dns-rpms/",
+        "title": "CentOS 5.7 - Build and install BIND DNS RPMS",
+        "date": "02 March 2012"
+    },
+
+    {
+        "url": "/blog/2012/02/21/apache-ldap-authentication/",
+        "title": "Apache LDAP authentication",
+        "date": "21 February 2012"
+    },
+
+    {
+        "url": "/blog/2012/02/20/bulk-user-account-migration-redhat-slash-centos/",
+        "title": "Bulk user account migration - RedHat/CentOS",
+        "date": "20 February 2012"
+    },
+
+    {
+        "url": "/blog/2012/02/19/asterisk-registered-useragent-audit/",
+        "title": "Asterisk - registered Useragent audit",
+        "date": "19 February 2012"
+    },
+
+    {
+        "url": "/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem/",
+        "title": "On-the-Fly Read-Write compressed filesystem",
+        "date": "18 February 2012"
+    },
+
+    {
+        "url": "/blog/2012/02/18/fix-for-mac-os-x-not-resolving-fqdn-addresses-over-vpn/",
+        "title": "Fix for Mac OS X not resolving FQDN addresses over VPN",
+        "date": "18 February 2012"
+    },
+
+    {
+        "url": "/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls/",
+        "title": "Mac OS X Lion and Cisco IPSEC VPN pitfalls",
+        "date": "12 February 2012"
+    },
+
+    {
+        "url": "/blog/2010/05/03/applescript-applications-with-xcode-3-dot-2-2/",
+        "title": "AppleScript applications with Xcode 3.2.2",
+        "date": "03 May 2010"
+    },
+
+    {
+        "url": "/blog/2010/05/01/linksys-wrt54gl-dd-wrt-persistant-pppoe/",
+        "title": "Linksys WRT54GL, DD-WRT persistant PPPOE",
+        "date": "01 May 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/30/cisco-site-to-site-ipsec-vpn/",
+        "title": "Cisco site-to-site IPSEC VPN",
+        "date": "30 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/30/cisco-ios-dns-server/",
+        "title": "Cisco IOS DNS server",
+        "date": "30 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/29/snow-leopard-easy-tftp-server-and-serial-console/",
+        "title": "Snow Leopard easy TFTP server and serial console",
+        "date": "29 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/29/cisco-ppp-with-authentication/",
+        "title": "Cisco PPP with authentication",
+        "date": "29 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/24/syslog-with-cisco-devices/",
+        "title": "Syslog with Cisco devices",
+        "date": "24 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-2/",
+        "title": "Building a secure Gentoo Linux kiosk system - part 2",
+        "date": "24 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/24/building-a-secure-gentoo-linux-kiosk-system-part-1/",
+        "title": "Building a secure Gentoo Linux kiosk system - part 1",
+        "date": "24 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/21/cisco-ios-ipsec-vpn-server-and-client-config/",
+        "title": "Cisco IOS IPSEC VPN server and client config",
+        "date": "21 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/13/getting-and-inserting-mysql-data-with-perl-cgi/",
+        "title": "Getting and inserting MySQL data with perl CGI",
+        "date": "13 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/11/setup-the-cisco-ssh-server/",
+        "title": "Setup the Cisco SSH server",
+        "date": "11 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/10/ssh-passwordless-public-private-key-authentication/",
+        "title": "SSH passwordless public private key authentication",
+        "date": "10 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/10/setup-putty-ssh-client-for-passwordless-key-based-authentication/",
+        "title": "Setup Putty SSH client for passwordless key based authentication",
+        "date": "10 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/08/snmp-and-cisco-routers-or-switches/",
+        "title": "SNMP and Cisco routers or switches",
+        "date": "08 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/08/dhcp-server-on-cisco-ios/",
+        "title": "DHCP server on Cisco IOS",
+        "date": "08 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/04/06/router-on-a-stick-cisco-router-and-a-3com-switch/",
+        "title": "Router on a stick Cisco router and a 3COM switch",
+        "date": "06 April 2010"
+    },
+
+    {
+        "url": "/blog/2010/03/27/gns3-compatible-cisco-ios-router-images/",
+        "title": "GNS3 compatible Cisco IOS router images",
+        "date": "27 March 2010"
+    },
+
+    {
+        "url": "/blog/2010/03/24/microsoft-exchange-mail-relay-for-elastix-1-dot-6/",
+        "title": "Microsoft Exchange mail relay for Elastix 1.6",
+        "date": "24 March 2010"
+    },
+
+    {
+        "url": "/blog/2010/03/23/mounting-lvm-volumes-from-live-cd/",
+        "title": "Mounting LVM volumes from live CD",
+        "date": "23 March 2010"
+    },
+
+    {
+        "url": "/blog/2010/03/23/decrypting-cisco-type-7-passwords-with-ios/",
+        "title": "Decrypting Cisco type-7 passwords with IOS",
+        "date": "23 March 2010"
+    },
+
+    {
+        "url": "/blog/2010/03/21/splitting-traffic-between-two-isps-dd-wrt-linksys-wrt54gl/",
+        "title": "Splitting traffic between two ISPs DD-WRT Linksys WRT54GL",
+        "date": "21 March 2010"
+    },
+
+    {
+        "url": "/blog/2010/03/20/mac-os-x-time-machine-backups-with-ubuntu/",
+        "title": "Mac OS X Time Machine backups with Ubuntu",
+        "date": "20 March 2010"
+    }
+
+]
