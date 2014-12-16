@@ -4,7 +4,7 @@
   <title><![CDATA[Category: networking | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/networking/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-15T16:07:14+02:00</updated>
+  <updated>2014-12-16T22:30:00+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[OSPF Path Selection Order of Preference and Summarization]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/"/>
+    <updated>2014-12-16T22:19:58+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/ospf.png"></p>
+
+<p>My shortish summarized version of OSPF Path Selection Order of Preference and Summarization.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Path Selection:</h3>
+
+<p>These rules apply in THIS order even if the OSPF link metric (Cost value) is changed.</p>
+
+<ol>
+<li>Intra Area Routes (O)</li>
+<li>Inter Area Routes (O IA)</li>
+<li>External Type 1 (E1)</li>
+<li>External Type 2 (E2)</li>
+<li>NSSA Type 1 (N1)</li>
+<li>NSSA TYpe 2 (N2)</li>
+</ol>
+
+
+<p><strong>Interface cost is derived from the bandwidth. The formula is:</strong></p>
+
+<p>Cost = Reference / Bandwidth. (Rounded down to the closest integer)</p>
+
+<p>By default, Reference = 100000 (Kb/s)</p>
+
+<p><strong>NOTES:</strong>
+&ndash; Changing cost values, you need to use the <code>ip ospf cost &lt;COST_VALUE&gt;</code> command on the interface and NOT the <code>bandwidth</code> statement. The <code>bandwidth</code> command is also used for other traffic minipulation techniques like QoS and will break those.</p>
+
+<p>On FastE, GigE, TenGigE and 100GigE the default OSPF cost will be &ldquo;1&rdquo;, so you WILL want to change this!</p>
+
+<h3>Summarization:</h3>
+
+<p>All routers inside the area MUST have exactly the same LSDB to be able to summarize!</p>
+
+<p><strong>Summarization can ONLY be done:</strong></p>
+
+<ul>
+<li>between areas (ABR) with <code>area &lt;SOURCE_AREA&gt; range &lt;ADDRESS&gt; &lt;MASK&gt;</code></li>
+<li>during redistribution (ASBR) from another protocol with <code>summary-address &lt;ADDRESS&gt; &lt;MASK&gt;</code></li>
+</ul>
+
+
+<p>It is possible to &lsquo;black hole&rsquo; the traffic or sub-optimal route within the domain with OSPF summarization. OSPF will AUTO create a discard route with the <strong>Null0</strong> interface as the next-hop to prevent the router from using a shorter match (0.0.0.0), if the more specific destination network is not present in the routing table. This behavior can be disabled with <code>no discard-route &lt;INTERNAL|EXTERNAL&gt;</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OSPF LSA's, Area Types, Network Types and Timers]]></title>

@@ -2,6 +2,15 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/</loc>
+    
+    <lastmod>2014-12-16T22:19:58+02:00</lastmod>
+    
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <url>
     <loc>/blog/2014/12/14/ospf-lsas-areas-networks-timers/</loc>
     
     <lastmod>2014-12-14T22:41:32+02:00</lastmod>

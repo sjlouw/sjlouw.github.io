@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cisco | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/cisco/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-15T16:07:14+02:00</updated>
+  <updated>2014-12-16T22:30:00+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[OSPF Path Selection Order of Preference and Summarization]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/"/>
+    <updated>2014-12-16T22:19:58+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/ospf.png"></p>
+
+<p>My shortish summarized version of OSPF Path Selection Order of Preference and Summarization.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Path Selection:</h3>
+
+<p>These rules apply in THIS order even if the OSPF link metric (Cost value) is changed.</p>
+
+<ol>
+<li>Intra Area Routes (O)</li>
+<li>Inter Area Routes (O IA)</li>
+<li>External Type 1 (E1)</li>
+<li>External Type 2 (E2)</li>
+<li>NSSA Type 1 (N1)</li>
+<li>NSSA TYpe 2 (N2)</li>
+</ol>
+
+
+<p><strong>Interface cost is derived from the bandwidth. The formula is:</strong></p>
+
+<p>Cost = Reference / Bandwidth. (Rounded down to the closest integer)</p>
+
+<p>By default, Reference = 100000 (Kb/s)</p>
+
+<p><strong>NOTES:</strong>
+&ndash; Changing cost values, you need to use the <code>ip ospf cost &lt;COST_VALUE&gt;</code> command on the interface and NOT the <code>bandwidth</code> statement. The <code>bandwidth</code> command is also used for other traffic minipulation techniques like QoS and will break those.</p>
+
+<p>On FastE, GigE, TenGigE and 100GigE the default OSPF cost will be &ldquo;1&rdquo;, so you WILL want to change this!</p>
+
+<h3>Summarization:</h3>
+
+<p>All routers inside the area MUST have exactly the same LSDB to be able to summarize!</p>
+
+<p><strong>Summarization can ONLY be done:</strong></p>
+
+<ul>
+<li>between areas (ABR) with <code>area &lt;SOURCE_AREA&gt; range &lt;ADDRESS&gt; &lt;MASK&gt;</code></li>
+<li>during redistribution (ASBR) from another protocol with <code>summary-address &lt;ADDRESS&gt; &lt;MASK&gt;</code></li>
+</ul>
+
+
+<p>It is possible to &lsquo;black hole&rsquo; the traffic or sub-optimal route within the domain with OSPF summarization. OSPF will AUTO create a discard route with the <strong>Null0</strong> interface as the next-hop to prevent the router from using a shorter match (0.0.0.0), if the more specific destination network is not present in the routing table. This behavior can be disabled with <code>no discard-route &lt;INTERNAL|EXTERNAL&gt;</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OSPF LSA's, Area Types, Network Types and Timers]]></title>
@@ -494,206 +556,6 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>interface Dialer0
 </span><span class='line'> ip ddns update hostname someddnshostname1.sytes.net
 </span><span class='line'> ip ddns update no-ip</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Mac OS X Lion and Cisco IPSEC VPN pitfalls]]></title>
-    <link href="http://devrandom.za.net/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls/"/>
-    <updated>2012-02-12T00:00:00+02:00</updated>
-    <id>http://devrandom.za.net/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/cisco_vpn.png"></p>
-
-<p>The Mac OS X Lion, Native VPN client, with Cisco IPSEC EasyVPN Server was NOT working properly for myself. The problem I faced was that traffic was NOT passed to the remote LAN when connected to VPN. Split-tunnel and normal EasyVPN setups did NOT work.</p>
-
-<!--more-->
-
-
-<br>
-
-
-<br>
-
-
-<ol>
-<li><p><strong>When presented with a split-tunnel ACL the Apple client will create a proxy pair for each line.</strong></p>
-
-<ul>
-<li><p>i.e. VPN IP address of A with a split ACL of:</p>
-
-<ul>
-<li>permit B</li>
-<li>permit C</li>
-<li>permit D</li>
-</ul>
-</li>
-</ul>
-
-
-<p> You would see an ipsec sa from A to B, A to C, and A to D.</p></li>
-<li><p><strong>When presented with a split-tunnel ACL the Cisco client will create a single ipsec sa:</strong></p>
-
-<ul>
-<li>i.e. A to any</li>
-</ul>
-
-
-<p>However the client will only route traffic to B, C, D over the tunnel.</p></li>
-</ol>
-
-
-<p>This is fine and has no problems when using a crypto map style setup for Cisco EasyVPN.</p>
-
-<p>However when you configure the use of dVTI this becomes difficult.  This is because the VTI can only support 1 ipsec sa built to it.  As a results when the Apple client tries to propose the proxy pair for the A to C entry it is rejected.</p>
-
-<p>This leaves you with two options here:</p>
-
-<ol>
-<li>Switch to a tunnel-all configuration</li>
-<li>Switch back to the crypto map configuration rather than the virtual-template configuration.</li>
-</ol>
-
-
-<p><a href="https://supportforums.cisco.com/thread/2095921">Reference</a></p>
-
-<h3>I chose to take the &ldquo;old&rdquo; crypto map style setup. Here&rsquo;s how I made it work on a Cisco 877 DSL router:</h3>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ip nat inside source route-map NAT interface Dialer0 overload&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>route-map NAT permit 10
-</span><span class='line'>match ip address 111
-</span><span class='line'>exit&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>access-list 101  remark &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
-</span><span class='line'>access-list 101  remark &lt;strong>&lt;strong>&lt;em>VPN Access-list&lt;/em>&lt;/strong>&lt;/strong>
-</span><span class='line'>access-list 101  permit ip 172.16.20.0 0.0.0.255 172.16.40.0 0.0.0.15
-</span><span class='line'>!
-</span><span class='line'>access-list 111  remark &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
-</span><span class='line'>access-list 111  remark &lt;strong>&lt;strong>&lt;em>DENY Local LAN to VPN Traffic&lt;/em>&lt;/strong>&lt;/strong>
-</span><span class='line'>access-list 111  deny ip 172.16.20.0 0.0.0.255 172.16.40.0 0.0.0.15
-</span><span class='line'>access-list 111  remark &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
-</span><span class='line'>access-list 111  remark &lt;strong>&lt;strong>&lt;em>PERMIT Networks Internet Access&lt;/em>&lt;/strong>&lt;/strong>
-</span><span class='line'>access-list 111  permit ip 172.16.20.0 0.0.0.255 any
-</span><span class='line'>access-list 111  permit ip any any&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>aaa new-model
-</span><span class='line'>aaa authentication login userauth local
-</span><span class='line'>aaa authorization network groupauth local&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>username myusername password 0 mypassword&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>crypto isakmp policy 3
-</span><span class='line'>encryption 3des
-</span><span class='line'>authentication pre-share
-</span><span class='line'>group 2
-</span><span class='line'>lifetime 86400
-</span><span class='line'>exit&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>crypto isakmp client configuration group my_vpn
-</span><span class='line'>key mysecretgroupkey
-</span><span class='line'>dns 172.16.20.1 8.8.8.8
-</span><span class='line'>domain my.domain
-</span><span class='line'>pool my_vpn_pool
-</span><span class='line'>acl 101
-</span><span class='line'>max-logins 10
-</span><span class='line'>max users 10
-</span><span class='line'>save-password
-</span><span class='line'>split-dns my.domain
-</span><span class='line'>include-local-lan
-</span><span class='line'>exit&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>crypto ipsec transform-set my_set esp-3des esp-md5-hmac
-</span><span class='line'>exit&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>crypto dynamic-map dynmap 10
-</span><span class='line'>set transform-set my_set
-</span><span class='line'>set security-association idle-time 900
-</span><span class='line'>reverse-route
-</span><span class='line'>exit&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>crypto map clientmap client authentication list userauth
-</span><span class='line'>crypto map clientmap isakmp authorization list groupauth
-</span><span class='line'>crypto map clientmap client configuration address respond
-</span><span class='line'>crypto map clientmap 10 ipsec-isakmp dynamic dynmap&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>ip local pool my_vpn_pool 172.16.40.2 172.16.40.8&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>interface Dialer0
-</span><span class='line'>ip nat outside
-</span><span class='line'>crypto map clientmap&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>interface vlan1
-</span><span class='line'>no autostate
-</span><span class='line'>ip nat inside</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>I have tested this setup with Mac OS X Lion VPN client and with iPhone IOS 5.0.1. All is working well now. Yeeaay!</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Unlocking a TG589vn v3 VDSL ISP locked router - Random Notes</title>
+  <title>OSPF Path Selection Order of Preference and Summarization - Random Notes</title>
   <meta name="author" content="S.J. Louw">
 
   
@@ -16,7 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://devrandom.za.net/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router">
+  <link rel="canonical" href="http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization">
   <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -117,7 +117,7 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-02-16T11:55:09+02:00" pubdate data-updated="true">Feb 16<span>th</span>, 2014</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-16T22:19:58+02:00" pubdate data-updated="true">Dec 16<span>th</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://devrandom.za.net">Comments</a>
@@ -126,16 +126,16 @@
     
     
     <h1 class="entry-title">
-        Unlocking a TG589vn v3 VDSL ISP locked router
+        OSPF Path Selection Order of Preference and Summarization
         
     </h1>
     
   </header>
 
 
-<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/tg589vnv3_pwned.png"></p>
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/ospf.png"></p>
 
-<p>Unlocking a locked ISP, TG589vn v3 VDSL router by installing generic Technicolor firmware. The following procedure was what worked for me.</p>
+<p>My shortish summarized version of OSPF Path Selection Order of Preference and Summarization.</p>
 
 <!--more-->
 
@@ -149,64 +149,44 @@
 <br>
 
 
-<br>
+<h3>Path Selection:</h3>
+
+<p>These rules apply in THIS order even if the OSPF link metric (Cost value) is changed.</p>
+
+<ol>
+<li>Intra Area Routes (O)</li>
+<li>Inter Area Routes (O IA)</li>
+<li>External Type 1 (E1)</li>
+<li>External Type 2 (E2)</li>
+<li>NSSA Type 1 (N1)</li>
+<li>NSSA TYpe 2 (N2)</li>
+</ol>
 
 
-<p>First give your PC a static IP address 192.168.1.2 / 255.255.255.0</p>
+<p><strong>Interface cost is derived from the bandwidth. The formula is:</strong></p>
 
-<p>Download and install <a href="http://www.jounin.net/tftpd32.html">Tftpd32</a></p>
+<p>Cost = Reference / Bandwidth. (Rounded down to the closest integer)</p>
 
-<p>Download the generic binary firmware file from <a href="http://www.mediafire.com/download/ku9yo2wsl577npf/MST_TG589vnv3_R10.5.2.F_BN.bin">here</a>, and put it under &ldquo;C:\Program Files\Tftpd32\&rdquo; or wherever your TFTP root is.</p>
+<p>By default, Reference = 100000 (Kb/s)</p>
 
-<h3>Configure the TFTP software as below:</h3>
+<p><strong>NOTES:</strong>
+&ndash; Changing cost values, you need to use the <code>ip ospf cost &lt;COST_VALUE&gt;</code> command on the interface and NOT the <code>bandwidth</code> statement. The <code>bandwidth</code> command is also used for other traffic minipulation techniques like QoS and will break those.</p>
 
-<p><img class="center" src="/images/blog_posts/tftpd32_1.png">
-<img class="center" src="/images/blog_posts/tftpd32_2.png"></p>
+<p>On FastE, GigE, TenGigE and 100GigE the default OSPF cost will be &ldquo;1&rdquo;, so you WILL want to change this!</p>
 
-<p>Plug the router in the ethernet port as shown below:
-<img class="center" src="/images/blog_posts/tg589vnv3_ports.png"></p>
+<h3>Summarization:</h3>
 
-<h3>Make sure you can ping the router IP address from your PC.</h3>
+<p>All routers inside the area MUST have exactly the same LSDB to be able to summarize!</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ping 192.168.1.1
-</span><span class='line'>
-</span><span class='line'>PING 192.168.1.1 (192.168.1.1): 56 data bytes
-</span><span class='line'>64 bytes from 192.168.1.1: icmp_seq=0 ttl=255 time=1.075 ms
-</span><span class='line'>64 bytes from 192.168.1.1: icmp_seq=1 ttl=255 time=1.802 ms</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Resetting the router to the default settings and start flashing it:</h3>
-
-<p>Hold the small button in the hole on the back of the router for more than 16 seconds, while it&rsquo;s powered on. (Blue &ldquo;Upgrade&rdquo; light will come on) The router will restart and start the upgrade process with BOOTP / TFTP. You will see a small box pop up showing the binary file transfer to the router. After that is done, the router will unpack the new file and boot it. DO NOT RESTART your router at any point until you can see all lights in the front of the router showing the normal green status.</p>
-
-<p>The firmware flash will be done at this point and you should be able to ping your router at it&rsquo;s new default IP address, 192.168.1.254.</p>
-
-<p>Open your browser and and go to <a href="http://192.168.1.254,">http://192.168.1.254,</a> go to advanced settings and change the Administrator password.</p>
-
-<p>You should be able to SSH to your router now with full root access. Username: Administrator and password will be the one you set above. You will also see in the web interface that the branded ISP logo is gone and the generic Technicolor logo will show.
-<img class="center" src="/images/blog_posts/tg589vnv3_ssh.png">
-<img class="center" src="/images/blog_posts/tg589vnv3_web.png"></p>
-
-<h3>Here is some advanced CLI documentation for this router:</h3>
+<p><strong>Summarization can ONLY be done:</strong></p>
 
 <ul>
-<li><a href="http://www.mediafire.com/view/8hiaraeqx31d8hj/TG589vn-v3_EN_r10.4.B.B_mh.pdf">TG589vn-v3_EN_r10.4.B.B_mh.pdf</a></li>
-<li><a href="http://www.mediafire.com/view/3j6s1mmloottjbi/command_list_v2.txt">command_list_v2.txt</a></li>
-<li><a href="http://www.mediafire.com/view/vtdihfhs73ce5gb/command_mlp_v2.txt">command_mlp_v2.txt</a></li>
+<li>between areas (ABR) with <code>area &lt;SOURCE_AREA&gt; range &lt;ADDRESS&gt; &lt;MASK&gt;</code></li>
+<li>during redistribution (ASBR) from another protocol with <code>summary-address &lt;ADDRESS&gt; &lt;MASK&gt;</code></li>
 </ul>
 
 
-<p>NOTE: Documentation mirrored from original site: <a href="http://download.modem-help.co.uk/mfcs-A/Alcatel/Modems/TG589vn/v3/">modem-help.co.uk</a></p>
-
-<p>You can also install some PINS on the router&rsquo;s mainboard and get serial console access, by following the below guide posted on youtube by someone else&hellip;</p>
-
-<iframe width="640" height="360" src="http://www.youtube.com/embed/FwiosVp4Ra0 " frameborder="0" allowfullscreen></iframe>
-
+<p>It is possible to &lsquo;black hole&rsquo; the traffic or sub-optimal route within the domain with OSPF summarization. OSPF will AUTO create a discard route with the <strong>Null0</strong> interface as the next-hop to prevent the router from using a shorter match (0.0.0.0), if the more specific destination network is not present in the routing table. This behavior can be disabled with <code>no discard-route &lt;INTERNAL|EXTERNAL&gt;</code>.</p>
 </div>
 
 
@@ -230,13 +210,13 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-02-16T11:55:09+02:00" pubdate data-updated="true">Feb 16<span>th</span>, 2014</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-16T22:19:58+02:00" pubdate data-updated="true">Dec 16<span>th</span>, 2014</time>
           
 
 <span class="glyphicon glyphicon-tags"></span>&nbsp;
 <span class="categories">
   
-    <a class='category label label-primary' href='/blog/categories/other/'>other</a>
+    <a class='category label label-primary' href='/blog/categories/cisco/'>cisco</a> <a class='category label label-primary' href='/blog/categories/networking/'>networking</a>
   
 </span>
 
@@ -245,7 +225,7 @@
         
           <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -259,10 +239,8 @@
         
           <ul class="meta text-muted pager">
             
-            <li class="previous"><a href="/blog/2014/01/20/cisco-ios-and-dns-views/" title="Previous Post: Cisco IOS and DNS views">&laquo; Cisco IOS and DNS views</a></li>
+            <li class="previous"><a href="/blog/2014/12/14/ospf-lsas-areas-networks-timers/" title="Previous Post: OSPF LSA's, Area Types, Network Types and Timers">&laquo; OSPF LSA's, Area Types, Network Types and Timers</a></li>
             
-            
-            <li class="next"><a href="/blog/2014/12/14/ospf-lsas-areas-networks-timers/" title="Next Post: OSPF LSA's, Area Types, Network Types and Timers">OSPF LSA's, Area Types, Network Types and Timers &raquo;</a></li>
             
           </ul>
         
@@ -301,11 +279,11 @@
   
   <div id="recent_posts" class="list-group">
     
-    <a class="list-group-item " href="/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/">OSPF Path Selection Order of Preference and Summarization</a>
+    <a class="list-group-item active" href="/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/">OSPF Path Selection Order of Preference and Summarization</a>
     
     <a class="list-group-item " href="/blog/2014/12/14/ospf-lsas-areas-networks-timers/">OSPF LSA's, Area Types, Network Types and Timers</a>
     
-    <a class="list-group-item active" href="/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/">Unlocking a TG589vn v3 VDSL ISP locked router</a>
+    <a class="list-group-item " href="/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/">Unlocking a TG589vn v3 VDSL ISP locked router</a>
     
     <a class="list-group-item " href="/blog/2014/01/20/cisco-ios-and-dns-views/">Cisco IOS and DNS views</a>
     
@@ -464,8 +442,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://devrandom.za.net/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/';
-        var disqus_url = 'http://devrandom.za.net/blog/2014/02/16/unlocking-a-tg589vn-v3-vdsl-isp-locked-router/';
+        var disqus_identifier = 'http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/';
+        var disqus_url = 'http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/';
         var disqus_script = 'embed.js';
       
     (function () {

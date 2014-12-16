@@ -4,7 +4,7 @@
   <title><![CDATA[Random Notes]]></title>
   <link href="http://devrandom.za.net/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-15T16:07:14+02:00</updated>
+  <updated>2014-12-16T22:30:00+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -12,6 +12,13 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[OSPF Path Selection Order of Preference and Summarization]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/"/>
+    <updated>2014-12-16T22:19:58+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization</id>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OSPF LSA's, Area Types, Network Types and Timers]]></title>
@@ -144,13 +151,6 @@
     <link href="http://devrandom.za.net/blog/2010/04/29/snow-leopard-easy-tftp-server-and-serial-console/"/>
     <updated>2010-04-29T00:00:00+02:00</updated>
     <id>http://devrandom.za.net/blog/2010/04/29/snow-leopard-easy-tftp-server-and-serial-console</id>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Cisco PPP with authentication]]></title>
-    <link href="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/"/>
-    <updated>2010-04-29T00:00:00+02:00</updated>
-    <id>http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication</id>
   </entry>
   
 </feed>
