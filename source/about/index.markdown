@@ -7,7 +7,8 @@ footer: true
 ---
 {% img left /images/avatar.png %}
 
-My name is S.J. Louw. I am working as a network engineer at a social network company in Cape Town, South Africa. Below are some of the technologies and brands I have worked with.
+My name is S.J. Louw. This blog is my personal scratch pad of stuff I want to remember or refer back to. Below are some of the technologies and brands I have worked with.
+<br>
 <br>
 <br>
 <br>
