@@ -4,7 +4,7 @@
   <title><![CDATA[Category: networking | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/networking/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-16T22:30:00+02:00</updated>
+  <updated>2014-12-17T10:05:21+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -154,17 +154,17 @@
 <br>
 
 
-<p><strong>1</strong> &ndash; Originated by all routers to tell the other routers in the area about their connected links.</p>
+<p><strong>Type1</strong> &ndash; Originated by all routers to tell the other routers in the area about their connected links.</p>
 
-<p><strong>2</strong> &ndash; Originated by the DR in the area. Simplifies the graph of the area when there are multiple routers on the same segment.</p>
+<p><strong>Type2</strong> &ndash; Originated by the DR in the area. Simplifies the graph of the area when there are multiple routers on the same segment.</p>
 
-<p><strong>3</strong> &ndash; Originated by the ABR. Describes routes in other areas.</p>
+<p><strong>Type3</strong> &ndash; Originated by the ABR. Describes routes in other areas.</p>
 
-<p><strong>4</strong> &ndash; Originated by the ABR. Describes inter-area reachability to a router that performed redistribution.</p>
+<p><strong>Type4</strong> &ndash; Originated by the ABR. Describes inter-area reachability to a router that performed redistribution.</p>
 
-<p><strong>5</strong> &ndash; Originated by the ASBR that performs the redistribution. Describes redistributed routes from another protocol.</p>
+<p><strong>Type5</strong> &ndash; Originated by the ASBR that performs the redistribution. Describes redistributed routes from another protocol.</p>
 
-<p><strong>7</strong> &ndash; Originated by the ASBR, but ONLY applies to NSSA external areas. (Converted to type 5 LSA when the ABR of the NSSA originates them into area 0)</p>
+<p><strong>Type7</strong> &ndash; Originated by the ASBR, but ONLY applies to NSSA external areas. (Converted to type 5 LSA when the ABR of the NSSA originates them into area 0)</p>
 
 <br>
 
@@ -223,6 +223,15 @@
 
 
 <p>Anything that says <strong>&ldquo;total&rdquo;</strong> must get the <code>"no-summary"</code> on the CLI.</p>
+
+<p><strong>NOTES:</strong></p>
+
+<ol>
+<li><p>If the NSSA ASBR is also an ABR, <strong>Type7</strong> LSA&rsquo;s will be originated into the NSSA and <strong>Type5</strong> LSA&rsquo;s will be originated into <strong>Area 0</strong>. <strong>Type7</strong> LSA origination into the NSSA, in this case, can be suppressed with <code>area &lt;AREA_NUM&gt; nssa no-redistribution</code>.</p></li>
+<li><p>If multiple ABR&rsquo;s only one will perform NSSA Type7 to Type5 translation, based on ABR with highest <strong>Router-ID</strong>.</p></li>
+<li><p>If the Forwarding Address (FA) for an external prefix is NOT reachable/filtered, the router will NOT install it into the route table nor will it translate Type7 to Type5 LSA&rsquo;s. This can be &ldquo;fixed&rdquo; by <code>area &lt;AREA_NUM&gt; nssa suppress-fa</code> on the ABR, thus setting the FA to itself (0.0.0.0).</p></li>
+</ol>
+
 
 <h3>OSPF Network Types:</h3>
 
