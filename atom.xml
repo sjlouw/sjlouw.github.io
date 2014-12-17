@@ -4,7 +4,7 @@
   <title><![CDATA[Random Notes]]></title>
   <link href="http://devrandom.za.net/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-17T10:21:16+02:00</updated>
+  <updated>2014-12-17T22:22:32+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Basics and Best Path Selection]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-basics-and-best-path-selection/"/>
+    <updated>2014-12-17T21:26:20+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/17/bgp-basics-and-best-path-selection</id>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Filters and Communities]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/"/>
+    <updated>2014-12-17T21:25:55+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities</id>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Route Reflectors and Confederations]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations/"/>
+    <updated>2014-12-17T21:25:21+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations</id>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-optimization/"/>
+    <updated>2014-12-17T21:24:08+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/17/bgp-optimization</id>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OSPF Path Selection Order of Preference and Summarization]]></title>
@@ -123,34 +151,6 @@
     <link href="http://devrandom.za.net/blog/2010/05/03/applescript-applications-with-xcode-3-dot-2-2/"/>
     <updated>2010-05-03T00:00:00+02:00</updated>
     <id>http://devrandom.za.net/blog/2010/05/03/applescript-applications-with-xcode-3-dot-2-2</id>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Linksys WRT54GL, DD-WRT persistant PPPOE]]></title>
-    <link href="http://devrandom.za.net/blog/2010/05/01/linksys-wrt54gl-dd-wrt-persistant-pppoe/"/>
-    <updated>2010-05-01T00:00:00+02:00</updated>
-    <id>http://devrandom.za.net/blog/2010/05/01/linksys-wrt54gl-dd-wrt-persistant-pppoe</id>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Cisco site-to-site IPSEC VPN]]></title>
-    <link href="http://devrandom.za.net/blog/2010/04/30/cisco-site-to-site-ipsec-vpn/"/>
-    <updated>2010-04-30T00:00:00+02:00</updated>
-    <id>http://devrandom.za.net/blog/2010/04/30/cisco-site-to-site-ipsec-vpn</id>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Cisco IOS DNS server]]></title>
-    <link href="http://devrandom.za.net/blog/2010/04/30/cisco-ios-dns-server/"/>
-    <updated>2010-04-30T00:00:00+02:00</updated>
-    <id>http://devrandom.za.net/blog/2010/04/30/cisco-ios-dns-server</id>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Snow Leopard easy TFTP server and serial console]]></title>
-    <link href="http://devrandom.za.net/blog/2010/04/29/snow-leopard-easy-tftp-server-and-serial-console/"/>
-    <updated>2010-04-29T00:00:00+02:00</updated>
-    <id>http://devrandom.za.net/blog/2010/04/29/snow-leopard-easy-tftp-server-and-serial-console</id>
   </entry>
   
 </feed>

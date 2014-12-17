@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Cisco PPP with authentication - Random Notes</title>
+  <title>BGP Filters and Communities - Random Notes</title>
   <meta name="author" content="S.J. Louw">
 
   
@@ -16,7 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication">
+  <link rel="canonical" href="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities">
   <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -117,7 +117,7 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-29T00:00:00+02:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-17T21:25:55+02:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://devrandom.za.net">Comments</a>
@@ -126,20 +126,96 @@
     
     
     <h1 class="entry-title">
-        Cisco PPP with authentication
+        BGP Filters and Communities
         
     </h1>
     
   </header>
 
 
-<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/cisco4.png"></p>
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/bgp.png"></p>
 
-<p>Cisco use HDLC encapsulation by default for point-to-point serial links. This is how to setup PPP encapsulation with authentication, but without encryption.</p>
+<p>My shortish summarized version of Cisco BGP Filters and Communities.</p>
 
-<p>Encapsulation must be the same on both routers. <!--more-->Note how the hostname of the reverse router was used as the username. Passwords must be the same on both routers. PAP or CHAP authentication can be enabled.</p>
+<!--more-->
 
-<h3>Router 01 setup:</h3>
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<table>
+<thead>
+<tr>
+<th align="left">MATCH USING&hellip;     </th>
+<th align="left">STUFF TO SET&hellip;       </th>
+<th align="left">DIRECTION</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">prefix-list         </td>
+<td align="left">weight               </td>
+<td align="left">inbound</td>
+</tr>
+<tr>
+<td align="left">access-list         </td>
+<td align="left">local preference     </td>
+<td align="left">outbound</td>
+</tr>
+<tr>
+<td align="left">as-path access-list </td>
+<td align="left">origin               </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">neighbor            </td>
+<td align="left">as-path (prepending) </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">route-map           </td>
+<td align="left">med/metric           </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">community-list      </td>
+<td align="left">next-hop (self)      </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">distribute-list     </td>
+<td align="left">community            </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">filter-list         </td>
+<td align="left">                     </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">&hellip;and lots more    </td>
+<td align="left">&hellip;and lots more     </td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>REGEX Filters:</h3>
+
+<p>Example: Filter AS 100 outbound with REGEX</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -148,16 +224,85 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Router(config)#hostname Router01
-</span><span class='line'>Router01(config)#username Router02 password mypassword
-</span><span class='line'>Router01(config)#int s1/0
-</span><span class='line'>Router01(config-if)#ip address 192.168.1.1 255.255.255.0
-</span><span class='line'>Router01(config-if)#encapsulation ppp
-</span><span class='line'>Router01(config-if)#ppp authentication chap
-</span><span class='line'>Router01(config-if)#no shut</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip as-path access-list 1 deny &lt;REGEX> (`_100_`) (Match AS 100 exactly)
+</span><span class='line'>ip as-path access-list 1 permit &lt;REGEX> (`.*`) (Match all/permit any)
+</span><span class='line'>
+</span><span class='line'>route-map FILTER_100 permit 10
+</span><span class='line'>  match as-path 1
+</span><span class='line'>
+</span><span class='line'>router bgp &lt;AS_NUM> (100)
+</span><span class='line'>  neighbor x.x.x.x route-map FILTER_100 out
+</span><span class='line'>
+</span><span class='line'>clear ip bgp x.x.x.x</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Router 02 setup:</h3>
+<h3>Prefix-lists:</h3>
+
+<p>Prefix-lists is for matching routes!</p>
+
+<ul>
+<li>Uses tree-structure</li>
+<li>Better CPU utilization</li>
+<li>Better subnet matching</li>
+<li>Two-stage matching system: <strong>network + mask</strong></li>
+<li>Created in <strong>Global Config</strong> mode</li>
+<li>Matches x.x.x.x/xx EXACTLY</li>
+<li><strong>le</strong> = less than or equel</li>
+<li><strong>ge</strong> = greater than or equel</li>
+</ul>
+
+
+<p><strong>Examples:</strong></p>
+
+<ol>
+<li><code>ip prefix-list NAME permit 0.0.0.0/0</code> matches ONLY 0.0.0.0/0 (default route)</li>
+<li><code>ip prefix-list NAME permit 0.0.0.0/0 ge 32</code> matches all HOST routes</li>
+<li><code>ip prefix-list NAME permit 0.0.0.0/0 le 32</code> matches ANY route</li>
+<li><code>ip prefix-list NAME permit 0.0.0.0/1 ge 24 le 24</code> matches CLASS A networks or it&rsquo;s subnets</li>
+<li><code>ip prefix-list NAME permit 128.0.0.0/2 ge 16</code> matches CLASS B networks or it&rsquo;s subnets</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip prefix-list NAME permit 0.0.0.0/0 ge 32
+</span><span class='line'>
+</span><span class='line'>router bgp 100
+</span><span class='line'>  neighbor x.x.x.x prefix-list NAME in
+</span><span class='line'>
+</span><span class='line'>clear ip bgp x.x.x.x</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Prefix-lists can also be attached to route-maps.</p>
+
+<h3>Outbound Route Filtering (ORF):</h3>
+
+<ul>
+<li>Transmits INBOUND filters to apply OUTBOUND</li>
+<li>Neighbors must support <strong>ORF Type</strong> both sides</li>
+<li><code>neighbor x.x.x.x capability orf prefix-list &lt;SEND_RECEIVE_BOTH&gt;</code></li>
+</ul>
+
+
+<h3>BGP Communities:</h3>
+
+<ul>
+<li>The BGP community value is an optional, transitive attribute.</li>
+<li>ISP&rsquo;s normally create community values for customers, to use, to influence routes.</li>
+<li>RFC guideline format: 100:12345 where <strong>100 = AS_NUM</strong> and <strong>12345 = community value</strong></li>
+<li>community-list <strong>(1-99)</strong> matches on normal community values</li>
+<li>community-list <strong>(100-199)</strong> matches on REGEX</li>
+</ul>
+
+
+<p><strong>Examples:</strong></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -166,23 +311,31 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Router(config)#hostname Router02
-</span><span class='line'>Router02(config)#username Router01 password mypassword
-</span><span class='line'>Router02(config)#int s1/0
-</span><span class='line'>Router02(config-if)#ip address 192.168.1.2 255.255.255.0
-</span><span class='line'>Router02(config-if)#encapsulation ppp
-</span><span class='line'>Router02(config-if)#ppp authentication chap
-</span><span class='line'>Router02(config-if)#no shut</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip bgp-community new-format
+</span><span class='line'>  neighbor x.x.x.x send-community
+</span><span class='line'>
+</span><span class='line'>ip access-list standard CUSTOMER_ROUTES
+</span><span class='line'>  permit x.x.x.x x.x.x.x
+</span><span class='line'>
+</span><span class='line'>route-map SET-COMMUNITY
+</span><span class='line'>  match ip address CUSTOMER_ROUTES
+</span><span class='line'>  set community 100:12345 100:84957 100:3892 (Multiple can be added on one line)</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Verify:</h3>
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Router01#sh int s1/0
-</span><span class='line'>Router02#sh int s1/0</span></code></pre></td></tr></table></div></figure>
-
-
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip community-list 1 permit 100:2345
+</span><span class='line'>
+</span><span class='line'>route-map MYMAP
+</span><span class='line'>  match community 1
+</span><span class='line'>  set local_preference 20</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -207,13 +360,13 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-29T00:00:00+02:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-17T21:25:55+02:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
           
 
 <span class="glyphicon glyphicon-tags"></span>&nbsp;
 <span class="categories">
   
-    <a class='category label label-primary' href='/blog/categories/cisco/'>cisco</a>
+    <a class='category label label-primary' href='/blog/categories/cisco/'>cisco</a> <a class='category label label-primary' href='/blog/categories/networking/'>networking</a>
   
 </span>
 
@@ -222,7 +375,7 @@
         
           <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -236,10 +389,10 @@
         
           <ul class="meta text-muted pager">
             
-            <li class="previous"><a href="/blog/2010/04/24/syslog-with-cisco-devices/" title="Previous Post: Syslog with Cisco devices">&laquo; Syslog with Cisco devices</a></li>
+            <li class="previous"><a href="/blog/2014/12/17/bgp-route-reflectors-and-confederations/" title="Previous Post: BGP Route Reflectors and Confederations">&laquo; BGP Route Reflectors and Confederations</a></li>
             
             
-            <li class="next"><a href="/blog/2010/04/29/snow-leopard-easy-tftp-server-and-serial-console/" title="Next Post: Snow Leopard easy TFTP server and serial console">Snow Leopard easy TFTP server and serial console &raquo;</a></li>
+            <li class="next"><a href="/blog/2014/12/17/bgp-basics-and-best-path-selection/" title="Next Post: BGP Basics and Best Path Selection">BGP Basics and Best Path Selection &raquo;</a></li>
             
           </ul>
         
@@ -280,7 +433,7 @@
     
     <a class="list-group-item " href="/blog/2014/12/17/bgp-basics-and-best-path-selection/">BGP Basics and Best Path Selection</a>
     
-    <a class="list-group-item " href="/blog/2014/12/17/bgp-filters-and-communities/">BGP Filters and Communities</a>
+    <a class="list-group-item active" href="/blog/2014/12/17/bgp-filters-and-communities/">BGP Filters and Communities</a>
     
     <a class="list-group-item " href="/blog/2014/12/17/bgp-route-reflectors-and-confederations/">BGP Route Reflectors and Confederations</a>
     
@@ -441,8 +594,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/';
-        var disqus_url = 'http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/';
+        var disqus_identifier = 'http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/';
+        var disqus_url = 'http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/';
         var disqus_script = 'embed.js';
       
     (function () {

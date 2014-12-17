@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Cisco PPP with authentication - Random Notes</title>
+  <title>BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh - Random Notes</title>
   <meta name="author" content="S.J. Louw">
 
   
@@ -16,7 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication">
+  <link rel="canonical" href="http://devrandom.za.net/blog/2014/12/17/bgp-optimization">
   <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -117,7 +117,7 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-29T00:00:00+02:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-17T21:24:08+02:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://devrandom.za.net">Comments</a>
@@ -126,20 +126,74 @@
     
     
     <h1 class="entry-title">
-        Cisco PPP with authentication
+        BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh
         
     </h1>
     
   </header>
 
 
-<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/cisco4.png"></p>
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/bgp.png"></p>
 
-<p>Cisco use HDLC encapsulation by default for point-to-point serial links. This is how to setup PPP encapsulation with authentication, but without encryption.</p>
+<p>My shortish summarized version of Cisco BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh.</p>
 
-<p>Encapsulation must be the same on both routers. <!--more-->Note how the hostname of the reverse router was used as the username. Passwords must be the same on both routers. PAP or CHAP authentication can be enabled.</p>
+<!--more-->
 
-<h3>Router 01 setup:</h3>
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Optimizations:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>conf t
+</span><span class='line'>ip tcp path-mtu-discovery (default is 536 bytes)</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>interface Gi0/0
+</span><span class='line'>hold-queue 1000 in (default is 75 packets)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The BGP process scans the BGP table for changes for triggered updates.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  bgp scan-time &lt;SECONDS> (default is 60 seconds)
+</span><span class='line'>  neighbor x.x.x.x advertisement-interval &lt;SECONDS> (default is 30 seconds eBGP and 5 seconds iBGP)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Setting a maximum prefix limit:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>neighbor x.x.x.x maximum-prefix &lt;NUM>
+</span><span class='line'>
+</span><span class='line'>show ip bgp summary (State/PfxRcd)</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Peer Groups:</h3>
+
+<ul>
+<li>Can be used to make neighbor configurations more effecient by using templates.</li>
+<li>CANNOT combine iBGP and eBGP peer-groups</li>
+</ul>
+
+
+<p>Example:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -148,16 +202,24 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Router(config)#hostname Router01
-</span><span class='line'>Router01(config)#username Router02 password mypassword
-</span><span class='line'>Router01(config)#int s1/0
-</span><span class='line'>Router01(config-if)#ip address 192.168.1.1 255.255.255.0
-</span><span class='line'>Router01(config-if)#encapsulation ppp
-</span><span class='line'>Router01(config-if)#ppp authentication chap
-</span><span class='line'>Router01(config-if)#no shut</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  neighbor MY_PEERGROUP peer-group
+</span><span class='line'>  neighbor MY_PEERGROUP update-source loopback0
+</span><span class='line'>  neighbor ...............
+</span><span class='line'>  neighbor x.x.x.x peer-group MY_PEERGROUP
+</span><span class='line'>
+</span><span class='line'>show ip bgp peer-group</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Router 02 setup:</h3>
+<h3>Peer Templates:</h3>
+
+<ul>
+<li>Generates single <strong>outbound</strong> update for all peers.</li>
+<li>Individual configurations supported for <strong>inbound</strong> updates.</li>
+</ul>
+
+
+<p>Example: (peer-session)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -166,23 +228,87 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Router(config)#hostname Router02
-</span><span class='line'>Router02(config)#username Router01 password mypassword
-</span><span class='line'>Router02(config)#int s1/0
-</span><span class='line'>Router02(config-if)#ip address 192.168.1.2 255.255.255.0
-</span><span class='line'>Router02(config-if)#encapsulation ppp
-</span><span class='line'>Router02(config-if)#ppp authentication chap
-</span><span class='line'>Router02(config-if)#no shut</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  template peer-session MYTEMPLATE1
+</span><span class='line'>    timers 30 300
+</span><span class='line'>  exit-peer-session
+</span><span class='line'>  
+</span><span class='line'>  template peer-session MYTEMPLATE2
+</span><span class='line'>    remote-as 200
+</span><span class='line'>    inherit peer-session MYTEMPLATE1
+</span><span class='line'>  exit-peer-session
+</span><span class='line'>
+</span><span class='line'>  neighbor x.x.x.x inherit peer-session MYTEMPLATE1
+</span><span class='line'>
+</span><span class='line'>show ip bgp template peer-session</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Verify:</h3>
+<p>Example: (peer-policy)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Router01#sh int s1/0
-</span><span class='line'>Router02#sh int s1/0</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  template peer-policy MYTEMPLATE1
+</span><span class='line'>    prefix-list MYPREFIXLIST in
+</span><span class='line'>  exit-peer-policy
+</span><span class='line'>
+</span><span class='line'>  neighbor x.x.x.x inherit peer-policy MYTEMPLATE1
+</span><span class='line'>
+</span><span class='line'>show ip bgp template peer-policy</span></code></pre></td></tr></table></div></figure>
 
 
+<h3>Route Dampening:</h3>
+
+<ul>
+<li>Controls flapping routes</li>
+<li>Default 5 seconds <strong>WAIT</strong> for iBGP and 30 seconds <strong>WAIT</strong> for eBGP</li>
+<li>Flapping route will be dampened after 3 successive flaps and for 30 minutes default.</li>
+<li>Every route will receive the following by default:
+
+<ul>
+<li>Penalty = 1000</li>
+<li>Suppress Limit = 750</li>
+<li>Reuse limit = 750</li>
+</ul>
+</li>
+<li>Decay algorithm = 15 minutes (Half-life)</li>
+<li>Maximum penalty = 4x decay algorithm = 60 minutes</li>
+</ul>
+
+
+<p>Example:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  bgp dampening 10 1000 4000 255
+</span><span class='line'>
+</span><span class='line'>clear ip bgp dampening x.x.x.x x.x.x.x (resets dampening)
+</span><span class='line'>clear ip bgp x.x.x.x flap-statistics (resets dampening)</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Refreshing neighbor changes without tearing down the BGP session:</h3>
+
+<ul>
+<li>Outbound soft reconfigure = <code>clear ip bgp x.x.x.x soft-out</code> (NO extra configuration needed)</li>
+<li>Inbound soft reconfigure = <code>clear ip bgp x.x.x.x soft-in</code> (MUST be pre-configured: <code>neighbor x.x.x.x soft-reconfiguration inbound</code>)</li>
+<li>Route refresh ONLY = <code>clear ip bgp x.x.x.x soft-in</code> (WITHOUT neighbor config as above)</li>
+</ul>
 
 </div>
 
@@ -207,13 +333,13 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-29T00:00:00+02:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-17T21:24:08+02:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
           
 
 <span class="glyphicon glyphicon-tags"></span>&nbsp;
 <span class="categories">
   
-    <a class='category label label-primary' href='/blog/categories/cisco/'>cisco</a>
+    <a class='category label label-primary' href='/blog/categories/cisco/'>cisco</a> <a class='category label label-primary' href='/blog/categories/networking/'>networking</a>
   
 </span>
 
@@ -222,7 +348,7 @@
         
           <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2014/12/17/bgp-optimization/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2014/12/17/bgp-optimization/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -236,10 +362,10 @@
         
           <ul class="meta text-muted pager">
             
-            <li class="previous"><a href="/blog/2010/04/24/syslog-with-cisco-devices/" title="Previous Post: Syslog with Cisco devices">&laquo; Syslog with Cisco devices</a></li>
+            <li class="previous"><a href="/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/" title="Previous Post: OSPF Path Selection Order of Preference and Summarization">&laquo; OSPF Path Selection Order of Preference and Summarization</a></li>
             
             
-            <li class="next"><a href="/blog/2010/04/29/snow-leopard-easy-tftp-server-and-serial-console/" title="Next Post: Snow Leopard easy TFTP server and serial console">Snow Leopard easy TFTP server and serial console &raquo;</a></li>
+            <li class="next"><a href="/blog/2014/12/17/bgp-route-reflectors-and-confederations/" title="Next Post: BGP Route Reflectors and Confederations">BGP Route Reflectors and Confederations &raquo;</a></li>
             
           </ul>
         
@@ -284,7 +410,7 @@
     
     <a class="list-group-item " href="/blog/2014/12/17/bgp-route-reflectors-and-confederations/">BGP Route Reflectors and Confederations</a>
     
-    <a class="list-group-item " href="/blog/2014/12/17/bgp-optimization/">BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh</a>
+    <a class="list-group-item active" href="/blog/2014/12/17/bgp-optimization/">BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh</a>
     
     <a class="list-group-item " href="/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/">OSPF Path Selection Order of Preference and Summarization</a>
     
@@ -441,8 +567,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/';
-        var disqus_url = 'http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/';
+        var disqus_identifier = 'http://devrandom.za.net/blog/2014/12/17/bgp-optimization/';
+        var disqus_url = 'http://devrandom.za.net/blog/2014/12/17/bgp-optimization/';
         var disqus_script = 'embed.js';
       
     (function () {

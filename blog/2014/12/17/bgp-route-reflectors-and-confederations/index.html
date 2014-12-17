@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Cisco PPP with authentication - Random Notes</title>
+  <title>BGP Route Reflectors and Confederations - Random Notes</title>
   <meta name="author" content="S.J. Louw">
 
   
@@ -16,7 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication">
+  <link rel="canonical" href="http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations">
   <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -117,7 +117,7 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-29T00:00:00+02:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-17T21:25:21+02:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://devrandom.za.net">Comments</a>
@@ -126,20 +126,80 @@
     
     
     <h1 class="entry-title">
-        Cisco PPP with authentication
+        BGP Route Reflectors and Confederations
         
     </h1>
     
   </header>
 
 
-<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/cisco4.png"></p>
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/bgp.png"></p>
 
-<p>Cisco use HDLC encapsulation by default for point-to-point serial links. This is how to setup PPP encapsulation with authentication, but without encryption.</p>
+<p>My shortish summarized version of Cisco BGP Route Reflectors and Confederations.</p>
 
-<p>Encapsulation must be the same on both routers. <!--more-->Note how the hostname of the reverse router was used as the username. Passwords must be the same on both routers. PAP or CHAP authentication can be enabled.</p>
+<!--more-->
 
-<h3>Router 01 setup:</h3>
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Route Reflectors:</h3>
+
+<p>iBGP MUST have full mesh to prevent loops, thus to scale, you can use Route Reflectors.</p>
+
+<ol>
+<li>Clients must have full mesh connection to Route-Reflectors.</li>
+<li>Route Reflector groups add a cluster-id attribute to routes.</li>
+</ol>
+
+
+<p><strong>Route Reflectors process updates as follows:</strong></p>
+
+<ul>
+<li>Updates received from <strong>eBGP</strong> peers: Forward to all <strong>iBGP and eBGP</strong> peers.</li>
+<li>Updates received from <strong>iBGP (non-client)</strong> peers: Forward to all <strong>eBGP and Client</strong> peers.</li>
+<li>Updates received from <strong>iBGP (client)</strong> peers: Forward to <strong>all</strong> peers <strong>except sender</strong>.</li>
+</ul>
+
+
+<p>Example Route Reflector Client Setup (No client-side setup needed):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>neighbor x.x.x.x route-reflector-client</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Example Route Reflector Cluster Setup:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  bgp cluster-id 10</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Confederations:</h3>
+
+<p>Another way to solve the iBGP full mesh problem is to use Confederations.</p>
+
+<ul>
+<li>An AS inside an AS</li>
+<li>Uses <strong>INTRA-AS</strong> numbers which are stripped before sending updates via eBGP.</li>
+<li>Inter-Confederation peers are treated as eBGP to establish, but as iBGP relating to attributes.</li>
+<li>Breaks iBGP AS into smaller Autonomous Systems.</li>
+<li>Use private AS numbers (64512 &ndash; 65535)</li>
+<li>Full iBGP mesh required <strong>within confederation AS</strong> (RR also an option within confederation)</li>
+</ul>
+
+
+<p>Example:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -148,41 +208,19 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Router(config)#hostname Router01
-</span><span class='line'>Router01(config)#username Router02 password mypassword
-</span><span class='line'>Router01(config)#int s1/0
-</span><span class='line'>Router01(config-if)#ip address 192.168.1.1 255.255.255.0
-</span><span class='line'>Router01(config-if)#encapsulation ppp
-</span><span class='line'>Router01(config-if)#ppp authentication chap
-</span><span class='line'>Router01(config-if)#no shut</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Router 02 setup:</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Router(config)#hostname Router02
-</span><span class='line'>Router02(config)#username Router01 password mypassword
-</span><span class='line'>Router02(config)#int s1/0
-</span><span class='line'>Router02(config-if)#ip address 192.168.1.2 255.255.255.0
-</span><span class='line'>Router02(config-if)#encapsulation ppp
-</span><span class='line'>Router02(config-if)#ppp authentication chap
-</span><span class='line'>Router02(config-if)#no shut</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Verify:</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Router01#sh int s1/0
-</span><span class='line'>Router02#sh int s1/0</span></code></pre></td></tr></table></div></figure>
-
-
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 64512
+</span><span class='line'>  bgp confederation identifier 500
+</span><span class='line'>  bgp confederation peers 64513 64514
+</span><span class='line'>  neighbor x.x.x.x remote-as 64512 (will be iBGP)
+</span><span class='line'>  neighbor y.y.y.y remote-as 64513 (will be eBGP)
+</span><span class='line'>  neighbor y.y.y.y ebgp-multihop &lt;HOP_COUNT>
+</span><span class='line'>  neighbor z.z.z.z remote-as 64514 (will be eBGP)
+</span><span class='line'>  neighbor z.z.z.z ebgp-multihop &lt;HOP_COUNT>
+</span><span class='line'>
+</span><span class='line'>show ip bgp neighbors</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -207,13 +245,13 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2010-04-29T00:00:00+02:00" pubdate data-updated="true">Apr 29<span>th</span>, 2010</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-17T21:25:21+02:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
           
 
 <span class="glyphicon glyphicon-tags"></span>&nbsp;
 <span class="categories">
   
-    <a class='category label label-primary' href='/blog/categories/cisco/'>cisco</a>
+    <a class='category label label-primary' href='/blog/categories/cisco/'>cisco</a> <a class='category label label-primary' href='/blog/categories/networking/'>networking</a>
   
 </span>
 
@@ -222,7 +260,7 @@
         
           <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -236,10 +274,10 @@
         
           <ul class="meta text-muted pager">
             
-            <li class="previous"><a href="/blog/2010/04/24/syslog-with-cisco-devices/" title="Previous Post: Syslog with Cisco devices">&laquo; Syslog with Cisco devices</a></li>
+            <li class="previous"><a href="/blog/2014/12/17/bgp-optimization/" title="Previous Post: BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh">&laquo; BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh</a></li>
             
             
-            <li class="next"><a href="/blog/2010/04/29/snow-leopard-easy-tftp-server-and-serial-console/" title="Next Post: Snow Leopard easy TFTP server and serial console">Snow Leopard easy TFTP server and serial console &raquo;</a></li>
+            <li class="next"><a href="/blog/2014/12/17/bgp-filters-and-communities/" title="Next Post: BGP Filters and Communities">BGP Filters and Communities &raquo;</a></li>
             
           </ul>
         
@@ -282,7 +320,7 @@
     
     <a class="list-group-item " href="/blog/2014/12/17/bgp-filters-and-communities/">BGP Filters and Communities</a>
     
-    <a class="list-group-item " href="/blog/2014/12/17/bgp-route-reflectors-and-confederations/">BGP Route Reflectors and Confederations</a>
+    <a class="list-group-item active" href="/blog/2014/12/17/bgp-route-reflectors-and-confederations/">BGP Route Reflectors and Confederations</a>
     
     <a class="list-group-item " href="/blog/2014/12/17/bgp-optimization/">BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh</a>
     
@@ -441,8 +479,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/';
-        var disqus_url = 'http://devrandom.za.net/blog/2010/04/29/cisco-ppp-with-authentication/';
+        var disqus_identifier = 'http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations/';
+        var disqus_url = 'http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations/';
         var disqus_script = 'embed.js';
       
     (function () {

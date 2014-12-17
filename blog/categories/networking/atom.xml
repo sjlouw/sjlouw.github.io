@@ -4,7 +4,7 @@
   <title><![CDATA[Category: networking | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/networking/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-17T10:21:16+02:00</updated>
+  <updated>2014-12-17T22:22:32+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -12,6 +12,630 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Basics and Best Path Selection]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-basics-and-best-path-selection/"/>
+    <updated>2014-12-17T21:26:20+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/17/bgp-basics-and-best-path-selection</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
+
+<p>My shortish summarized version of Cisco BGP Basics and Best Path Selection.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>BGP Rules:</h3>
+
+<ul>
+<li>Path Vector protocol that routes AS to AS (AS-Path).</li>
+<li>&ldquo;You CAN&rsquo;T tell someone else what to do whith their traffic!&rdquo;</li>
+<li>Use TCP port 179 to establish neighbor relationships.</li>
+<li>Private AS range = 64512 &ndash; 65535</li>
+<li>By default ONLY advertise best path.</li>
+<li>Triggered updates ONLY (default 5 seconds INTERNAL and 30 seconds EXTERNAL).</li>
+<li>Neighbor relationships form/converge in approximately 30 &ndash; 60 seconds (SLOW)</li>
+<li>Default Hold timers: 180 seconds.</li>
+<li>Loopback routes get default wight of 32768.</li>
+<li><code>network x.x.x.x</code> must be EXACT match as in RIB otherwise BGP will not advertise it.</li>
+<li>iBGP does NOT modify any attributes like AS-Path or Next-hop, therefore has rules like split-horizon to prevent loops. (<code>neighbor x.x.x.x next-hop-self</code>).</li>
+<li>iBGP, use <strong>loopbacks</strong> to form neighbor relationships.</li>
+<li>By default sends BGP messages to eBGP neighbors with a TTL of 1</li>
+<li>Supports up to 6 paths load-balanced.</li>
+</ul>
+
+
+<h3>Best Path Algorithm:</h3>
+
+<ol>
+<li>MOST specific route</li>
+<li>Administrative distance</li>
+</ol>
+
+
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="center">“We Love Oranges AS Oranges Mean Pure Refreshment”</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">W       </td>
+<td align="center">Weight (Highest)</td>
+</tr>
+<tr>
+<td align="left">L       </td>
+<td align="center">LOCAL_PREF (Highest)</td>
+</tr>
+<tr>
+<td align="left">O       </td>
+<td align="center">Originate (local)</td>
+</tr>
+<tr>
+<td align="left">AS      </td>
+<td align="center">AS_PATH (shortest)</td>
+</tr>
+<tr>
+<td align="left">O       </td>
+<td align="center">ORIGIN Code (IGP > EGP > Incomplete)</td>
+</tr>
+<tr>
+<td align="left">M       </td>
+<td align="center">MED (lowest)</td>
+</tr>
+<tr>
+<td align="left">P       </td>
+<td align="center">Paths (External > Internal)</td>
+</tr>
+<tr>
+<td align="left">R       </td>
+<td align="center">RID (lowest)</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Basic Config:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>neighbor x.x.x.x remote-as &lt;AS_NUM>
+</span><span class='line'>neighbor x.x.x.x update-source loopback0
+</span><span class='line'>neighbor x.x.x.x description &lt;WHATEVER>
+</span><span class='line'>no synchronization
+</span><span class='line'>no auto-summary</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Basic Show Commands:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show ip bgp summary
+</span><span class='line'>show ip bgp</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>NOTES:</strong></p>
+
+<p>If eBGP neighbor is NOT directly connected (iBGP does NOT use same rules):
+<code>neighbor x.x.x.x ebgp-multihop &lt;HOP_COUNT_1-255&gt;</code></p>
+
+<p>Removing <strong>private AS</strong> number outbound:
+<code>neighbor x.x.x.x remove-private-as</code></p>
+
+<p>Authentication: (MUST match both sides of neighbor relationship)</p>
+
+<ul>
+<li><code>neighbor x.x.x.x password 0 cisco</code> (clear text)</li>
+<li><code>neighbor x.x.x.x password 7 DFEAF10390E560AEA745CCBA53E044ED</code> (MD5 hashed)</li>
+</ul>
+
+
+<p>Advertise default route outbound:
+<code>neighbor x.x.x.x default-originate</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Filters and Communities]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/"/>
+    <updated>2014-12-17T21:25:55+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
+
+<p>My shortish summarized version of Cisco BGP Filters and Communities.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<table>
+<thead>
+<tr>
+<th align="left">MATCH USING&hellip;     </th>
+<th align="left">STUFF TO SET&hellip;       </th>
+<th align="left">DIRECTION</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">prefix-list         </td>
+<td align="left">weight               </td>
+<td align="left">inbound</td>
+</tr>
+<tr>
+<td align="left">access-list         </td>
+<td align="left">local preference     </td>
+<td align="left">outbound</td>
+</tr>
+<tr>
+<td align="left">as-path access-list </td>
+<td align="left">origin               </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">neighbor            </td>
+<td align="left">as-path (prepending) </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">route-map           </td>
+<td align="left">med/metric           </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">community-list      </td>
+<td align="left">next-hop (self)      </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">distribute-list     </td>
+<td align="left">community            </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">filter-list         </td>
+<td align="left">                     </td>
+<td></td>
+</tr>
+<tr>
+<td align="left">&hellip;and lots more    </td>
+<td align="left">&hellip;and lots more     </td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>REGEX Filters:</h3>
+
+<p>Example: Filter AS 100 outbound with REGEX</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip as-path access-list 1 deny &lt;REGEX> (&lt;code>_100_&lt;/code>) (Match AS 100 exactly)
+</span><span class='line'>ip as-path access-list 1 permit &lt;REGEX> (&lt;code>.*&lt;/code>) (Match all/permit any)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>route-map FILTER_100 permit 10
+</span><span class='line'>  match as-path 1&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>router bgp &lt;AS_NUM> (100)
+</span><span class='line'>  neighbor x.x.x.x route-map FILTER_100 out&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>clear ip bgp x.x.x.x</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Prefix-lists:</h3>
+
+<p>Prefix-lists is for matching routes!</p>
+
+<ul>
+<li>Uses tree-structure</li>
+<li>Better CPU utilization</li>
+<li>Better subnet matching</li>
+<li>Two-stage matching system: <strong>network + mask</strong></li>
+<li>Created in <strong>Global Config</strong> mode</li>
+<li>Matches x.x.x.x/xx EXACTLY</li>
+<li><strong>le</strong> = less than or equel</li>
+<li><strong>ge</strong> = greater than or equel</li>
+</ul>
+
+
+<p><strong>Examples:</strong></p>
+
+<ol>
+<li><code>ip prefix-list NAME permit 0.0.0.0/0</code> matches ONLY 0.0.0.0/0 (default route)</li>
+<li><code>ip prefix-list NAME permit 0.0.0.0/0 ge 32</code> matches all HOST routes</li>
+<li><code>ip prefix-list NAME permit 0.0.0.0/0 le 32</code> matches ANY route</li>
+<li><code>ip prefix-list NAME permit 0.0.0.0/1 ge 24 le 24</code> matches CLASS A networks or it&rsquo;s subnets</li>
+<li><code>ip prefix-list NAME permit 128.0.0.0/2 ge 16</code> matches CLASS B networks or it&rsquo;s subnets</li>
+</ol>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip prefix-list NAME permit 0.0.0.0/0 ge 32&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>router bgp 100
+</span><span class='line'>  neighbor x.x.x.x prefix-list NAME in&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>clear ip bgp x.x.x.x</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Prefix-lists can also be attached to route-maps.</p>
+
+<h3>Outbound Route Filtering (ORF):</h3>
+
+<ul>
+<li>Transmits INBOUND filters to apply OUTBOUND</li>
+<li>Neighbors must support <strong>ORF Type</strong> both sides</li>
+<li><code>neighbor x.x.x.x capability orf prefix-list &lt;SEND_RECEIVE_BOTH&gt;</code></li>
+</ul>
+
+
+<h3>BGP Communities:</h3>
+
+<ul>
+<li>The BGP community value is an optional, transitive attribute.</li>
+<li>ISP&rsquo;s normally create community values for customers, to use, to influence routes.</li>
+<li>RFC guideline format: 100:12345 where <strong>100 = AS_NUM</strong> and <strong>12345 = community value</strong></li>
+<li>community-list <strong>(1-99)</strong> matches on normal community values</li>
+<li>community-list <strong>(100-199)</strong> matches on REGEX</li>
+</ul>
+
+
+<p><strong>Examples:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip bgp-community new-format
+</span><span class='line'>  neighbor x.x.x.x send-community&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>ip access-list standard CUSTOMER_ROUTES
+</span><span class='line'>  permit x.x.x.x x.x.x.x&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>route-map SET-COMMUNITY
+</span><span class='line'>  match ip address CUSTOMER_ROUTES
+</span><span class='line'>  set community 100:12345 100:84957 100:3892 (Multiple can be added on one line)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ip community-list 1 permit 100:2345&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>route-map MYMAP
+</span><span class='line'>  match community 1
+</span><span class='line'>  set local_preference 20</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Route Reflectors and Confederations]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations/"/>
+    <updated>2014-12-17T21:25:21+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
+
+<p>My shortish summarized version of Cisco BGP Route Reflectors and Confederations.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Route Reflectors:</h3>
+
+<p>iBGP MUST have full mesh to prevent loops, thus to scale, you can use Route Reflectors.</p>
+
+<ol>
+<li>Clients must have full mesh connection to Route-Reflectors.</li>
+<li>Route Reflector groups add a cluster-id attribute to routes.</li>
+</ol>
+
+
+<p><strong>Route Reflectors process updates as follows:</strong></p>
+
+<ul>
+<li>Updates received from <strong>eBGP</strong> peers: Forward to all <strong>iBGP and eBGP</strong> peers.</li>
+<li>Updates received from <strong>iBGP (non-client)</strong> peers: Forward to all <strong>eBGP and Client</strong> peers.</li>
+<li>Updates received from <strong>iBGP (client)</strong> peers: Forward to <strong>all</strong> peers <strong>except sender</strong>.</li>
+</ul>
+
+
+<p>Example Route Reflector Client Setup (No client-side setup needed):</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>neighbor x.x.x.x route-reflector-client</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Example Route Reflector Cluster Setup:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  bgp cluster-id 10</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Confederations:</h3>
+
+<p>Another way to solve the iBGP full mesh problem is to use Confederations.</p>
+
+<ul>
+<li>An AS inside an AS</li>
+<li>Uses <strong>INTRA-AS</strong> numbers which are stripped before sending updates via eBGP.</li>
+<li>Inter-Confederation peers are treated as eBGP to establish, but as iBGP relating to attributes.</li>
+<li>Breaks iBGP AS into smaller Autonomous Systems.</li>
+<li>Use private AS numbers (64512 &ndash; 65535)</li>
+<li>Full iBGP mesh required <strong>within confederation AS</strong> (RR also an option within confederation)</li>
+</ul>
+
+
+<p>Example:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 64512
+</span><span class='line'>  bgp confederation identifier 500
+</span><span class='line'>  bgp confederation peers 64513 64514
+</span><span class='line'>  neighbor x.x.x.x remote-as 64512 (will be iBGP)
+</span><span class='line'>  neighbor y.y.y.y remote-as 64513 (will be eBGP)
+</span><span class='line'>  neighbor y.y.y.y ebgp-multihop &lt;HOP_COUNT>
+</span><span class='line'>  neighbor z.z.z.z remote-as 64514 (will be eBGP)
+</span><span class='line'>  neighbor z.z.z.z ebgp-multihop &lt;HOP_COUNT>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show ip bgp neighbors</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-optimization/"/>
+    <updated>2014-12-17T21:24:08+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/17/bgp-optimization</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
+
+<p>My shortish summarized version of Cisco BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Optimizations:</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>conf t
+</span><span class='line'>ip tcp path-mtu-discovery (default is 536 bytes)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>interface Gi0/0
+</span><span class='line'>hold-queue 1000 in (default is 75 packets)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The BGP process scans the BGP table for changes for triggered updates.
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  bgp scan-time &lt;SECONDS> (default is 60 seconds)
+</span><span class='line'>  neighbor x.x.x.x advertisement-interval &lt;SECONDS> (default is 30 seconds eBGP and 5 seconds iBGP)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Setting a maximum prefix limit:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>neighbor x.x.x.x maximum-prefix &lt;NUM>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show ip bgp summary (State/PfxRcd)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Peer Groups:</h3>
+
+<ul>
+<li>Can be used to make neighbor configurations more effecient by using templates.</li>
+<li>CANNOT combine iBGP and eBGP peer-groups</li>
+</ul>
+
+
+<p>Example:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  neighbor MY_PEERGROUP peer-group
+</span><span class='line'>  neighbor MY_PEERGROUP update-source loopback0
+</span><span class='line'>  neighbor &hellip;&hellip;&hellip;&hellip;&hellip;
+</span><span class='line'>  neighbor x.x.x.x peer-group MY_PEERGROUP&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show ip bgp peer-group</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Peer Templates:</h3>
+
+<ul>
+<li>Generates single <strong>outbound</strong> update for all peers.</li>
+<li>Individual configurations supported for <strong>inbound</strong> updates.</li>
+</ul>
+
+
+<p>Example: (peer-session)
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  template peer-session MYTEMPLATE1&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>timers 30 300
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  exit-peer-session&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  template peer-session MYTEMPLATE2&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>remote-as 200
+</span><span class='line'>inherit peer-session MYTEMPLATE1
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  exit-peer-session&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  neighbor x.x.x.x inherit peer-session MYTEMPLATE1&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show ip bgp template peer-session</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Example: (peer-policy)
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  template peer-policy MYTEMPLATE1&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>prefix-list MYPREFIXLIST in
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  exit-peer-policy&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  neighbor x.x.x.x inherit peer-policy MYTEMPLATE1&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show ip bgp template peer-policy</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Route Dampening:</h3>
+
+<ul>
+<li>Controls flapping routes</li>
+<li>Default 5 seconds <strong>WAIT</strong> for iBGP and 30 seconds <strong>WAIT</strong> for eBGP</li>
+<li>Flapping route will be dampened after 3 successive flaps and for 30 minutes default.</li>
+<li>Every route will receive the following by default:
+
+<ul>
+<li>Penalty = 1000</li>
+<li>Suppress Limit = 750</li>
+<li>Reuse limit = 750</li>
+</ul>
+</li>
+<li>Decay algorithm = 15 minutes (Half-life)</li>
+<li>Maximum penalty = 4x decay algorithm = 60 minutes</li>
+</ul>
+
+
+<p>Example:
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  bgp dampening 10 1000 4000 255&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>clear ip bgp dampening x.x.x.x x.x.x.x (resets dampening)
+</span><span class='line'>clear ip bgp x.x.x.x flap-statistics (resets dampening)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Refreshing neighbor changes without tearing down the BGP session:</h3>
+
+<ul>
+<li>Outbound soft reconfigure = <code>clear ip bgp x.x.x.x soft-out</code> (NO extra configuration needed)</li>
+<li>Inbound soft reconfigure = <code>clear ip bgp x.x.x.x soft-in</code> (MUST be pre-configured: <code>neighbor x.x.x.x soft-reconfiguration inbound</code>)</li>
+<li>Route refresh ONLY = <code>clear ip bgp x.x.x.x soft-in</code> (WITHOUT neighbor config as above)</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OSPF Path Selection Order of Preference and Summarization]]></title>
@@ -72,201 +696,6 @@
 
 
 <p>It is possible to &lsquo;black hole&rsquo; the traffic or sub-optimal route within the domain with OSPF summarization. OSPF will AUTO create a discard route with the <strong>Null0</strong> interface as the next-hop to prevent the router from using a shorter match (0.0.0.0), if the more specific destination network is not present in the routing table. This behavior can be disabled with <code>no discard-route &lt;INTERNAL|EXTERNAL&gt;</code>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[OSPF LSA's, Area Types, Network Types and Timers]]></title>
-    <link href="http://devrandom.za.net/blog/2014/12/14/ospf-lsas-areas-networks-timers/"/>
-    <updated>2014-12-14T22:41:32+02:00</updated>
-    <id>http://devrandom.za.net/blog/2014/12/14/ospf-lsas-areas-networks-timers</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/ospf.png"></p>
-
-<p>My shortish summarized version of the OSPF Link State Advertisements, Area Types, Network Types and Timers.</p>
-
-<!--more-->
-
-
-<br>
-
-
-<br>
-
-
-<br>
-
-
-<h3>OSPF Link State Advertisements (LSA&rsquo;s):</h3>
-
-<br>
-
-
-<table>
-<thead>
-<tr>
-<th align="center"> LSA </th>
-<th align="left">      Name     </th>
-<th align="left">                 Description                 </th>
-<th align="left">                       Area                       </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center"> 1   </td>
-<td align="left"> Router LSA    </td>
-<td align="left">  Generated by Any router for any/all links  </td>
-<td align="left">                    Intra-area                    </td>
-</tr>
-<tr>
-<td align="center"> 2   </td>
-<td align="left"> Network LSA   </td>
-<td align="left">   Generated by a DR only for DR-used-links  </td>
-<td align="left">                    Intra-area                    </td>
-</tr>
-<tr>
-<td align="center"> 3   </td>
-<td align="left"> Summary LSA   </td>
-<td align="left">    Generated by ABRs to summarize 1 &amp; 2&rsquo;s   </td>
-<td align="left">                    Inter-area                    </td>
-</tr>
-<tr>
-<td align="center"> 4   </td>
-<td align="left"> ASBR Summary  </td>
-<td align="left"> Generated by ABRs to summarize NH of Type 5 </td>
-<td align="left">                    Inter-area                    </td>
-</tr>
-<tr>
-<td align="center"> 5   </td>
-<td align="left"> External LSA  </td>
-<td align="left">              Generated by ASBR              </td>
-<td align="left">        Domain-wide (other than stub areas)       </td>
-</tr>
-<tr>
-<td align="center"> 7   </td>
-<td align="left"> NSSA External </td>
-<td align="left">   Generated by ASBR specific to NSSA area   </td>
-<td align="left"> NSSA only &ndash; Translated to Type 5 for other areas</td>
-</tr>
-</tbody>
-</table>
-
-
-<br>
-
-
-<p><strong>Type1</strong> &ndash; Originated by all routers to tell the other routers in the area about their connected links.</p>
-
-<p><strong>Type2</strong> &ndash; Originated by the DR in the area. Simplifies the graph of the area when there are multiple routers on the same segment.</p>
-
-<p><strong>Type3</strong> &ndash; Originated by the ABR. Describes routes in other areas.</p>
-
-<p><strong>Type4</strong> &ndash; Originated by the ABR. Describes inter-area reachability to a router that performed redistribution.</p>
-
-<p><strong>Type5</strong> &ndash; Originated by the ASBR that performs the redistribution. Describes redistributed routes from another protocol.</p>
-
-<p><strong>Type7</strong> &ndash; Originated by the ASBR, but ONLY applies to NSSA external areas. (Converted to type 5 LSA when the ABR of the NSSA originates them into area 0)</p>
-
-<br>
-
-
-<table>
-<thead>
-<tr>
-<th align="center">LSA </th>
-<th align="center">    Area    </th>
-<th align="center"> RIB Indentifier </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center"> 1   </td>
-<td align="center"> Intra-area </td>
-<td align="center">        O        </td>
-</tr>
-<tr>
-<td align="center"> 2   </td>
-<td align="center"> Intra-area </td>
-<td align="center">        O        </td>
-</tr>
-<tr>
-<td align="center"> 3   </td>
-<td align="center"> Inter-area </td>
-<td align="center">       O IA      </td>
-</tr>
-<tr>
-<td align="center"> 4   </td>
-<td align="center"> Inter-area </td>
-<td align="center">       O IA      </td>
-</tr>
-<tr>
-<td align="center"> 5   </td>
-<td align="center"> External   </td>
-<td align="center">     E1 or E2    </td>
-</tr>
-<tr>
-<td align="center"> 7   </td>
-<td align="center"> External   </td>
-<td align="center">     N1 or N2    </td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>OSPF Area Types:</h3>
-
-<p><iframe width="640" height="360" src="http://www.youtube.com/embed/nayaSlYkQp0 " frameborder="0" allowfullscreen></iframe></p>
-
-<ul>
-<li><strong>stub</strong> = 1, 2, 3 + 0.0.0.0 default route</li>
-<li><strong>total stub</strong> = 1, 2 + 0.0.0.0 default route</li>
-<li><strong>NSSA</strong> = 1, 2, 3, 7  (0.0.0.0 default route is not automatically created although you can add it)</li>
-<li><strong>total NSSA</strong> = 1, 2, 7 + 0.0.0.0 default route</li>
-</ul>
-
-
-<p>Anything that says <strong>&ldquo;total&rdquo;</strong> must get the <code>"no-summary"</code> on the CLI.</p>
-
-<p><strong>NOTES:</strong></p>
-
-<ol>
-<li><p>If the NSSA ASBR is also an ABR, <strong>Type7</strong> LSA&rsquo;s will be originated into the NSSA and <strong>Type5</strong> LSA&rsquo;s will be originated into <strong>Area 0</strong>. <strong>Type7</strong> LSA origination into the NSSA, in this case, can be suppressed with <code>area &lt;AREA_NUM&gt; nssa no-redistribution</code>.</p></li>
-<li><p>If multiple ABR&rsquo;s only one will perform NSSA Type7 to Type5 translation, based on ABR with highest <strong>Router-ID</strong>.</p></li>
-<li><p>If the Forwarding Address (FA) for an external prefix is NOT reachable/filtered, the router will NOT install it into the route table nor will it translate Type7 to Type5 LSA&rsquo;s. This can be &ldquo;fixed&rdquo; by <code>area &lt;AREA_NUM&gt; nssa suppress-fa</code> on the ABR, thus setting the FA to itself (0.0.0.0).</p></li>
-</ol>
-
-
-<h3>OSPF Network Types:</h3>
-
-<ul>
-<li>Broadcast</li>
-<li>Non-broadcast</li>
-<li>Point-to-Point</li>
-<li>Point-to-Multipoint</li>
-<li>Point-to-Multipoint (Non-broadcast)</li>
-</ul>
-
-
-<p><strong>Mixing network types, combinations that will work:</strong></p>
-
-<blockquote><p>Reason why some network types are not compatible with other is Network Types that use DR election will only be compatible with other types that also elects/requires DR election.</p></blockquote>
-
-<ul>
-<li>Broadcast to Broadcast</li>
-<li>Non-Broadcast to Non-Broadcast</li>
-<li>Point-to-Point to Point-to-Point</li>
-<li>Point-to-Multipoint to Point-to-Multipoint</li>
-<li>Broadcast to Non-Broadcast (MUST adjust hello/dead timers to form adjacency)</li>
-<li>Point-to-Point to Point-to-Multipoint (MUST adjust hello/dead timers to form adjacency)</li>
-</ul>
-
-
-<p><strong>Point-to-(anything)</strong> does not use a DR.</p>
-
-<p><strong>(anything)-to-Multipoint</strong> adds a /32 route advertisement. The DR and BDR is the only routers that is REQUIRED to peer with all other routers when <strong>&ldquo;Multipoint&rdquo;</strong> networks is used.</p>
-
-<h3>OSPF Network Type Timers (Hello/Dead):</h3>
-
-<p>Anything with <strong>&ldquo;multi&rdquo;</strong> or <strong>&ldquo;non&rdquo;</strong> uses slow timers <code>(30/120)</code>, others use fast timers <code>(10/40)</code>.</p>
 ]]></content>
   </entry>
   
