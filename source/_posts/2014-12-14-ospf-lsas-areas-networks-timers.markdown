@@ -48,6 +48,9 @@ LSA |    Area    | RIB Indentifier
  7   | External   |     N1 or N2    
 
 ###OSPF Area Types:
+
+{% youtube nayaSlYkQp0 %}
+
 - **stub** = 1, 2, 3 + 0.0.0.0 default route
 - **total stub** = 1, 2 + 0.0.0.0 default route
 - **NSSA** = 1, 2, 3, 7  (0.0.0.0 default route is not automatically created although you can add it)
