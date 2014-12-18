@@ -13,6 +13,9 @@ My shortish summarized version of Cisco BGP Basics and Best Path Selection.
 <br>
 <br>
 <br>
+<br>
+
+{% youtube z8INzy9E628 %}
 
 ###BGP Rules:
 
