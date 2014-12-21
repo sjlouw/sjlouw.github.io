@@ -45,3 +45,17 @@ My name is S.J. Louw. This blog is my personal scratch pad of stuff I want to re
   <a href="http://en.wikipedia.org/wiki/Cascading_Style_Sheets" target="_blank"><img src="/images/css-logo.png" border=0/></a>
   <a href="http://en.wikipedia.org/wiki/HTML" target="_blank"><img src="/images/html-logo.png" border=0/></a>
 </div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+**Certifications:**
+<div>
+  <img src="/images/ccna.png" border=0/>
+  <img src="/images/ccnp.png" border=0/>
+  <img src="/images/ccda.png" border=0/>
+  <img src="/images/ccdp.png" border=0/>
+</div>

@@ -90,6 +90,13 @@ Prefix-lists can also be attached to route-maps.
 - community-list **(1-99)** matches on normal community values
 - community-list **(100-199)** matches on REGEX
 
+**By default 4 well known communities that can be used to mark prefixes:**
+
+- **Internet:** advertise these routes to all neighbors.
+- **Local-as:** prevent sending routes outside the local As within the confederation.
+- **No-Advertise:** do not advertise this route to any peer, internal or external.
+- **No-Export:** do not advertise this route to external BGP peers.
+
 **Examples:**
 
 {% codeblock %}
