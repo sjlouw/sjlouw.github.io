@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>On-the-Fly Read-Write compressed filesystem - Random Notes</title>
+  <title>MPLS Layer 3 VPN Basics, Setup and Verification - Random Notes</title>
   <meta name="author" content="S.J. Louw">
 
   
@@ -16,7 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://devrandom.za.net/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem">
+  <link rel="canonical" href="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification">
   <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -117,7 +117,7 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2012-02-18T00:00:00+02:00" pubdate data-updated="true">Feb 18<span>th</span>, 2012</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-21T14:16:06+02:00" pubdate data-updated="true">Dec 21<span>st</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://devrandom.za.net">Comments</a>
@@ -126,16 +126,16 @@
     
     
     <h1 class="entry-title">
-        On-the-Fly Read-Write compressed filesystem
+        MPLS Layer 3 VPN Basics, Setup and Verification
         
     </h1>
     
   </header>
 
 
-<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/zip.png"></p>
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/mpls.png"></p>
 
-<p>I recently had a problem where <a href="http://sourceforge.net/projects/sarg/">&ldquo;SARG&rdquo;</a> completely chew up all root filesystem space as reports was generated daily and stored under /var/www/html/sarg. Quick solution&hellip; I thought this can also come in handy for future reference&hellip; &ldquo;On-the-Fly read-write compressed filesystem&rdquo;</p>
+<p>My shortish summarized version of MPLS Layer 3 VPN Basics, Setup and Verification.</p>
 
 <!--more-->
 
@@ -146,60 +146,80 @@
 <br>
 
 
-<p>I did the following on CentOS 5.5:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rpm -Uhv http://apt.sw.be/redhat/el5/en/x86_64/rpmforge/RPMS//rpmforge-release-0.3.6-1.el5.rf.x86_64.rpm
-</span><span class='line'>
-</span><span class='line'>yum -y install squashfs-tools fuse-unionfs
-</span><span class='line'>
-</span><span class='line'>mv /var/www/html/sarg /root/sarg-old
-</span><span class='line'>mkdir /var/www/html/sarg
-</span><span class='line'>
-</span><span class='line'>mksquashfs /root/sarg-old /.sarg-compressed.sqfs -check_data
-</span><span class='line'>
-</span><span class='line'>mkdir -p /var/squashed/<span class="o">{</span>ro,rw<span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<br>
 
 
-<p>Add the following to /etc/fstab:</p>
+<br>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/.sarg-compressed.sqfs  /var/squashed/ro  squashfs  loop,ro  0 0
-</span><span class='line'>unionfs#/var/squashed/rw=rw:/var/squashed/ro=ro /var/www/html/sarg fuse default_permissions,allow_other,use_ino,nonempty,suid,cow 0 0</span></code></pre></td></tr></table></div></figure>
+
+<br>
 
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mount -all
-</span><span class='line'>
-</span><span class='line'>touch /var/www/html/sarg/test
-</span><span class='line'>rm -rf /var/www/html/sarg-old
-</span></code></pre></td></tr></table></div></figure>
+<iframe width="640" height="360" src="http://www.youtube.com/embed/MEWIdO40U54 " frameborder="0" allowfullscreen></iframe>
 
 
-<p>Check that your new fuse filesystem is mounted:</p>
+<h3>MPLS Layer 3 VPNs:</h3>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>df -h
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>Private routing (site-2-site) per customer (VRF)</li>
+<li>Virtual Network (private) VPN &ndash; Separates data-plane, securely, per customer.</li>
+<li>Terminology:
+
+<ul>
+<li>Label Switched Path (<strong>LSP</strong>)</li>
+<li>Label Switch Router (<strong>LSR</strong>)</li>
+<li>Customer Edge (<strong>CE</strong>)</li>
+<li>Provider Edge (<strong>PE</strong>)</li>
+<li>Provider (<strong>P</strong>)</li>
+</ul>
+</li>
+<li>General Label flow procedure:
+
+<ul>
+<li>CE &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;> PE = <strong>PUSH</strong> label (entering core)</li>
+<li>PE &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;> PE = <strong>SWOP</strong> labels (inside core)</li>
+<li>PE &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;> CE = <strong>POP</strong> label (exiting core)</li>
+</ul>
+</li>
+<li>MPLSs&#8217; control-plane protocol is Label Distribution Protocol <strong>(LDP)</strong></li>
+<li>Experimental bits inside packet = Used for QoS</li>
+<li>Bottom-of-stack bits (S-bit) inside packet = If = 1 indicates bottom of stack has been reached</li>
+<li>MPLS header injected between Data-link (Layer2) and Network layer (Layer3)</li>
+</ul>
 
 
-<p>By doing this, all files written to /var/www/html/sarg is actually being written &ldquo;inside&rdquo; /.sarg-compressed.sqfs (The compressed filesystem) Files like text, or html in this instance, are compressed at a massive ratio.</p>
+<h3>Basic Setup Procedure:</h3>
+
+<ol>
+<li>Before setting up MPLS, first verify basic IP routing/reachability (NLRI)</li>
+<li>Setup MPLS only on PE to PE routers.</li>
+<li><code>mpls label range 100 199</code> (Setup label range for router to use)</li>
+<li><code>mpls ip</code> (Enable MPLS in Global Config mode)</li>
+<li><code>mpls ip</code> (Enable MPLS under interfaces to be used)</li>
+</ol>
+
+
+<p>When MPLS is enabled on interfaces, <strong>LDP</strong> forms neighbors and exchange labels.</p>
+
+<h3>Verifying Labels:</h3>
+
+<ol>
+<li><code>show mpls ldp bindings x.x.x.x &lt;SLASH_NOTATION_MASK&gt;</code></li>
+<li><code>show mpls forwarding-table x.x.x.x</code> (Forwarding table is build from <strong>RIB</strong>)</li>
+</ol>
+
+
+<p><strong>NOTES:</strong></p>
+
+<ul>
+<li>Label, implicit Null (<strong>imp-null</strong>) (3) &ndash; Directly attached networks</li>
+<li>MPLS reserved labels = 0-15</li>
+<li>By default LAST <strong>P</strong> router POPs label before sending to LAST <strong>PE</strong> router. (Penultimate Hop Popping &ndash; PHP)</li>
+<li>If MPLS enabled : <code>traceroute</code> will include MPLS label</li>
+</ul>
+
 </div>
 
 
@@ -223,13 +243,13 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2012-02-18T00:00:00+02:00" pubdate data-updated="true">Feb 18<span>th</span>, 2012</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-21T14:16:06+02:00" pubdate data-updated="true">Dec 21<span>st</span>, 2014</time>
           
 
 <span class="glyphicon glyphicon-tags"></span>&nbsp;
 <span class="categories">
   
-    <a class='category label label-primary' href='/blog/categories/linux/'>linux</a> <a class='category label label-primary' href='/blog/categories/other/'>other</a>
+    <a class='category label label-primary' href='/blog/categories/cisco/'>cisco</a> <a class='category label label-primary' href='/blog/categories/networking/'>networking</a>
   
 </span>
 
@@ -238,7 +258,7 @@
         
           <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -252,10 +272,8 @@
         
           <ul class="meta text-muted pager">
             
-            <li class="previous"><a href="/blog/2012/02/18/fix-for-mac-os-x-not-resolving-fqdn-addresses-over-vpn/" title="Previous Post: Fix for Mac OS X not resolving FQDN addresses over VPN">&laquo; Fix for Mac OS X not resolving FQDN addresses over VPN</a></li>
+            <li class="previous"><a href="/blog/2014/12/17/bgp-basics-and-best-path-selection/" title="Previous Post: BGP Basics and Best Path Selection">&laquo; BGP Basics and Best Path Selection</a></li>
             
-            
-            <li class="next"><a href="/blog/2012/02/19/asterisk-registered-useragent-audit/" title="Next Post: Asterisk - registered Useragent audit">Asterisk - registered Useragent audit &raquo;</a></li>
             
           </ul>
         
@@ -294,7 +312,7 @@
   
   <div id="recent_posts" class="list-group">
     
-    <a class="list-group-item " href="/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/">MPLS Layer 3 VPN Basics, Setup and Verification</a>
+    <a class="list-group-item active" href="/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/">MPLS Layer 3 VPN Basics, Setup and Verification</a>
     
     <a class="list-group-item " href="/blog/2014/12/17/bgp-basics-and-best-path-selection/">BGP Basics and Best Path Selection</a>
     
@@ -457,8 +475,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://devrandom.za.net/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem/';
-        var disqus_url = 'http://devrandom.za.net/blog/2012/02/18/on-the-fly-read-write-compressed-filesystem/';
+        var disqus_identifier = 'http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/';
+        var disqus_url = 'http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/';
         var disqus_script = 'embed.js';
       
     (function () {

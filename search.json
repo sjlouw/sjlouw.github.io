@@ -1,6 +1,12 @@
 [
 
     {
+        "url": "/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/",
+        "title": "MPLS Layer 3 VPN Basics, Setup and Verification",
+        "date": "21 December 2014"
+    },
+
+    {
         "url": "/blog/2014/12/17/bgp-basics-and-best-path-selection/",
         "title": "BGP Basics and Best Path Selection",
         "date": "17 December 2014"

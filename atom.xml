@@ -4,7 +4,7 @@
   <title><![CDATA[Random Notes]]></title>
   <link href="http://devrandom.za.net/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-21T07:30:23+02:00</updated>
+  <updated>2014-12-21T14:27:15+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -12,6 +12,13 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MPLS Layer 3 VPN Basics, Setup and Verification]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/"/>
+    <updated>2014-12-21T14:16:06+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification</id>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[BGP Basics and Best Path Selection]]></title>
@@ -144,13 +151,6 @@
     <link href="http://devrandom.za.net/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls/"/>
     <updated>2012-02-12T00:00:00+02:00</updated>
     <id>http://devrandom.za.net/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls</id>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[AppleScript applications with Xcode 3.2.2]]></title>
-    <link href="http://devrandom.za.net/blog/2010/05/03/applescript-applications-with-xcode-3-dot-2-2/"/>
-    <updated>2010-05-03T00:00:00+02:00</updated>
-    <id>http://devrandom.za.net/blog/2010/05/03/applescript-applications-with-xcode-3-dot-2-2</id>
   </entry>
   
 </feed>

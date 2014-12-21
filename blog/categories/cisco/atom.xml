@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cisco | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/cisco/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-21T07:30:23+02:00</updated>
+  <updated>2014-12-21T14:27:15+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -12,6 +12,98 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MPLS Layer 3 VPN Basics, Setup and Verification]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/"/>
+    <updated>2014-12-21T14:16:06+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/mpls.png"></p>
+
+<p>My shortish summarized version of MPLS Layer 3 VPN Basics, Setup and Verification.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<p><iframe width="640" height="360" src="http://www.youtube.com/embed/MEWIdO40U54 " frameborder="0" allowfullscreen></iframe></p>
+
+<h3>MPLS Layer 3 VPNs:</h3>
+
+<ul>
+<li>Private routing (site-2-site) per customer (VRF)</li>
+<li>Virtual Network (private) VPN &ndash; Separates data-plane, securely, per customer.</li>
+<li>Terminology:
+
+<ul>
+<li>Label Switched Path (<strong>LSP</strong>)</li>
+<li>Label Switch Router (<strong>LSR</strong>)</li>
+<li>Customer Edge (<strong>CE</strong>)</li>
+<li>Provider Edge (<strong>PE</strong>)</li>
+<li>Provider (<strong>P</strong>)</li>
+</ul>
+</li>
+<li>General Label flow procedure:
+
+<ul>
+<li>CE &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;> PE = <strong>PUSH</strong> label (entering core)</li>
+<li>PE &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;> PE = <strong>SWOP</strong> labels (inside core)</li>
+<li>PE &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;> CE = <strong>POP</strong> label (exiting core)</li>
+</ul>
+</li>
+<li>MPLSs' control-plane protocol is Label Distribution Protocol <strong>(LDP)</strong></li>
+<li>Experimental bits inside packet = Used for QoS</li>
+<li>Bottom-of-stack bits (S-bit) inside packet = If = 1 indicates bottom of stack has been reached</li>
+<li>MPLS header injected between Data-link (Layer2) and Network layer (Layer3)</li>
+</ul>
+
+
+<h3>Basic Setup Procedure:</h3>
+
+<ol>
+<li>Before setting up MPLS, first verify basic IP routing/reachability (NLRI)</li>
+<li>Setup MPLS only on PE to PE routers.</li>
+<li><code>mpls label range 100 199</code> (Setup label range for router to use)</li>
+<li><code>mpls ip</code> (Enable MPLS in Global Config mode)</li>
+<li><code>mpls ip</code> (Enable MPLS under interfaces to be used)</li>
+</ol>
+
+
+<p>When MPLS is enabled on interfaces, <strong>LDP</strong> forms neighbors and exchange labels.</p>
+
+<h3>Verifying Labels:</h3>
+
+<ol>
+<li><code>show mpls ldp bindings x.x.x.x &lt;SLASH_NOTATION_MASK&gt;</code></li>
+<li><code>show mpls forwarding-table x.x.x.x</code> (Forwarding table is build from <strong>RIB</strong>)</li>
+</ol>
+
+
+<p><strong>NOTES:</strong></p>
+
+<ul>
+<li>Label, implicit Null (<strong>imp-null</strong>) (3) &ndash; Directly attached networks</li>
+<li>MPLS reserved labels = 0-15</li>
+<li>By default LAST <strong>P</strong> router POPs label before sending to LAST <strong>PE</strong> router. (Penultimate Hop Popping &ndash; PHP)</li>
+<li>If MPLS enabled : <code>traceroute</code> will include MPLS label</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[BGP Basics and Best Path Selection]]></title>
@@ -649,68 +741,6 @@
 <li>Route refresh ONLY = <code>clear ip bgp x.x.x.x soft-in</code> (WITHOUT neighbor config as above)</li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[OSPF Path Selection Order of Preference and Summarization]]></title>
-    <link href="http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/"/>
-    <updated>2014-12-16T22:19:58+02:00</updated>
-    <id>http://devrandom.za.net/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/ospf.png"></p>
-
-<p>My shortish summarized version of OSPF Path Selection Order of Preference and Summarization.</p>
-
-<!--more-->
-
-
-<br>
-
-
-<br>
-
-
-<br>
-
-
-<h3>Path Selection:</h3>
-
-<p>These rules apply in THIS order even if the OSPF link metric (Cost value) is changed.</p>
-
-<ol>
-<li>Intra Area Routes (O)</li>
-<li>Inter Area Routes (O IA)</li>
-<li>External Type 1 (E1)</li>
-<li>External Type 2 (E2)</li>
-<li>NSSA Type 1 (N1)</li>
-<li>NSSA TYpe 2 (N2)</li>
-</ol>
-
-
-<p><strong>Interface cost is derived from the bandwidth. The formula is:</strong></p>
-
-<p>Cost = Reference / Bandwidth. (Rounded down to the closest integer)</p>
-
-<p>By default, Reference = 100000 (Kb/s)</p>
-
-<p><strong>NOTES:</strong>
-&ndash; Changing cost values, you need to use the <code>ip ospf cost &lt;COST_VALUE&gt;</code> command on the interface and NOT the <code>bandwidth</code> statement. The <code>bandwidth</code> command is also used for other traffic minipulation techniques like QoS and will break those.</p>
-
-<p>On FastE, GigE, TenGigE and 100GigE the default OSPF cost will be &ldquo;1&rdquo;, so you WILL want to change this!</p>
-
-<h3>Summarization:</h3>
-
-<p>All routers inside the area MUST have exactly the same LSDB to be able to summarize!</p>
-
-<p><strong>Summarization can ONLY be done:</strong></p>
-
-<ul>
-<li>between areas (ABR) with <code>area &lt;SOURCE_AREA&gt; range &lt;ADDRESS&gt; &lt;MASK&gt;</code></li>
-<li>during redistribution (ASBR) from another protocol with <code>summary-address &lt;ADDRESS&gt; &lt;MASK&gt;</code></li>
-</ul>
-
-
-<p>It is possible to &lsquo;black hole&rsquo; the traffic or sub-optimal route within the domain with OSPF summarization. OSPF will AUTO create a discard route with the <strong>Null0</strong> interface as the next-hop to prevent the router from using a shorter match (0.0.0.0), if the more specific destination network is not present in the routing table. This behavior can be disabled with <code>no discard-route &lt;INTERNAL|EXTERNAL&gt;</code>.</p>
 ]]></content>
   </entry>
   
