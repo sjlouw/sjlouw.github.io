@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cisco | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/cisco/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-18T19:30:04+02:00</updated>
+  <updated>2014-12-21T07:30:23+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -324,6 +324,16 @@
 <li>RFC guideline format: 100:12345 where <strong>100 = AS_NUM</strong> and <strong>12345 = community value</strong></li>
 <li>community-list <strong>(1-99)</strong> matches on normal community values</li>
 <li>community-list <strong>(100-199)</strong> matches on REGEX</li>
+</ul>
+
+
+<p><strong>By default 4 well known communities that can be used to mark prefixes:</strong></p>
+
+<ul>
+<li><strong>Internet:</strong> advertise these routes to all neighbors.</li>
+<li><strong>Local-as:</strong> prevent sending routes outside the local As within the confederation.</li>
+<li><strong>No-Advertise:</strong> do not advertise this route to any peer, internal or external.</li>
+<li><strong>No-Export:</strong> do not advertise this route to external BGP peers.</li>
 </ul>
 
 
