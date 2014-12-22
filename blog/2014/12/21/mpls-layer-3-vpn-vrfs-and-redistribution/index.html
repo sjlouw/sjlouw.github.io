@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>BGP Filters and Communities - part2 - Random Notes</title>
+  <title>MPLS Layer 3 VPN VRFs and Redistribution - part2 - Random Notes</title>
   <meta name="author" content="S.J. Louw">
 
   
@@ -16,7 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities">
+  <link rel="canonical" href="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution">
   <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="Random Notes" type="application/atom+xml">
   <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -117,7 +117,7 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-17T21:25:55+02:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-21T14:16:06+02:00" pubdate data-updated="true">Dec 21<span>st</span>, 2014</time>
         
            | <a href="#disqus_thread"
              data-disqus-identifier="http://devrandom.za.net">Comments</a>
@@ -126,16 +126,16 @@
     
     
     <h1 class="entry-title">
-        BGP Filters and Communities - part2
+        MPLS Layer 3 VPN VRFs and Redistribution - part2
         
     </h1>
     
   </header>
 
 
-<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/bgp.png"></p>
+<div class="entry-content clearfix"><p><img class="left" src="/images/blog_posts/mpls.png"></p>
 
-<p>This is part 2 of 4. My shortish summarized version of Cisco BGP Filters and Communities.</p>
+<p>This is part 2 of 2. My shortish summarized version of MPLS Layer 3 VPN VRFs and Redistribution.</p>
 
 <!--more-->
 
@@ -152,70 +152,21 @@
 <br>
 
 
-<br>
+<h3>Virtual Routing and Forwarding (VRF) Instances:</h3>
+
+<ul>
+<li><strong>VRF Name:</strong> AS:THECOMPANY</li>
+<li><strong>Route Distinguisher:</strong> AS:NUMBER or IP_ADDRESS:NUMBER (Does NOT have to match PE-PE)</li>
+<li><strong>Route Target (extended community):</strong> IP_ADDRESS:NUMBER or AS:NUMBER (Export and Import MUST match PE-PE)</li>
+<li><strong>Interface</strong> towards CE to be allocated to VRF</li>
+</ul>
 
 
-<table>
-<thead>
-<tr>
-<th align="left">MATCH USING&hellip;     </th>
-<th align="left">STUFF TO SET&hellip;       </th>
-<th align="left">DIRECTION</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">prefix-list         </td>
-<td align="left">weight               </td>
-<td align="left">inbound</td>
-</tr>
-<tr>
-<td align="left">access-list         </td>
-<td align="left">local preference     </td>
-<td align="left">outbound</td>
-</tr>
-<tr>
-<td align="left">as-path access-list </td>
-<td align="left">origin               </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">neighbor            </td>
-<td align="left">as-path (prepending) </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">route-map           </td>
-<td align="left">med/metric           </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">community-list      </td>
-<td align="left">next-hop (self)      </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">distribute-list     </td>
-<td align="left">community            </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">filter-list         </td>
-<td align="left">                     </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">&hellip;and lots more    </td>
-<td align="left">&hellip;and lots more     </td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p>NOTES:</p>
 
+<p>In production, disable TTL propagation (on <strong>ALL</strong> MPLS routers) to hide label info inside traceroute! (<code>no mpls ip propagate-ttl</code>)</p>
 
-<h3>REGEX Filters:</h3>
-
-<p>Example: Filter AS 100 outbound with REGEX</p>
+<p><strong>Configuration (On PE routers):</strong></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -227,44 +178,90 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ip as-path access-list 1 deny &lt;REGEX> (`_100_`) (Match AS 100 exactly)
-</span><span class='line'>ip as-path access-list 1 permit &lt;REGEX> (`.*`) (Match all/permit any)
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>vrf definition 100:THECOMPANY
+</span><span class='line'>  rd 100:1
+</span><span class='line'>  address-family ipv4
+</span><span class='line'>    route-target export x.x.x.x:100 (reversed on other PE router)
+</span><span class='line'>    route-target import y.y.y.y:100 (reversed on other PE router)
+</span><span class='line'>    exit
+</span><span class='line'>  exit
 </span><span class='line'>
-</span><span class='line'>route-map FILTER_100 permit 10
-</span><span class='line'>  match as-path 1
-</span><span class='line'>
-</span><span class='line'>router bgp &lt;AS_NUM> (100)
-</span><span class='line'>  neighbor x.x.x.x route-map FILTER_100 out
-</span><span class='line'>
-</span><span class='line'>clear ip bgp x.x.x.x</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>interface Gi0/1
+</span><span class='line'>  description THECOMPANY
+</span><span class='line'>  vrf forwarding 100:THECOMPANY (matches VRF definition)
+</span><span class='line'>  ip address x.x.x.x x.x.x.x (lives inside VRF)
+</span><span class='line'>  no shutdown</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Prefix-lists:</h3>
+<p><strong>Verify:</strong></p>
 
-<p>Prefix-lists is for matching routes!</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show ip interface brief
+</span><span class='line'>show vrf
+</span><span class='line'>show ip route vrf 100:THECOMPANY</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Routing Between CE and PE:</h3>
+
+<p><img class="center" src="/images/blog_posts/mpls_vrf_forwarding_procedure.png"></p>
 
 <ul>
-<li>Uses tree-structure</li>
-<li>Better CPU utilization</li>
-<li>Better subnet matching</li>
-<li>Two-stage matching system: <strong>network + mask</strong></li>
-<li>Created in <strong>Global Config</strong> mode</li>
-<li>Matches x.x.x.x/xx EXACTLY</li>
-<li><strong>le</strong> = less than or equel</li>
-<li><strong>ge</strong> = greater than or equel</li>
+<li>Routing needs to be configured and associated to VRF (PE routers ONLY)</li>
+<li>CE routing needs to be configured (CE routers ONLY)</li>
+<li>Mutual redistribution IGP&lt;&mdash;>mBGP needs to be configured (PE routers ONLY)</li>
 </ul>
 
 
-<p><strong>Examples:</strong></p>
+<p><strong>OSPF (PE):</strong></p>
 
-<ol>
-<li><code>ip prefix-list NAME permit 0.0.0.0/0</code> matches ONLY 0.0.0.0/0 (default route)</li>
-<li><code>ip prefix-list NAME permit 0.0.0.0/0 ge 32</code> matches all HOST routes</li>
-<li><code>ip prefix-list NAME permit 0.0.0.0/0 le 32</code> matches ANY route</li>
-<li><code>ip prefix-list NAME permit 0.0.0.0/1 ge 24 le 24</code> matches CLASS A networks or it&rsquo;s subnets</li>
-<li><code>ip prefix-list NAME permit 128.0.0.0/2 ge 16</code> matches CLASS B networks or it&rsquo;s subnets</li>
-</ol>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router ospf 100 vrf 100:YOURCOMPANY
+</span><span class='line'>  network x.x.x.x x.x.x.x area 0
+</span><span class='line'>
+</span><span class='line'>show ip route vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure>
 
+
+<p><strong>OSPF (CE):</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router ospf 1
+</span><span class='line'>  network x.x.x.x x.x.x.x area 0</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>EIGRP (PE):</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router eigrp 1
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY autonomous-system 100
+</span><span class='line'>  network x.x.x.x
+</span><span class='line'>
+</span><span class='line'>show ip route vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>EIGRP (CE):</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router eigrp 1
+</span><span class='line'>  network x.x.x.x
+</span><span class='line'>  no auto-summary</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>RIP (PE):</strong></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -272,47 +269,29 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ip prefix-list NAME permit 0.0.0.0/0 ge 32
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router rip
+</span><span class='line'>  version 2
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY
+</span><span class='line'>    network x.x.x.x
+</span><span class='line'>    no auto-summary
 </span><span class='line'>
-</span><span class='line'>router bgp 100
-</span><span class='line'>  neighbor x.x.x.x prefix-list NAME in
-</span><span class='line'>
-</span><span class='line'>clear ip bgp x.x.x.x</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>show ip route vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Prefix-lists can also be attached to route-maps.</p>
+<p><strong>RIP (CE):</strong></p>
 
-<h3>Outbound Route Filtering (ORF):</h3>
-
-<ul>
-<li>Transmits INBOUND filters to apply OUTBOUND</li>
-<li>Neighbors must support <strong>ORF Type</strong> both sides</li>
-<li><code>neighbor x.x.x.x capability orf prefix-list &lt;SEND_RECEIVE_BOTH&gt;</code></li>
-</ul>
-
-
-<h3>BGP Communities:</h3>
-
-<ul>
-<li>The BGP community value is an optional, transitive attribute.</li>
-<li>ISP&rsquo;s normally create community values for customers, to use, to influence routes.</li>
-<li>RFC guideline format: 100:12345 where <strong>100 = AS_NUM</strong> and <strong>12345 = community value</strong></li>
-<li>community-list <strong>(1-99)</strong> matches on normal community values</li>
-<li>community-list <strong>(100-199)</strong> matches on REGEX</li>
-</ul>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router rip
+</span><span class='line'>  version 2
+</span><span class='line'>  network x.x.x.x
+</span><span class='line'>  no auto-summary</span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>By default 4 well known communities that can be used to mark prefixes:</strong></p>
-
-<ul>
-<li><strong>Internet:</strong> advertise these routes to all neighbors.</li>
-<li><strong>Local-as:</strong> prevent sending routes outside the local As within the confederation.</li>
-<li><strong>No-Advertise:</strong> do not advertise this route to any peer, internal or external.</li>
-<li><strong>No-Export:</strong> do not advertise this route to external BGP peers.</li>
-</ul>
-
-
-<p><strong>Examples:</strong></p>
+<p><strong>BGP (PE):</strong></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -323,29 +302,134 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ip bgp-community new-format
-</span><span class='line'>  neighbor x.x.x.x send-community
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY
+</span><span class='line'>    neighbor x.x.x.x remote-as 101 (eBGP)
+</span><span class='line'>    exit
+</span><span class='line'>  address-family ipv4
+</span><span class='line'>    neighbor x.x.x.x next-hop-self
 </span><span class='line'>
-</span><span class='line'>ip access-list standard CUSTOMER_ROUTES
-</span><span class='line'>  permit x.x.x.x x.x.x.x
-</span><span class='line'>
-</span><span class='line'>route-map SET-COMMUNITY
-</span><span class='line'>  match ip address CUSTOMER_ROUTES
-</span><span class='line'>  set community 100:12345 100:84957 100:3892 (Multiple can be added on one line)</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>clear ip bgp x.x.x.x
+</span><span class='line'>show ip route vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure>
 
 
+<p><strong>BGP (CE):</strong></p>
 
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 101
+</span><span class='line'>  neighbor x.x.x.x remote-as 100 (eBGP)
+</span><span class='line'>  network x.x.x.x</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Redistribution on PE routers:</h3>
+
+<ul>
+<li>CE routes to be <strong>imported</strong> into VRF and <strong>exported</strong> to mBGP</li>
+<li><strong>VPNv4 labels</strong> will be added to <strong>Label Switched Path (LSP)</strong> (Bottom Label).</li>
+<li><strong>Route distinguiser (RD)</strong> and Route <strong>Target (RT)</strong> will be attached to routes.</li>
+</ul>
+
+
+<p><strong>OSPF mutual redistribution:</strong></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ip community-list 1 permit 100:2345
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY
+</span><span class='line'>    redistribute ospf 100 vrf 100:YOURCOMPANY
+</span><span class='line'>    exit
+</span><span class='line'>  exit
 </span><span class='line'>
-</span><span class='line'>route-map MYMAP
-</span><span class='line'>  match community 1
-</span><span class='line'>  set local_preference 20</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>router ospf 100 vrf 100:YOURCOMPANY
+</span><span class='line'>  redistribute bgp 100 subnets</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>EIGRP mutual redistribution:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY
+</span><span class='line'>    redistribute eigrp 1
+</span><span class='line'>    exit
+</span><span class='line'>  exit
+</span><span class='line'>
+</span><span class='line'>router eigrp 1
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY autonomous-system 100
+</span><span class='line'>    redistribute bgp 100 metric y y y y y</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>RIP mutual redistribution:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY
+</span><span class='line'>    redistribute rip
+</span><span class='line'>    exit
+</span><span class='line'>  exit
+</span><span class='line'>
+</span><span class='line'>router rip
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY
+</span><span class='line'>    redistribute bgp 100 metric y (hop count)</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Verify:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show bgp vpnv4 unicast rd 100:1 labels
+</span><span class='line'>show bgp vpnv4 unicast vrf 100:YOURCOMPANY label
+</span><span class='line'>show mpls forwarding-table vrf 100:YOURCOMPANY
+</span><span class='line'>show ip cef vrf 100:YOURCOMPANY x.x.x.x/xx
+</span><span class='line'>show bgp vpnv4 unicast vrf 100:YOURCOMPANY x.x.x.x/xx
+</span><span class='line'>show ip protocols
+</span><span class='line'>traceroute x.x.x.x
+</span><span class='line'>traceroute mpls ipv4 x.x.x.x x.x.x.x</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Using &ldquo;VRF-aware&rdquo; applications for troubleshooting:</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show ip route vrf 100:YOURCOMPANY
+</span><span class='line'>ip route vrf 100:YOURCOMPANY x.x.x.x y.y.y.y z.z.z.z
+</span><span class='line'>ping vrf 100:YOURCOMPANY x.x.x.x
+</span><span class='line'>traceroute vrf 100:YOURCOMPANY x.x.x.x
+</span><span class='line'>telnet x.x.x.x /vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure>
+
+
 
 </div>
 
@@ -370,7 +454,7 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-17T21:25:55+02:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2014-12-21T14:16:06+02:00" pubdate data-updated="true">Dec 21<span>st</span>, 2014</time>
           
 
 <span class="glyphicon glyphicon-tags"></span>&nbsp;
@@ -385,7 +469,7 @@
         
           <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution/" data-via="sjlouw" data-counturl="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -399,10 +483,10 @@
         
           <ul class="meta text-muted pager">
             
-            <li class="previous"><a href="/blog/2014/12/17/bgp-route-reflectors-and-confederations/" title="Previous Post: BGP Route Reflectors and Confederations - part3">&laquo; BGP Route Reflectors and Confederations - part3</a></li>
+            <li class="previous"><a href="/blog/2014/12/17/bgp-basics-and-best-path-selection/" title="Previous Post: BGP Basics and Best Path Selection - part1">&laquo; BGP Basics and Best Path Selection - part1</a></li>
             
             
-            <li class="next"><a href="/blog/2014/12/17/bgp-basics-and-best-path-selection/" title="Next Post: BGP Basics and Best Path Selection - part1">BGP Basics and Best Path Selection - part1 &raquo;</a></li>
+            <li class="next"><a href="/blog/2014/12/22/mpls-layer-3-vpn-basics-setup-and-verification/" title="Next Post: MPLS Layer 3 VPN Basics, Setup and Verification - part1">MPLS Layer 3 VPN Basics, Setup and Verification - part1 &raquo;</a></li>
             
           </ul>
         
@@ -443,11 +527,11 @@
     
     <a class="list-group-item " href="/blog/2014/12/22/mpls-layer-3-vpn-basics-setup-and-verification/">MPLS Layer 3 VPN Basics, Setup and Verification - part1</a>
     
-    <a class="list-group-item " href="/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution/">MPLS Layer 3 VPN VRFs and Redistribution - part2</a>
+    <a class="list-group-item active" href="/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution/">MPLS Layer 3 VPN VRFs and Redistribution - part2</a>
     
     <a class="list-group-item " href="/blog/2014/12/17/bgp-basics-and-best-path-selection/">BGP Basics and Best Path Selection - part1</a>
     
-    <a class="list-group-item active" href="/blog/2014/12/17/bgp-filters-and-communities/">BGP Filters and Communities - part2</a>
+    <a class="list-group-item " href="/blog/2014/12/17/bgp-filters-and-communities/">BGP Filters and Communities - part2</a>
     
     <a class="list-group-item " href="/blog/2014/12/17/bgp-route-reflectors-and-confederations/">BGP Route Reflectors and Confederations - part3</a>
     
@@ -604,8 +688,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/';
-        var disqus_url = 'http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/';
+        var disqus_identifier = 'http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution/';
+        var disqus_url = 'http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution/';
         var disqus_script = 'embed.js';
       
     (function () {

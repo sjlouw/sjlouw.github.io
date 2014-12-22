@@ -4,7 +4,7 @@
   <title><![CDATA[Random Notes]]></title>
   <link href="http://devrandom.za.net/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-21T14:27:15+02:00</updated>
+  <updated>2014-12-22T23:16:21+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -14,35 +14,42 @@
 
   
   <entry>
-    <title type="html"><![CDATA[MPLS Layer 3 VPN Basics, Setup and Verification]]></title>
-    <link href="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/"/>
-    <updated>2014-12-21T14:16:06+02:00</updated>
-    <id>http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification</id>
+    <title type="html"><![CDATA[MPLS Layer 3 VPN Basics, Setup and Verification - part1]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/22/mpls-layer-3-vpn-basics-setup-and-verification/"/>
+    <updated>2014-12-22T22:59:29+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/22/mpls-layer-3-vpn-basics-setup-and-verification</id>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[BGP Basics and Best Path Selection]]></title>
+    <title type="html"><![CDATA[MPLS Layer 3 VPN VRFs and Redistribution - part2]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution/"/>
+    <updated>2014-12-21T14:16:06+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution</id>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Basics and Best Path Selection - part1]]></title>
     <link href="http://devrandom.za.net/blog/2014/12/17/bgp-basics-and-best-path-selection/"/>
     <updated>2014-12-17T21:26:20+02:00</updated>
     <id>http://devrandom.za.net/blog/2014/12/17/bgp-basics-and-best-path-selection</id>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[BGP Filters and Communities]]></title>
+    <title type="html"><![CDATA[BGP Filters and Communities - part2]]></title>
     <link href="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/"/>
     <updated>2014-12-17T21:25:55+02:00</updated>
     <id>http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities</id>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[BGP Route Reflectors and Confederations]]></title>
+    <title type="html"><![CDATA[BGP Route Reflectors and Confederations - part3]]></title>
     <link href="http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations/"/>
     <updated>2014-12-17T21:25:21+02:00</updated>
     <id>http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations</id>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh]]></title>
+    <title type="html"><![CDATA[BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh - part4]]></title>
     <link href="http://devrandom.za.net/blog/2014/12/17/bgp-optimization/"/>
     <updated>2014-12-17T21:24:08+02:00</updated>
     <id>http://devrandom.za.net/blog/2014/12/17/bgp-optimization</id>
@@ -144,13 +151,6 @@
     <link href="http://devrandom.za.net/blog/2012/02/18/fix-for-mac-os-x-not-resolving-fqdn-addresses-over-vpn/"/>
     <updated>2012-02-18T00:00:00+02:00</updated>
     <id>http://devrandom.za.net/blog/2012/02/18/fix-for-mac-os-x-not-resolving-fqdn-addresses-over-vpn</id>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Mac OS X Lion and Cisco IPSEC VPN pitfalls]]></title>
-    <link href="http://devrandom.za.net/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls/"/>
-    <updated>2012-02-12T00:00:00+02:00</updated>
-    <id>http://devrandom.za.net/blog/2012/02/12/mac-os-x-lion-and-cisco-ipsec-vpn-pitfalls</id>
   </entry>
   
 </feed>

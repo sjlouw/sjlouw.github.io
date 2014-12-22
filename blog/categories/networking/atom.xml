@@ -4,7 +4,7 @@
   <title><![CDATA[Category: networking | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/networking/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-21T14:27:15+02:00</updated>
+  <updated>2014-12-22T23:16:21+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -14,13 +14,13 @@
 
   
   <entry>
-    <title type="html"><![CDATA[MPLS Layer 3 VPN Basics, Setup and Verification]]></title>
-    <link href="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/"/>
-    <updated>2014-12-21T14:16:06+02:00</updated>
-    <id>http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification</id>
+    <title type="html"><![CDATA[MPLS Layer 3 VPN Basics, Setup and Verification - part1]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/22/mpls-layer-3-vpn-basics-setup-and-verification/"/>
+    <updated>2014-12-22T22:59:29+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/22/mpls-layer-3-vpn-basics-setup-and-verification</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/mpls.png"></p>
 
-<p>My shortish summarized version of MPLS Layer 3 VPN Basics, Setup and Verification.</p>
+<p>This is part 1 of 2. My shortish summarized version of MPLS Layer 3 VPN Basics, Setup and Verification.</p>
 
 <!--more-->
 
@@ -46,7 +46,7 @@
 
 <ul>
 <li>Private routing (site-2-site) per customer (VRF)</li>
-<li>Virtual Network (private) VPN &ndash; Separates data-plane, securely, per customer.</li>
+<li>Virtual Network (private) VPN &ndash; Separates data-plane, securely (NO encryption), per customer.</li>
 <li>Terminology:
 
 <ul>
@@ -55,9 +55,13 @@
 <li>Customer Edge (<strong>CE</strong>)</li>
 <li>Provider Edge (<strong>PE</strong>)</li>
 <li>Provider (<strong>P</strong>)</li>
+<li>Routing Information Base (<strong>RIB</strong>)</li>
+<li>Forwarding Information Base (<strong>FIB</strong>)</li>
+<li>Label Information Base (<strong>LIB</strong>)</li>
+<li>Label Forwarding Information Base (<strong>LFIB</strong>)</li>
 </ul>
 </li>
-<li>General Label flow procedure:
+<li>General label flow procedure:
 
 <ul>
 <li>CE &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;> PE = <strong>PUSH</strong> label (entering core)</li>
@@ -75,7 +79,7 @@
 <h3>Basic Setup Procedure:</h3>
 
 <ol>
-<li>Before setting up MPLS, first verify basic IP routing/reachability (NLRI)</li>
+<li>Before setting up MPLS, first verify basic IP routing/reachability.</li>
 <li>Setup MPLS only on PE to PE routers.</li>
 <li><code>mpls label range 100 199</code> (Setup label range for router to use)</li>
 <li><code>mpls ip</code> (Enable MPLS in Global Config mode)</li>
@@ -83,7 +87,7 @@
 </ol>
 
 
-<p>When MPLS is enabled on interfaces, <strong>LDP</strong> forms neighbors and exchange labels.</p>
+<p>When MPLS is enabled globally, it creates local labels for each route in it&rsquo;s routing table. (default does <strong>NOT</strong> stay static, can change) Then when MPLS is enabled on interfaces, <strong>LDP</strong> forms neighbors and exchange labels.</p>
 
 <h3>Verifying Labels:</h3>
 
@@ -102,17 +106,472 @@
 <li>If MPLS enabled : <code>traceroute</code> will include MPLS label</li>
 </ul>
 
+
+<h3>Label Distribution Protocol (LDP):</h3>
+
+<ul>
+<li>Labels does <strong>NOT</strong> stay statically numbered by default. It <strong>WILL</strong> change when router reboots, config changes, etc.</li>
+<li>Best path will ALWAYS be LSP over IPv4</li>
+<li>IPv4 <strong>transport address</strong> (can be changed) used to form neighbors, NOT necessarily = Router-ID.</li>
+<li>Router MUST be able to reach neighbor&rsquo;s <strong>transport address</strong> to establish neighbor relationship.</li>
+<li>Use multicast <strong>224.0.0.2</strong>, destination <strong>UDP port 646</strong> in Hello packets.</li>
+<li>Use unicast, <strong>TCP port 646</strong> to establish neighbor relationship.</li>
+<li>Highest Router-ID will be <strong>Active / initiating</strong> router and lower Router-ID will be <strong>Passive / receiving</strong> router in TCP LDP neighbor negotiation.</li>
+</ul>
+
+
+<p>Show labels assigned to routes:</p>
+
+<p><code>show mpls ldp binings</code></p>
+
+<p>Show local labels ONLY:</p>
+
+<p><code>show mpls ldp bindings local</code></p>
+
+<p>Show label best path for a route:</p>
+
+<p><code>show mpls forwarding-table x.x.x.x</code></p>
+
+<p>Debug LDP bindings:</p>
+
+<p><code>debug mpls ldp bindings</code></p>
+
+<p><strong>LDP Router-ID selection, order of preference:</strong></p>
+
+<ol>
+<li>Administratively configured address (<code>mpls ldp router-id &lt;INTERFACE/NUM&gt; force (global config mode)</code>)</li>
+<li>Highest IP address on loopback</li>
+<li>Highest IP address on interface</li>
+</ol>
+
+
+<p><strong>Transport address selection, order of preference:</strong></p>
+
+<ol>
+<li>Administratively configured address (<code>mpls ldp discovery transport-address interface (under interface)</code>)</li>
+<li>Router-ID</li>
+</ol>
+
+
+<p><strong>Verifying both Router-ID and transport address:</strong></p>
+
+<p><code>show mpls ldp discovery detail</code></p>
+
+<h3>Label Switched Path (LSP):</h3>
+
+<p><strong>Label Retention:</strong></p>
+
+<ul>
+<li><strong>Liberal Label Retention (LLR) (default):</strong> Label mapping received from peer is retained regardless of whether the LSR is the next hop for advertised mapping.</li>
+<li><strong>Conservative Label retention (CLR):</strong> Label mappings will ONLY be retained if sending LSR is next hop downstream router for this specific FEC. ONLY labels used for MPLS packet forwarding are kept in LIB.</li>
+</ul>
+
+
+<p><strong>Verification:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show mpls ldp neighbor
+</span><span class='line'>show mpls ldp bindings x.x.x.x
+</span><span class='line'>show mpls forwarding-table x.x.x.x
+</span><span class='line'>traceroute x.x.x.x</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Multi-protocol BGP (mBGP):</h3>
+
+<ul>
+<li>Configured on PE routers</li>
+<li>VPNv4 routes include VRF/Route distinguishing (RD) info</li>
+<li><strong>Route targets</strong> included inside VPNv4 routes as extended community values, to be imported into VRFs on PE routers.</li>
+</ul>
+
+
+<p><strong>Configuration:</strong></p>
+
+<p><strong>1. Verify</strong> PE to PE connectivity (<code>ping</code> / <code>traceroute</code>)</p>
+
+<p><strong>2. Setup:</strong>
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  neighbor x.x.x.x remote-as 100 (iBGP)
+</span><span class='line'>  neighbor x.x.x.x update-source loopback 0
+</span><span class='line'>  address-family vpnv4&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>neighbor x.x.x.x activate
+</span><span class='line'>neighbor x.x.x.x send-community extended
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>3. Verify:</strong>
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show ip bgp neighbors | section capabilities
+</span><span class='line'>show control-plane host open-ports</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[BGP Basics and Best Path Selection]]></title>
+    <title type="html"><![CDATA[MPLS Layer 3 VPN VRFs and Redistribution - part2]]></title>
+    <link href="http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution/"/>
+    <updated>2014-12-21T14:16:06+02:00</updated>
+    <id>http://devrandom.za.net/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/mpls.png"></p>
+
+<p>This is part 2 of 2. My shortish summarized version of MPLS Layer 3 VPN VRFs and Redistribution.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Virtual Routing and Forwarding (VRF) Instances:</h3>
+
+<ul>
+<li><strong>VRF Name:</strong> AS:THECOMPANY</li>
+<li><strong>Route Distinguisher:</strong> AS:NUMBER or IP_ADDRESS:NUMBER (Does NOT have to match PE-PE)</li>
+<li><strong>Route Target (extended community):</strong> IP_ADDRESS:NUMBER or AS:NUMBER (Export and Import MUST match PE-PE)</li>
+<li><strong>Interface</strong> towards CE to be allocated to VRF</li>
+</ul>
+
+
+<p>NOTES:</p>
+
+<p>In production, disable TTL propagation (on <strong>ALL</strong> MPLS routers) to hide label info inside traceroute! (<code>no mpls ip propagate-ttl</code>)</p>
+
+<p><strong>Configuration (On PE routers):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>vrf definition 100:THECOMPANY
+</span><span class='line'>  rd 100:1
+</span><span class='line'>  address-family ipv4&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>route-target export x.x.x.x:100 (reversed on other PE router)
+</span><span class='line'>route-target import y.y.y.y:100 (reversed on other PE router)
+</span><span class='line'>exit
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  exit&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/1
+</span><span class='line'>  description THECOMPANY
+</span><span class='line'>  vrf forwarding 100:THECOMPANY (matches VRF definition)
+</span><span class='line'>  ip address x.x.x.x x.x.x.x (lives inside VRF)
+</span><span class='line'>  no shutdown</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>Verify:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show ip interface brief
+</span><span class='line'>show vrf
+</span><span class='line'>show ip route vrf 100:THECOMPANY</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Routing Between CE and PE:</h3>
+
+<p><img class="center" src="/images/blog_posts/mpls_vrf_forwarding_procedure.png"></p>
+
+<ul>
+<li>Routing needs to be configured and associated to VRF (PE routers ONLY)</li>
+<li>CE routing needs to be configured (CE routers ONLY)</li>
+<li>Mutual redistribution IGP&lt;&mdash;>mBGP needs to be configured (PE routers ONLY)</li>
+</ul>
+
+
+<p><strong>OSPF (PE):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router ospf 100 vrf 100:YOURCOMPANY
+</span><span class='line'>  network x.x.x.x x.x.x.x area 0&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show ip route vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>OSPF (CE):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router ospf 1
+</span><span class='line'>  network x.x.x.x x.x.x.x area 0</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>EIGRP (PE):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router eigrp 1
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY autonomous-system 100
+</span><span class='line'>  network x.x.x.x&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show ip route vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>EIGRP (CE):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router eigrp 1
+</span><span class='line'>  network x.x.x.x
+</span><span class='line'>  no auto-summary</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>RIP (PE):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router rip
+</span><span class='line'>  version 2
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>network x.x.x.x
+</span><span class='line'>no auto-summary
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show ip route vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>RIP (CE):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router rip
+</span><span class='line'>  version 2
+</span><span class='line'>  network x.x.x.x
+</span><span class='line'>  no auto-summary</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>BGP (PE):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>neighbor x.x.x.x remote-as 101 (eBGP)
+</span><span class='line'>exit
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  address-family ipv4&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>neighbor x.x.x.x next-hop-self
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>clear ip bgp x.x.x.x
+</span><span class='line'>show ip route vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>BGP (CE):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 101
+</span><span class='line'>  neighbor x.x.x.x remote-as 100 (eBGP)
+</span><span class='line'>  network x.x.x.x</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Redistribution on PE routers:</h3>
+
+<ul>
+<li>CE routes to be <strong>imported</strong> into VRF and <strong>exported</strong> to mBGP</li>
+<li><strong>VPNv4 labels</strong> will be added to <strong>Label Switched Path (LSP)</strong> (Bottom Label).</li>
+<li><strong>Route distinguiser (RD)</strong> and Route <strong>Target (RT)</strong> will be attached to routes.</li>
+</ul>
+
+
+<p><strong>OSPF mutual redistribution:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>redistribute ospf 100 vrf 100:YOURCOMPANY
+</span><span class='line'>exit
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  exit&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>router ospf 100 vrf 100:YOURCOMPANY
+</span><span class='line'>  redistribute bgp 100 subnets</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>EIGRP mutual redistribution:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>redistribute eigrp 1
+</span><span class='line'>exit
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  exit&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>router eigrp 1
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY autonomous-system 100&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>redistribute bgp 100 metric y y y y y
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>RIP mutual redistribution:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>redistribute rip
+</span><span class='line'>exit
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  exit&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>router rip
+</span><span class='line'>  address-family ipv4 vrf 100:YOURCOMPANY&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>redistribute bgp 100 metric y (hop count)
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>Verify:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show bgp vpnv4 unicast rd 100:1 labels
+</span><span class='line'>show bgp vpnv4 unicast vrf 100:YOURCOMPANY label
+</span><span class='line'>show mpls forwarding-table vrf 100:YOURCOMPANY
+</span><span class='line'>show ip cef vrf 100:YOURCOMPANY x.x.x.x/xx
+</span><span class='line'>show bgp vpnv4 unicast vrf 100:YOURCOMPANY x.x.x.x/xx
+</span><span class='line'>show ip protocols
+</span><span class='line'>traceroute x.x.x.x
+</span><span class='line'>traceroute mpls ipv4 x.x.x.x x.x.x.x</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>Using &ldquo;VRF-aware&rdquo; applications for troubleshooting:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>show ip route vrf 100:YOURCOMPANY
+</span><span class='line'>ip route vrf 100:YOURCOMPANY x.x.x.x y.y.y.y z.z.z.z
+</span><span class='line'>ping vrf 100:YOURCOMPANY x.x.x.x
+</span><span class='line'>traceroute vrf 100:YOURCOMPANY x.x.x.x
+</span><span class='line'>telnet x.x.x.x /vrf 100:YOURCOMPANY</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[BGP Basics and Best Path Selection - part1]]></title>
     <link href="http://devrandom.za.net/blog/2014/12/17/bgp-basics-and-best-path-selection/"/>
     <updated>2014-12-17T21:26:20+02:00</updated>
     <id>http://devrandom.za.net/blog/2014/12/17/bgp-basics-and-best-path-selection</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
 
-<p>My shortish summarized version of Cisco BGP Basics and Best Path Selection.</p>
+<p>This is part 1 of 4. My shortish summarized version of Cisco BGP Basics and Best Path Selection.</p>
 
 <!--more-->
 
@@ -146,7 +605,7 @@
 <li>Neighbor relationships form/converge in approximately 30 &ndash; 60 seconds (SLOW)</li>
 <li>Default Hold timers: 180 seconds.</li>
 <li>Loopback routes get default wight of 32768.</li>
-<li><code>network x.x.x.x</code> must be EXACT match as in RIB otherwise BGP will not advertise it.</li>
+<li><code>network x.x.x.x</code> must be EXACT match as in routing table otherwise BGP will not advertise it.</li>
 <li>iBGP does NOT modify any attributes like AS-Path or Next-hop, therefore has rules like split-horizon to prevent loops. (<code>neighbor x.x.x.x next-hop-self</code>).</li>
 <li>iBGP, use <strong>loopbacks</strong> to form neighbor relationships.</li>
 <li>By default sends BGP messages to eBGP neighbors with a TTL of 1</li>
@@ -248,13 +707,13 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[BGP Filters and Communities]]></title>
+    <title type="html"><![CDATA[BGP Filters and Communities - part2]]></title>
     <link href="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/"/>
     <updated>2014-12-17T21:25:55+02:00</updated>
     <id>http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
 
-<p>My shortish summarized version of Cisco BGP Filters and Communities.</p>
+<p>This is part 2 of 4. My shortish summarized version of Cisco BGP Filters and Communities.</p>
 
 <!--more-->
 
@@ -464,13 +923,13 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[BGP Route Reflectors and Confederations]]></title>
+    <title type="html"><![CDATA[BGP Route Reflectors and Confederations - part3]]></title>
     <link href="http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations/"/>
     <updated>2014-12-17T21:25:21+02:00</updated>
     <id>http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
 
-<p>My shortish summarized version of Cisco BGP Route Reflectors and Confederations.</p>
+<p>This is part 3 of 4. My shortish summarized version of Cisco BGP Route Reflectors and Confederations.</p>
 
 <!--more-->
 
@@ -554,193 +1013,6 @@
 </span><span class='line'>  neighbor z.z.z.z ebgp-multihop &lt;HOP_COUNT>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>show ip bgp neighbors</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh]]></title>
-    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-optimization/"/>
-    <updated>2014-12-17T21:24:08+02:00</updated>
-    <id>http://devrandom.za.net/blog/2014/12/17/bgp-optimization</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
-
-<p>My shortish summarized version of Cisco BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh.</p>
-
-<!--more-->
-
-
-<br>
-
-
-<br>
-
-
-<br>
-
-
-<h3>Optimizations:</h3>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>conf t
-</span><span class='line'>ip tcp path-mtu-discovery (default is 536 bytes)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>interface Gi0/0
-</span><span class='line'>hold-queue 1000 in (default is 75 packets)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>The BGP process scans the BGP table for changes for triggered updates.
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
-</span><span class='line'>  bgp scan-time &lt;SECONDS> (default is 60 seconds)
-</span><span class='line'>  neighbor x.x.x.x advertisement-interval &lt;SECONDS> (default is 30 seconds eBGP and 5 seconds iBGP)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Setting a maximum prefix limit:
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>neighbor x.x.x.x maximum-prefix &lt;NUM>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>show ip bgp summary (State/PfxRcd)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h3>Peer Groups:</h3>
-
-<ul>
-<li>Can be used to make neighbor configurations more effecient by using templates.</li>
-<li>CANNOT combine iBGP and eBGP peer-groups</li>
-</ul>
-
-
-<p>Example:
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
-</span><span class='line'>  neighbor MY_PEERGROUP peer-group
-</span><span class='line'>  neighbor MY_PEERGROUP update-source loopback0
-</span><span class='line'>  neighbor &hellip;&hellip;&hellip;&hellip;&hellip;
-</span><span class='line'>  neighbor x.x.x.x peer-group MY_PEERGROUP&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>show ip bgp peer-group</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h3>Peer Templates:</h3>
-
-<ul>
-<li>Generates single <strong>outbound</strong> update for all peers.</li>
-<li>Individual configurations supported for <strong>inbound</strong> updates.</li>
-</ul>
-
-
-<p>Example: (peer-session)
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
-</span><span class='line'>  template peer-session MYTEMPLATE1&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>timers 30 300
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  exit-peer-session&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  template peer-session MYTEMPLATE2&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>remote-as 200
-</span><span class='line'>inherit peer-session MYTEMPLATE1
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  exit-peer-session&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  neighbor x.x.x.x inherit peer-session MYTEMPLATE1&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>show ip bgp template peer-session</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Example: (peer-policy)
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
-</span><span class='line'>  template peer-policy MYTEMPLATE1&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>prefix-list MYPREFIXLIST in
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  exit-peer-policy&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  neighbor x.x.x.x inherit peer-policy MYTEMPLATE1&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>show ip bgp template peer-policy</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h3>Route Dampening:</h3>
-
-<ul>
-<li>Controls flapping routes</li>
-<li>Default 5 seconds <strong>WAIT</strong> for iBGP and 30 seconds <strong>WAIT</strong> for eBGP</li>
-<li>Flapping route will be dampened after 3 successive flaps and for 30 minutes default.</li>
-<li>Every route will receive the following by default:
-
-<ul>
-<li>Penalty = 1000</li>
-<li>Suppress Limit = 750</li>
-<li>Reuse limit = 750</li>
-</ul>
-</li>
-<li>Decay algorithm = 15 minutes (Half-life)</li>
-<li>Maximum penalty = 4x decay algorithm = 60 minutes</li>
-</ul>
-
-
-<p>Example:
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
-</span><span class='line'>  bgp dampening 10 1000 4000 255&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>clear ip bgp dampening x.x.x.x x.x.x.x (resets dampening)
-</span><span class='line'>clear ip bgp x.x.x.x flap-statistics (resets dampening)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h3>Refreshing neighbor changes without tearing down the BGP session:</h3>
-
-<ul>
-<li>Outbound soft reconfigure = <code>clear ip bgp x.x.x.x soft-out</code> (NO extra configuration needed)</li>
-<li>Inbound soft reconfigure = <code>clear ip bgp x.x.x.x soft-in</code> (MUST be pre-configured: <code>neighbor x.x.x.x soft-reconfiguration inbound</code>)</li>
-<li>Route refresh ONLY = <code>clear ip bgp x.x.x.x soft-in</code> (WITHOUT neighbor config as above)</li>
-</ul>
-
 ]]></content>
   </entry>
   

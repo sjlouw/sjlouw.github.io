@@ -1,32 +1,38 @@
 [
 
     {
-        "url": "/blog/2014/12/21/mpls-layer-3-vpn-basics-setup-and-verification/",
-        "title": "MPLS Layer 3 VPN Basics, Setup and Verification",
+        "url": "/blog/2014/12/22/mpls-layer-3-vpn-basics-setup-and-verification/",
+        "title": "MPLS Layer 3 VPN Basics, Setup and Verification - part1",
+        "date": "22 December 2014"
+    },
+
+    {
+        "url": "/blog/2014/12/21/mpls-layer-3-vpn-vrfs-and-redistribution/",
+        "title": "MPLS Layer 3 VPN VRFs and Redistribution - part2",
         "date": "21 December 2014"
     },
 
     {
         "url": "/blog/2014/12/17/bgp-basics-and-best-path-selection/",
-        "title": "BGP Basics and Best Path Selection",
+        "title": "BGP Basics and Best Path Selection - part1",
         "date": "17 December 2014"
     },
 
     {
         "url": "/blog/2014/12/17/bgp-filters-and-communities/",
-        "title": "BGP Filters and Communities",
+        "title": "BGP Filters and Communities - part2",
         "date": "17 December 2014"
     },
 
     {
         "url": "/blog/2014/12/17/bgp-route-reflectors-and-confederations/",
-        "title": "BGP Route Reflectors and Confederations",
+        "title": "BGP Route Reflectors and Confederations - part3",
         "date": "17 December 2014"
     },
 
     {
         "url": "/blog/2014/12/17/bgp-optimization/",
-        "title": "BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh",
+        "title": "BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh - part4",
         "date": "17 December 2014"
     },
 
