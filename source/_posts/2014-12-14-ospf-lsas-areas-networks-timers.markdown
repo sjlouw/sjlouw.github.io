@@ -38,7 +38,7 @@ My shortish summarized version of the OSPF Link State Advertisements, Area Types
 **Type7** - Originated by the ASBR, but ONLY applies to NSSA external areas. (Converted to type 5 LSA when the ABR of the NSSA originates them into area 0) 
 
 <br>
-LSA |    Area    | RIB Indentifier 
+LSA |    Area    | Indentifier 
 :---:|:----------:|:---------------:
  1   | Intra-area |        O        
  2   | Intra-area |        O        

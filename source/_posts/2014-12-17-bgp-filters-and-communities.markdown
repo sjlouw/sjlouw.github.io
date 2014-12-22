@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "BGP Filters and Communities"
+title: "BGP Filters and Communities - part2"
 date: 2014-12-17 21:25:55 +0200
 comments: true
 categories: cisco networking
 ---
 {% img left /images/blog_posts/bgp.png %}
 
-My shortish summarized version of Cisco BGP Filters and Communities.
+This is part 2 of 4. My shortish summarized version of Cisco BGP Filters and Communities.
 <!--more-->
 <br>
 <br>

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh"
+title: "BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh - part4"
 date: 2014-12-17 21:24:08 +0200
 comments: true
 categories: cisco networking
 ---
 {% img left /images/blog_posts/bgp.png %}
 
-My shortish summarized version of Cisco BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh.
+This is part 4 of 4. My shortish summarized version of Cisco BGP Optimization, Peer Groups, Peer Templates, Route Dampening and Route Refresh.
 <!--more-->
 <br>
 <br>

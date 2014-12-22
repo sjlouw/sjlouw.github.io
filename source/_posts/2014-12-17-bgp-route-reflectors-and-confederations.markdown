@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "BGP Route Reflectors and Confederations"
+title: "BGP Route Reflectors and Confederations - part3"
 date: 2014-12-17 21:25:21 +0200
 comments: true
 categories: cisco networking
 ---
 {% img left /images/blog_posts/bgp.png %}
 
-My shortish summarized version of Cisco BGP Route Reflectors and Confederations.
+This is part 3 of 4. My shortish summarized version of Cisco BGP Route Reflectors and Confederations.
 <!--more-->
 <br>
 <br>

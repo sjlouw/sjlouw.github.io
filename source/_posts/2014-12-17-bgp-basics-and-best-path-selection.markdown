@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "BGP Basics and Best Path Selection"
+title: "BGP Basics and Best Path Selection - part1"
 date: 2014-12-17 21:26:20 +0200
 comments: true
 categories: cisco networking
 ---
 {% img left /images/blog_posts/bgp.png %}
 
-My shortish summarized version of Cisco BGP Basics and Best Path Selection.
+This is part 1 of 4. My shortish summarized version of Cisco BGP Basics and Best Path Selection.
 <!--more-->
 <br>
 <br>
@@ -28,7 +28,7 @@ My shortish summarized version of Cisco BGP Basics and Best Path Selection.
 - Neighbor relationships form/converge in approximately 30 - 60 seconds (SLOW)
 - Default Hold timers: 180 seconds.
 - Loopback routes get default wight of 32768.
-- `network x.x.x.x` must be EXACT match as in RIB otherwise BGP will not advertise it.
+- `network x.x.x.x` must be EXACT match as in routing table otherwise BGP will not advertise it.
 - iBGP does NOT modify any attributes like AS-Path or Next-hop, therefore has rules like split-horizon to prevent loops. (`neighbor x.x.x.x next-hop-self`).
 - iBGP, use **loopbacks** to form neighbor relationships.
 - By default sends BGP messages to eBGP neighbors with a TTL of 1
