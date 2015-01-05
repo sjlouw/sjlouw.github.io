@@ -4,7 +4,7 @@
   <title><![CDATA[Category: networking | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/networking/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2014-12-22T23:16:21+02:00</updated>
+  <updated>2015-01-05T10:11:12+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -12,6 +12,854 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[QoS (Quality of Service) - part1]]></title>
+    <link href="http://devrandom.za.net/blog/2015/01/05/qos-quality-of-service-part1/"/>
+    <updated>2015-01-05T09:29:42+02:00</updated>
+    <id>http://devrandom.za.net/blog/2015/01/05/qos-quality-of-service-part1</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/qos.png"></p>
+
+<p>This is part 1 of 2. My shortish summarized version of Quality of Service (QoS), Basic concepts, Marking and Congestion Management.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Quality Of Service (QoS) Basics:</h3>
+
+<p><strong>Main Traffic-type Characteristics:</strong></p>
+
+<ul>
+<li><strong>Voice</strong> traffic flow is smooth in nature, subject to packet drops, delay and has predictable bandwidth usage.</li>
+<li><strong>Video</strong> traffic is bursty and has greedy traffic usage.</li>
+<li><strong>Data</strong> traffic varies per application.</li>
+</ul>
+
+
+<p><strong>Main Traffic Challenges:</strong></p>
+
+<ul>
+<li>Lack of bandwith</li>
+<li>Packet loss</li>
+<li>Delay</li>
+<li>Jitter (Variation in delay)</li>
+</ul>
+
+
+<p><strong>Latency/Delay Types:</strong></p>
+
+<ul>
+<li><strong>Propagation delay:</strong> time taken for head of signal to travel from sender to receiver.</li>
+<li><strong>Serialization delay:</strong> time needed to place data on the wire/medium.</li>
+<li><strong>Processing delay:</strong> time spend to take from input interface and move to output interface.</li>
+<li><strong>Packetization delay:</strong> time taken to turn data into packets.</li>
+<li><strong>Queueing delay:</strong> time spend in the queues of output interface.</li>
+</ul>
+
+
+<h3>QoS Methods:</h3>
+
+<ul>
+<li><strong>Classification</strong> &ndash; identifying and groupiong different traffic types.</li>
+<li><strong>Marking</strong> &ndash; tags/colors packets so it can be identified elsewhare in a network.</li>
+<li><strong>Policing</strong> &ndash; drops or marks packets when specified limit is reached.</li>
+<li><strong>Shaping</strong> &ndash; queues packets when a specified limit is reached.</li>
+<li><strong>Congestion Avoidence</strong>
+
+<ul>
+<li>FIFO (First-in First-out) &ndash; Tail-drop</li>
+<li>RED (Random Early Detection) &ndash; Drops packets randomly</li>
+<li>WRED (Weighted Random Early Detection) &ndash; Drops packets with specified markings</li>
+</ul>
+</li>
+<li><strong>Congestion Management</strong> &ndash; Ordering packets in most efficient way</li>
+<li><strong>Link Efficiency</strong>
+
+<ul>
+<li>Compression</li>
+<li>Link Fragmentation and Interleaving (LFI)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Modular QoS CLI (MQC):</h3>
+
+<ol>
+<li>Configure <code>class-map</code></li>
+<li>Configure <code>policy-map</code></li>
+<li>Apply <code>service-policy</code> (ONLY 1 per interface per direction)</li>
+</ol>
+
+
+<br>
+
+
+<p><img class="center" src="/images/blog_posts/qos_mqc.png"></p>
+
+<h3>Classification:</h3>
+
+<ul>
+<li><strong>Inspecting</strong> one or more aspects of a packet to see what it&rsquo;s carrying.</li>
+</ul>
+
+
+<p><strong>Network Based Application Recognition (NBAR):</strong></p>
+
+<ul>
+<li>Deep packet inspection to identify traffic</li>
+<li>OSI Layers 5 &ndash; 7</li>
+<li>Identification &ldquo;signatures&rdquo; (PDLM files / PDLM packs) can be extended (<code>ip nbar pdlm flash://whatever.pdlm</code>)</li>
+</ul>
+
+
+<p><strong>Example:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class-map MYMAP
+</span><span class='line'>  match protocol &lt;SOME_PROTOCOL_NAME></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>NBAR Stats Collection:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>interface Gi0/0
+</span><span class='line'>  ip nbar protocol-discovery
+</span><span class='line'>  load-interval 60&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show ip nbar protocol-discovery stats bit-rate top-n 10
+</span><span class='line'>show ip nbar unclassified-port-stats (Unknown traffic)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Marking:</h3>
+
+<ul>
+<li><strong>Writing</strong> information to a packet to identify the classification decision.</li>
+<li>Mark packets as close to source (trust boundry) as possible.</li>
+</ul>
+
+
+<p><strong>Types Of Marking:</strong></p>
+
+<ul>
+<li><strong>Layer 2</strong> &ndash; Typically stripped at Layer 3 hops
+
+<ul>
+<li>example: COS, MPLS (Experimental bits), Frame Relay (DE bit), ATM (CLD bit)</li>
+</ul>
+</li>
+<li><strong>Layer 3</strong> &ndash; Passes through Layer 3 hops, excluding NAT
+
+<ul>
+<li>example: IP Precedence, DSCP</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Example:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class-map MATCH_HTTP
+</span><span class='line'>  match protocol http&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>policy-map MARKING_HTTP
+</span><span class='line'>  class MATCH_HTTP&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>set ip precedence &lt;PRECEDENCE_VALUE&gt; (0 - 7)
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/0
+</span><span class='line'>  service-policy &lt;INPUT_OR_OUTPUT> MARKING_HTTP</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>IP Precedence and DSCP:</h4>
+
+<br>
+
+
+<p><img class="center" src="/images/blog_posts/ipp_dscp_compat.png"></p>
+
+<ul>
+<li><strong>7</strong> &ndash; Network &ndash; Reserved</li>
+<li><strong>6</strong> &ndash; Internet &ndash; Reserved</li>
+<li><strong>5</strong> &ndash; Critical &ndash; Voice bearer (RTP)</li>
+<li><strong>4</strong> &ndash; Flash Override &ndash; Video</li>
+<li><strong>3</strong> &ndash; Flash &ndash; Voice signaling (RTCP) or Video</li>
+<li><strong>2</strong> &ndash; Immediate &ndash; High priority data</li>
+<li><strong>1</strong> &ndash; Priority &ndash; Medium priority data</li>
+<li><strong>0</strong> &ndash; Routine &ndash; Best effort data</li>
+</ul>
+
+
+<p><img class="center" src="/images/blog_posts/ipp_dscp_compat_chart.png"></p>
+
+<h3>Congestion Management:</h3>
+
+<ul>
+<li><strong>FIFO (First-in First-out):</strong>
+
+<ul>
+<li>Best effort</li>
+<li>ONLY 1 queue (1 send and 1 receive)</li>
+<li>method: FIFO</li>
+<li>NO delay guarentee</li>
+<li>NO bandwidth guarentee</li>
+</ul>
+</li>
+<li><strong>Priority Queueing:</strong>
+
+<ul>
+<li>Can cause bandwith starvation for &ldquo;NOT high&rdquo; trafffic.</li>
+<li>4 queues (High, Medium, Normal, Low)</li>
+<li>method: strict priority</li>
+<li>ONLY High priority delay guarentee</li>
+<li>NO bandwidth guarentee</li>
+</ul>
+</li>
+<li><strong>Custom Queueing:</strong>
+
+<ul>
+<li>Assigns bytes per protocol per queue.</li>
+<li>16 queues</li>
+<li>method: Round-robin</li>
+<li>NO delay guarentee</li>
+<li>Bandwidth GUARENTEE</li>
+</ul>
+</li>
+<li><strong>Weighted Fair Queueing (WFQ):</strong>
+
+<ul>
+<li>Cisco default for links less than 2048 bit/s</li>
+<li>Number of queues per flow</li>
+<li>method: Weighted Fair (least top talker gets priority)</li>
+<li>NO delay guarentee</li>
+<li>NO bandwidth guarentee</li>
+</ul>
+</li>
+<li><strong>Class-based Weighted Fair Queueing (CBWFQ):</strong>
+
+<ul>
+<li>Up to 256 classes (class-maps)</li>
+<li>Use % of bandwidth per class-map</li>
+<li>method: N/A</li>
+<li>NO delay guarentee</li>
+<li>Bandwidth GUARENTEE</li>
+</ul>
+</li>
+<li><strong>Low Latency Queueing (LLQ):</strong>
+
+<ul>
+<li>1 Priority queue plus CBWFQ</li>
+<li>method: Policed priority (Uses combination of other queueing methods)</li>
+<li>Delay GUARENTEE for priority queue traffic</li>
+<li>Bandwidth GUARENTEE</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Marking and LLQ Implementation:</strong></p>
+
+<p><strong>NOTE:</strong> Will ONLY see effect when there is congestion!</p>
+
+<br>
+
+
+<p><img class="center" src="/images/blog_posts/congestion_management.png"></p>
+
+<p><strong>Router 2 Configuration:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class-map MATCH_HTTP
+</span><span class='line'>  match protocol http&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>class-map MATCH_FTP
+</span><span class='line'>  match protocol ftp&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>policy-map MARK_TRAFFIC
+</span><span class='line'>  class MATCH_HTTP&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>set dscp af21
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  class MATCH_FTP&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>set dscp af11
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/1
+</span><span class='line'>  service-policy output MARK_TRAFFIC&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show class-map
+</span><span class='line'>show policy-map
+</span><span class='line'>show policy-map interface Gi0/1</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>Router 1 Configuration:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class-map MATCH_AF11
+</span><span class='line'>  match dscp af11&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>class-map MATCH_AF21
+</span><span class='line'>  match dscp af21&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>policy-map LLQ
+</span><span class='line'>  class MATCH_AF11&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>bandwidth percent 15 (WFQ)
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  class MATCH_AF21&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>priority percent 15 (LLQ)
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  class class-default&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>fair-queue (CBWFQ)
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/1
+</span><span class='line'>  service-policy output LLQ&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show class-map&lt;br/>
+</span><span class='line'>show policy-map
+</span><span class='line'>show policy-map interface Gi0/1</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[QoS (Quality of Service) - part2]]></title>
+    <link href="http://devrandom.za.net/blog/2015/01/05/qos-quality-of-service-part2/"/>
+    <updated>2015-01-05T09:14:26+02:00</updated>
+    <id>http://devrandom.za.net/blog/2015/01/05/qos-quality-of-service-part2</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/qos.png"></p>
+
+<p>This is part 2 of 2. My shortish summarized version of Quality of Service (QoS), Congestion Avoidence, Policing and Shaping.</p>
+
+<!--more-->
+
+
+<br>
+
+
+<br>
+
+
+<br>
+
+
+<h3>Congestion Avoidence with WRED:</h3>
+
+<ul>
+<li>ONLY TCP traffic</li>
+<li><strong>TCP Global Synchronization</strong> happens to TCP flows during periods of congestion. Each sender will reduce their TX rate (at same time) &ndash; (Window-size to half) when packet loss occurs.</li>
+<li>WRED designed to avoid numerous and sudden packet drops that can cause TCP Global Synchronization.</li>
+<li>Randomly drops packets from TCP flows to minimize synchronization.</li>
+<li>Dropping becomes more aggressive as queues fill up.</li>
+</ul>
+
+
+<p><img class="center" src="/images/blog_posts/wred.png"></p>
+
+<p><strong>Example:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class-map MATCH_HTTP
+</span><span class='line'>  match protocol http&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>policy-map SET_HTTP
+</span><span class='line'>  class MATCH_HTTP&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>random-detect dscp af11 &lt;PACKETS_MIN&gt; &lt;PACKETS_MAX&gt; &lt;MPD_1-65535&gt;
+</span><span class='line'>           or
+</span><span class='line'>random-detect dscp-based (auto)
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/0
+</span><span class='line'>  service-policy &lt;INPUT_OR_OUTPUT> SET_HTTP&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show class-map
+</span><span class='line'>show policy-map
+</span><span class='line'>show policy-map interface Gi0/0</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>ECN (Explicit Congestion Notification):</h3>
+
+<ul>
+<li>WRED enhancement</li>
+<li>Sender and receiver MUST support ECN</li>
+<li>Instead of dropping packets, tells sender to slow down</li>
+<li><strong>2x ECN bits:</strong>
+
+<ul>
+<li><strong>00</strong> = NOT ECN capable</li>
+<li><strong>01</strong> = ECN capable</li>
+<li><strong>10</strong> = ECN capable</li>
+<li><strong>11</strong> = Congestion experienced</li>
+</ul>
+</li>
+<li>When upstream router gets packet with <strong>11</strong> bit set, it returns <strong>ECN-echo</strong> packet to sender (application / host) and tells it to slow down.</li>
+<li>Can be enabled under policy-map with <code>random-detect ecn</code>.</li>
+</ul>
+
+
+<h3>Compression:</h3>
+
+<ul>
+<li>Payload Compression</li>
+<li>TCP Header Compression (suppress redundent header information)</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class-map MATCH_HTTP
+</span><span class='line'>  match protocol http&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>policy-map COMPRESS_HTTP
+</span><span class='line'>  class MATCH_HTTP&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>compression header ip ?
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/0
+</span><span class='line'>  service-policy &lt;INPUT_OR_OUTPUT> COMPRESS_HTTP&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show class-map
+</span><span class='line'>show policy-map
+</span><span class='line'>show policy-map interface Gi0/0</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>LFI (Link Fragmentation and Interleaving):</h3>
+
+<ul>
+<li>Cause higher bandwidth usage due to packets being fragmented and every fragment needs it&rsquo;s own header.</li>
+<li>Used to reduce serialization delay</li>
+<li>NOT used on links faster than 768 Kbps</li>
+<li>ONLY used on Frame-relay and PPP</li>
+</ul>
+
+
+<h3>Traffic Policing:</h3>
+
+<ul>
+<li><strong>Drops</strong> or <strong>marks</strong> traffic exceeding specified thresholds</li>
+<li>Use &ldquo;Token Bucket&rdquo; concept</li>
+</ul>
+
+
+<p><strong>Single Token Bucket:</strong></p>
+
+<p><img class="center" src="/images/blog_posts/single_token_bucket.png"></p>
+
+<p><strong>Example:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class-map match-any MATCH_PROTOCOLS
+</span><span class='line'>  match protocol edonkey
+</span><span class='line'>  match protocol napster&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>policy-map POLICE_PROTOCOLS
+</span><span class='line'>  class MATCH_PROTOCOLS&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>police &lt;BPS_RATE&gt; conform-action transmit exceed-action drop
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/0
+</span><span class='line'>  service-policy input POLICE_PROTOCOLS&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show class-map
+</span><span class='line'>show policy-map
+</span><span class='line'>show policy-map interface Gi0/0</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>Dual Token Bucket:</strong></p>
+
+<p><img class="center" src="/images/blog_posts/dual_token_buckets.png"></p>
+
+<p><strong>Example:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class-map match-any MATCH_PROTOCOLS
+</span><span class='line'>  match protocol edonkey
+</span><span class='line'>  match protocol napster&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>policy-map POLICE_PROTOCOLS
+</span><span class='line'>  class MATCH_PROTOCOLS&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>police &lt;BPS_RATE&gt; &lt;BURST_RATE&gt; &lt;PEAK_BURST&gt; conform-action transmit exceed-action set-dscp-transmit &lt;AF23&gt; violate-action drop
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/0
+</span><span class='line'>  service-policy input POLICE_PROTOCOLS&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show class-map
+</span><span class='line'>show policy-map
+</span><span class='line'>show policy-map interface Gi0/0</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Traffic Shaping:</h3>
+
+<ul>
+<li><strong>Shapes</strong> per class and NOT per interface</li>
+<li><strong>Queues</strong> excess traffic and send at desired rate (class-based)</li>
+<li>Cannot mark traffic with shaping</li>
+<li>Can shape per average or peak rate</li>
+<li>BECN (Backwards Explicit Congestion Notification)</li>
+<li>FECN (Forward Explicit Congestion Notification)</li>
+</ul>
+
+
+<p><img class="center" src="/images/blog_posts/shaping.png"></p>
+
+<p><strong>Example Shaping:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class-map match-any MATCH_PROTOCOLS
+</span><span class='line'>  match protocol edonkey
+</span><span class='line'>  match protocol napster&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>policy-map SHAPE_PROTOCOLS
+</span><span class='line'>  class MATCH_PROTOCOLS&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>shape peak &lt;BPS&gt; (CIR)
+</span><span class='line'>         or
+</span><span class='line'>shape average &lt;BPS&gt; (CIR)
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/0
+</span><span class='line'>  service-policy input SHAPE_PROTOCOLS&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show class-map
+</span><span class='line'>show policy-map
+</span><span class='line'>show policy-map interface Gi0/0</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>Example Queueing (Nested policy and class-maps):</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>policy-map PRIORITY
+</span><span class='line'>  class DATA&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>bandwidth 50
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  class class-default&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>fair-queue
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>class-map ALL_TRAFFIC
+</span><span class='line'>  match class DATA
+</span><span class='line'>  match class class-default&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>policy-map SHAPE_IT
+</span><span class='line'>  class ALL_TRAFFIC&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>shape average 500000
+</span><span class='line'>service-policy PRIORITY
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/0
+</span><span class='line'>  service-policy input SHAPE_IT&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show class-map
+</span><span class='line'>show policy-map
+</span><span class='line'>show policy-map interface Gi0/0</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Catalyst QoS (Class Of Service (COS)):</h3>
+
+<ul>
+<li>Layer 2</li>
+<li>Classification, marking, policing, etc. done in hardware ASICs (CEF)</li>
+<li>Switch QoS capabilities defined in terms of:
+
+<ul>
+<li>Queues (priority / standard)</li>
+<li>Thresholds (ammount of packets possibly held in queue)</li>
+</ul>
+</li>
+<li><strong>Queues can be configured as:</strong>
+
+<ul>
+<li>Priority Queues</li>
+<li>Weighted Round-robin (WRR) &ndash; Custom queue</li>
+<li>Weighted Round-robin (WRR) &ndash; Priority queue</li>
+</ul>
+</li>
+<li><strong>Thresholds can be configured with:</strong>
+
+<ul>
+<li>Tail drop</li>
+<li>WRED</li>
+</ul>
+</li>
+<li>Also uses class-maps and policy-maps</li>
+<li>IP phones normaly tags voice packets &ndash; can be &ldquo;caught&rdquo; by switch and manipulated.</li>
+<li>Supports TX queues (RX queues ONLY on high end switches)</li>
+</ul>
+
+
+<p><strong>Example switch QoS support tags:</strong></p>
+
+<ul>
+<li><strong>2Q2T</strong> = 2x Queue, 2x Thresholds per Queue</li>
+<li><strong>1P2Q2T</strong> = 1x Priority Queue, 2x Standard Queues, 2x Thresholds per Queue</li>
+</ul>
+
+
+<p><strong>Example:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mls qos (turn it on)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>interface Gi0/0
+</span><span class='line'>  mls qos trust (trust markings received on port)
+</span><span class='line'>  wrr-queue cos-map 1 0 1 2  &mdash;&ndash;|
+</span><span class='line'>  wrr-queue cos-map 2 3 4       |> first row, 1 &ndash; 4 = queue number
+</span><span class='line'>  wrr-queue cos-map 3 6 7       |> the rest, IP Precedence values 0 &ndash; 7
+</span><span class='line'>  wrr-queue cos-map 4 5      &mdash;&ndash;|
+</span><span class='line'>  wrr-queue bandwidth &lt;WEIGHT_1-65536> 5 6 10 1
+</span><span class='line'>  priority-queue out</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>5 = queue1, 6 = queue2, 10 = queue3, 1 = queue 4 (Last queue becomes priority queue)</li>
+<li>5 + 6 + 10 + 1 = 22</li>
+<li>Queue1 = 5 / 22 * 100 = 22.73% of total bandwidth</li>
+<li>Queue2 = 6 / 22 * 100 = 27.27% of total bandwidth</li>
+<li>Queue3 = 10 / 22 * 100 = 45.45% of total bandwidth</li>
+<li>Queue4 = 1 / 22 * 100 = 4.55% of total bandwidth</li>
+</ul>
+
+
+<h3>Auto-QoS:</h3>
+
+<ul>
+<li><strong>cef</strong> MUST be anabled (<code>ip cef</code>)</li>
+<li><strong>bandwidth</strong> MUST be configured on interface (<code>bandwidth &lt;BPS&gt;</code>)</li>
+<li><strong>IP address</strong> MUST be assigned</li>
+</ul>
+
+
+<p><strong>Example:</strong></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>interface Gi0/0
+</span><span class='line'>  bandwidth &lt;BPS>
+</span><span class='line'>  auto qos &lt;   > ?&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>show class-map
+</span><span class='line'>show policy-map
+</span><span class='line'>show ip access-list
+</span><span class='line'>show running-config</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>PAK Priority:</h3>
+
+<ul>
+<li>Router auto-tags all &ldquo;mission-critical&rdquo; (control-plane) traffic with IPP6/CS6</li>
+<li>Is an un-changeable internal mechanism</li>
+</ul>
+
+
+<h3>TX-Ring:</h3>
+
+<ul>
+<li>Hardware queue of a router</li>
+<li>Automatically tuned by later Cisco IOS versions</li>
+<li>Typically holds 32 &ndash; 64 packets by default</li>
+<li>Reduce to 3 on slow, smaller then 1.5Mbit/s links</li>
+<li><code>show controllers &lt;INTERFACE&gt; | incl tx_limited</code></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[MPLS Layer 3 VPN Basics, Setup and Verification - part1]]></title>
@@ -703,316 +1551,6 @@
 
 <p>Advertise default route outbound:
 <code>neighbor x.x.x.x default-originate</code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[BGP Filters and Communities - part2]]></title>
-    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities/"/>
-    <updated>2014-12-17T21:25:55+02:00</updated>
-    <id>http://devrandom.za.net/blog/2014/12/17/bgp-filters-and-communities</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
-
-<p>This is part 2 of 4. My shortish summarized version of Cisco BGP Filters and Communities.</p>
-
-<!--more-->
-
-
-<br>
-
-
-<br>
-
-
-<br>
-
-
-<br>
-
-
-<br>
-
-
-<table>
-<thead>
-<tr>
-<th align="left">MATCH USING&hellip;     </th>
-<th align="left">STUFF TO SET&hellip;       </th>
-<th align="left">DIRECTION</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">prefix-list         </td>
-<td align="left">weight               </td>
-<td align="left">inbound</td>
-</tr>
-<tr>
-<td align="left">access-list         </td>
-<td align="left">local preference     </td>
-<td align="left">outbound</td>
-</tr>
-<tr>
-<td align="left">as-path access-list </td>
-<td align="left">origin               </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">neighbor            </td>
-<td align="left">as-path (prepending) </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">route-map           </td>
-<td align="left">med/metric           </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">community-list      </td>
-<td align="left">next-hop (self)      </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">distribute-list     </td>
-<td align="left">community            </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">filter-list         </td>
-<td align="left">                     </td>
-<td></td>
-</tr>
-<tr>
-<td align="left">&hellip;and lots more    </td>
-<td align="left">&hellip;and lots more     </td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>REGEX Filters:</h3>
-
-<p>Example: Filter AS 100 outbound with REGEX</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ip as-path access-list 1 deny &lt;REGEX> (&lt;code>_100_&lt;/code>) (Match AS 100 exactly)
-</span><span class='line'>ip as-path access-list 1 permit &lt;REGEX> (&lt;code>.*&lt;/code>) (Match all/permit any)&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>route-map FILTER_100 permit 10
-</span><span class='line'>  match as-path 1&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>router bgp &lt;AS_NUM> (100)
-</span><span class='line'>  neighbor x.x.x.x route-map FILTER_100 out&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>clear ip bgp x.x.x.x</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h3>Prefix-lists:</h3>
-
-<p>Prefix-lists is for matching routes!</p>
-
-<ul>
-<li>Uses tree-structure</li>
-<li>Better CPU utilization</li>
-<li>Better subnet matching</li>
-<li>Two-stage matching system: <strong>network + mask</strong></li>
-<li>Created in <strong>Global Config</strong> mode</li>
-<li>Matches x.x.x.x/xx EXACTLY</li>
-<li><strong>le</strong> = less than or equel</li>
-<li><strong>ge</strong> = greater than or equel</li>
-</ul>
-
-
-<p><strong>Examples:</strong></p>
-
-<ol>
-<li><code>ip prefix-list NAME permit 0.0.0.0/0</code> matches ONLY 0.0.0.0/0 (default route)</li>
-<li><code>ip prefix-list NAME permit 0.0.0.0/0 ge 32</code> matches all HOST routes</li>
-<li><code>ip prefix-list NAME permit 0.0.0.0/0 le 32</code> matches ANY route</li>
-<li><code>ip prefix-list NAME permit 0.0.0.0/1 ge 24 le 24</code> matches CLASS A networks or it&rsquo;s subnets</li>
-<li><code>ip prefix-list NAME permit 128.0.0.0/2 ge 16</code> matches CLASS B networks or it&rsquo;s subnets</li>
-</ol>
-
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ip prefix-list NAME permit 0.0.0.0/0 ge 32&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>router bgp 100
-</span><span class='line'>  neighbor x.x.x.x prefix-list NAME in&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>clear ip bgp x.x.x.x</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Prefix-lists can also be attached to route-maps.</p>
-
-<h3>Outbound Route Filtering (ORF):</h3>
-
-<ul>
-<li>Transmits INBOUND filters to apply OUTBOUND</li>
-<li>Neighbors must support <strong>ORF Type</strong> both sides</li>
-<li><code>neighbor x.x.x.x capability orf prefix-list &lt;SEND_RECEIVE_BOTH&gt;</code></li>
-</ul>
-
-
-<h3>BGP Communities:</h3>
-
-<ul>
-<li>The BGP community value is an optional, transitive attribute.</li>
-<li>ISP&rsquo;s normally create community values for customers, to use, to influence routes.</li>
-<li>RFC guideline format: 100:12345 where <strong>100 = AS_NUM</strong> and <strong>12345 = community value</strong></li>
-<li>community-list <strong>(1-99)</strong> matches on normal community values</li>
-<li>community-list <strong>(100-199)</strong> matches on REGEX</li>
-</ul>
-
-
-<p><strong>By default 4 well known communities that can be used to mark prefixes:</strong></p>
-
-<ul>
-<li><strong>Internet:</strong> advertise these routes to all neighbors.</li>
-<li><strong>Local-as:</strong> prevent sending routes outside the local As within the confederation.</li>
-<li><strong>No-Advertise:</strong> do not advertise this route to any peer, internal or external.</li>
-<li><strong>No-Export:</strong> do not advertise this route to external BGP peers.</li>
-</ul>
-
-
-<p><strong>Examples:</strong></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ip bgp-community new-format
-</span><span class='line'>  neighbor x.x.x.x send-community&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>ip access-list standard CUSTOMER_ROUTES
-</span><span class='line'>  permit x.x.x.x x.x.x.x&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>route-map SET-COMMUNITY
-</span><span class='line'>  match ip address CUSTOMER_ROUTES
-</span><span class='line'>  set community 100:12345 100:84957 100:3892 (Multiple can be added on one line)</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ip community-list 1 permit 100:2345&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>route-map MYMAP
-</span><span class='line'>  match community 1
-</span><span class='line'>  set local_preference 20</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[BGP Route Reflectors and Confederations - part3]]></title>
-    <link href="http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations/"/>
-    <updated>2014-12-17T21:25:21+02:00</updated>
-    <id>http://devrandom.za.net/blog/2014/12/17/bgp-route-reflectors-and-confederations</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/blog_posts/bgp.png"></p>
-
-<p>This is part 3 of 4. My shortish summarized version of Cisco BGP Route Reflectors and Confederations.</p>
-
-<!--more-->
-
-
-<br>
-
-
-<br>
-
-
-<br>
-
-
-<br>
-
-
-<h3>Route Reflectors:</h3>
-
-<p>iBGP MUST have full mesh to prevent loops, thus to scale, you can use Route Reflectors.</p>
-
-<ol>
-<li>Clients must have full mesh connection to Route-Reflectors.</li>
-<li>Route Reflector groups add a cluster-id attribute to routes.</li>
-</ol>
-
-
-<p><strong>Route Reflectors process updates as follows:</strong></p>
-
-<ul>
-<li>Updates received from <strong>eBGP</strong> peers: Forward to all <strong>iBGP and eBGP</strong> peers.</li>
-<li>Updates received from <strong>iBGP (non-client)</strong> peers: Forward to all <strong>eBGP and Client</strong> peers.</li>
-<li>Updates received from <strong>iBGP (client)</strong> peers: Forward to <strong>all</strong> peers <strong>except sender</strong>.</li>
-</ul>
-
-
-<p>Example Route Reflector Client Setup (No client-side setup needed):</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>neighbor x.x.x.x route-reflector-client</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Example Route Reflector Cluster Setup:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 100
-</span><span class='line'>  bgp cluster-id 10</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h3>Confederations:</h3>
-
-<p>Another way to solve the iBGP full mesh problem is to use Confederations.</p>
-
-<ul>
-<li>An AS inside an AS</li>
-<li>Uses <strong>INTRA-AS</strong> numbers which are stripped before sending updates via eBGP.</li>
-<li>Inter-Confederation peers are treated as eBGP to establish, but as iBGP relating to attributes.</li>
-<li>Breaks iBGP AS into smaller Autonomous Systems.</li>
-<li>Use private AS numbers (64512 &ndash; 65535)</li>
-<li>Full iBGP mesh required <strong>within confederation AS</strong> (RR also an option within confederation)</li>
-</ul>
-
-
-<p>Example:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 64512
-</span><span class='line'>  bgp confederation identifier 500
-</span><span class='line'>  bgp confederation peers 64513 64514
-</span><span class='line'>  neighbor x.x.x.x remote-as 64512 (will be iBGP)
-</span><span class='line'>  neighbor y.y.y.y remote-as 64513 (will be eBGP)
-</span><span class='line'>  neighbor y.y.y.y ebgp-multihop &lt;HOP_COUNT>
-</span><span class='line'>  neighbor z.z.z.z remote-as 64514 (will be eBGP)
-</span><span class='line'>  neighbor z.z.z.z ebgp-multihop &lt;HOP_COUNT>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>show ip bgp neighbors</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

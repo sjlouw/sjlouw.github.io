@@ -1,6 +1,18 @@
 [
 
     {
+        "url": "/blog/2015/01/05/qos-quality-of-service-part1/",
+        "title": "QoS (Quality of Service) - part1",
+        "date": "05 January 2015"
+    },
+
+    {
+        "url": "/blog/2015/01/05/qos-quality-of-service-part2/",
+        "title": "QoS (Quality of Service) - part2",
+        "date": "05 January 2015"
+    },
+
+    {
         "url": "/blog/2014/12/22/mpls-layer-3-vpn-basics-setup-and-verification/",
         "title": "MPLS Layer 3 VPN Basics, Setup and Verification - part1",
         "date": "22 December 2014"
@@ -38,13 +50,13 @@
 
     {
         "url": "/blog/2014/12/16/ospf-path-selection-order-of-preference-and-summarization/",
-        "title": "OSPF Path Selection Order of Preference and Summarization",
+        "title": "OSPF Path Selection Order of Preference and Summarization - part1",
         "date": "16 December 2014"
     },
 
     {
         "url": "/blog/2014/12/14/ospf-lsas-areas-networks-timers/",
-        "title": "OSPF LSA's, Area Types, Network Types and Timers",
+        "title": "OSPF LSA's, Area Types, Network Types and Timers - part2",
         "date": "14 December 2014"
     },
 
