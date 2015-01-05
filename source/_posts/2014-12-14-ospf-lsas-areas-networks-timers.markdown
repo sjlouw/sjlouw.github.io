@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "OSPF LSA's, Area Types, Network Types and Timers"
+title: "OSPF LSA's, Area Types, Network Types and Timers - part2"
 date: 2014-12-14 22:41:32 +0200
 comments: true
 categories: cisco networking
 ---
 {% img left /images/blog_posts/ospf.png %}
 
-My shortish summarized version of the OSPF Link State Advertisements, Area Types, Network Types and Timers.
+This is part 2 of 2. My shortish summarized version of the OSPF Link State Advertisements, Area Types, Network Types and Timers.
 <!--more-->
 <br>
 <br>
@@ -51,6 +51,7 @@ LSA |    Area    | Indentifier
 
 {% youtube nayaSlYkQp0 %}
 
+<br>
 - **stub** = 1, 2, 3 + 0.0.0.0 default route
 - **total stub** = 1, 2 + 0.0.0.0 default route
 - **NSSA** = 1, 2, 3, 7  (0.0.0.0 default route is not automatically created although you can add it)

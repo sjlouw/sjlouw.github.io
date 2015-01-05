@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "OSPF Path Selection Order of Preference and Summarization"
+title: "OSPF Path Selection Order of Preference and Summarization - part1"
 date: 2014-12-16 22:19:58 +0200
 comments: true
 categories: cisco networking
 ---
 {% img left /images/blog_posts/ospf.png %}
 
-My shortish summarized version of OSPF Path Selection Order of Preference and Summarization.
+This is part 1 of 2. My shortish summarized version of OSPF Path Selection Order of Preference and Summarization.
 <!--more-->
 <br>
 <br>
