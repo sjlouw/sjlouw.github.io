@@ -16,7 +16,6 @@ This is part 4 of 4. My shortish summarized version of Cisco BGP Optimization, P
 ###Optimizations:
 
 {% codeblock %}
-conf t
 ip tcp path-mtu-discovery (default is 536 bytes)
 {% endcodeblock %}
 

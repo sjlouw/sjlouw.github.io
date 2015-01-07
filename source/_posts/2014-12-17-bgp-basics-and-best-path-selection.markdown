@@ -27,7 +27,7 @@ This is part 1 of 4. My shortish summarized version of Cisco BGP Basics and Best
 - Triggered updates ONLY (default 5 seconds INTERNAL and 30 seconds EXTERNAL).
 - Neighbor relationships form/converge in approximately 30 - 60 seconds (SLOW)
 - Default Hold timers: 180 seconds.
-- Loopback routes get default wight of 32768.
+- Loopback routes get default weight of 32768.
 - `network x.x.x.x` must be EXACT match as in routing table otherwise BGP will not advertise it.
 - iBGP does NOT modify any attributes like AS-Path or Next-hop, therefore has rules like split-horizon to prevent loops. (`neighbor x.x.x.x next-hop-self`).
 - iBGP, use **loopbacks** to form neighbor relationships.

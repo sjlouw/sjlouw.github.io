@@ -37,7 +37,7 @@ This is part 1 of 2. My shortish summarized version of MPLS Layer 3 VPN Basics, 
   * PE ------------> CE = **POP** label (exiting core)
 * MPLSs' control-plane protocol is Label Distribution Protocol **(LDP)**
 * Experimental bits inside packet = Used for QoS
-* Bottom-of-stack bits (S-bit) inside packet = If = 1 indicates bottom of stack has been reached
+* Bottom-of-stack bits (S-bit) inside packet - If = 1 indicates bottom of stack has been reached
 * MPLS header injected between Data-link (Layer2) and Network layer (Layer3)
 
 ###Basic Setup Procedure:

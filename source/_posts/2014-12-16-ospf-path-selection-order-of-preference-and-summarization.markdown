@@ -22,7 +22,7 @@ These rules apply in THIS order even if the OSPF link metric (Cost value) is cha
 3. External Type 1 (E1)
 4. External Type 2 (E2)
 5. NSSA Type 1 (N1)
-6. NSSA TYpe 2 (N2)
+6. NSSA Type 2 (N2)
 
 **Interface cost is derived from the bandwidth. The formula is:**
 
