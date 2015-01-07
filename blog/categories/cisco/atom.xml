@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cisco | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/cisco/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2015-01-05T10:11:12+02:00</updated>
+  <updated>2015-01-07T10:56:58+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -919,7 +919,7 @@
 </li>
 <li>MPLSs' control-plane protocol is Label Distribution Protocol <strong>(LDP)</strong></li>
 <li>Experimental bits inside packet = Used for QoS</li>
-<li>Bottom-of-stack bits (S-bit) inside packet = If = 1 indicates bottom of stack has been reached</li>
+<li>Bottom-of-stack bits (S-bit) inside packet &ndash; If = 1 indicates bottom of stack has been reached</li>
 <li>MPLS header injected between Data-link (Layer2) and Network layer (Layer3)</li>
 </ul>
 
@@ -1452,7 +1452,7 @@
 <li>Triggered updates ONLY (default 5 seconds INTERNAL and 30 seconds EXTERNAL).</li>
 <li>Neighbor relationships form/converge in approximately 30 &ndash; 60 seconds (SLOW)</li>
 <li>Default Hold timers: 180 seconds.</li>
-<li>Loopback routes get default wight of 32768.</li>
+<li>Loopback routes get default weight of 32768.</li>
 <li><code>network x.x.x.x</code> must be EXACT match as in routing table otherwise BGP will not advertise it.</li>
 <li>iBGP does NOT modify any attributes like AS-Path or Next-hop, therefore has rules like split-horizon to prevent loops. (<code>neighbor x.x.x.x next-hop-self</code>).</li>
 <li>iBGP, use <strong>loopbacks</strong> to form neighbor relationships.</li>
