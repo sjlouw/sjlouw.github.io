@@ -13,6 +13,29 @@ This is part 1 of 2. My shortish summarized version of OSPF Path Selection Order
 <br>
 <br>
 
+###Open Shortest Path First (OSPF) Basics:
+
+* Use protocol number **89**
+* Use bandwidth-based cost metric
+* Use highest IP on interfaces in UP/UP state as **Router-ID** by default
+* **Broadcast Networks:**
+  * **224.0.0.5** - ALL OSPF Routers - Used for **Hello** packets. Used by DR/BDR for LS-Updates and LS-Acks
+  * **224.0.0.6** - ALL DR/BDR Routers - Used by ALL routers except DR/BDR to send LS-Updates and LS-Acks to DR/BDR
+* **Point-to-Point Networks:**
+  * **224.0.0.5** - Used by ALL for ALL OSPF "messages"
+* **Non-Broadcast Networks:**
+  * **NO** multicast - Destination IP of Hello / Link State packets is unicast IP of a specific neighbor.
+  * **Neighbor IP** is a required part of OSPF configuration for Non-Broadcast links.
+* OSPFv2 Supports **cleartext** and **MD5** authentication
+* Supports MPLS-TE via "Opaque" LSA's (9-link-local, 10-area-local, 11-AS)
+* If equal cost routes exist, uses CEF load balancing.
+* **Neighbors MUST agree on following to become adjacent:**
+  * Area Number
+  * Authentication
+  * Hello and Dead intervals
+  * Stub area flag
+* Neigbors MUST be on same subnet to form adjacencies. ONLY on Point-to-Point links rule does not apply. (`ip unnumbered`)
+
 ###Path Selection:
 
 These rules apply in THIS order even if the OSPF link metric (Cost value) is changed.
@@ -26,9 +49,11 @@ These rules apply in THIS order even if the OSPF link metric (Cost value) is cha
 
 **Interface cost is derived from the bandwidth. The formula is:**
 
-Cost = Reference / Bandwidth. (Rounded down to the closest integer)
+By default, Reference = 100000 (Kb/s) (100 Mbps)
 
-By default, Reference = 100000 (Kb/s)
+Cost = Reference bandwidth / Interface bandwidth. (Rounded down to the closest integer)
+
+Can be modified: `ospf auto-cost reference-bandwidth`
 
 **NOTES:**
 - Changing cost values, you need to use the `ip ospf cost <COST_VALUE>` command on the interface and NOT the `bandwidth` statement. The `bandwidth` command is also used for other traffic minipulation techniques like QoS and will break those.

@@ -88,5 +88,7 @@ Anything that says **"total"** must get the `"no-summary"` on the CLI.
 
 **(anything)-to-Multipoint** adds a /32 route advertisement. The DR and BDR is the only routers that is REQUIRED to peer with all other routers when **"Multipoint"** networks is used.
 
+**Loopbacks** are considered host routes - default advertised as /32 (Actual configured subnet can be advertised by: `ip ospf network point-to-point`)
+
 ###OSPF Network Type Timers (Hello/Dead):
 Anything with **"multi"** or **"non"** uses slow timers `(30/120)`, others use fast timers `(10/40)`.
