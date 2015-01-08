@@ -323,6 +323,8 @@
 
 <p><strong>(anything)-to-Multipoint</strong> adds a /32 route advertisement. The DR and BDR is the only routers that is REQUIRED to peer with all other routers when <strong>&ldquo;Multipoint&rdquo;</strong> networks is used.</p>
 
+<p><strong>Loopbacks</strong> are considered host routes &ndash; default advertised as /32 (Actual configured subnet can be advertised by: <code>ip ospf network point-to-point</code>)</p>
+
 <h3>OSPF Network Type Timers (Hello/Dead):</h3>
 
 <p>Anything with <strong>&ldquo;multi&rdquo;</strong> or <strong>&ldquo;non&rdquo;</strong> uses slow timers <code>(30/120)</code>, others use fast timers <code>(10/40)</code>.</p>

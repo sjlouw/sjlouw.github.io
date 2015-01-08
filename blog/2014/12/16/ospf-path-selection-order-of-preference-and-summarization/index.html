@@ -149,6 +149,48 @@
 <br>
 
 
+<h3>Open Shortest Path First (OSPF) Basics:</h3>
+
+<ul>
+<li>Use protocol number <strong>89</strong></li>
+<li>Use bandwidth-based cost metric</li>
+<li>Use highest IP on interfaces in UP/UP state as <strong>Router-ID</strong> by default</li>
+<li><strong>Broadcast Networks:</strong>
+
+<ul>
+<li><strong>224.0.0.5</strong> &ndash; ALL OSPF Routers &ndash; Used for <strong>Hello</strong> packets. Used by DR/BDR for LS-Updates and LS-Acks</li>
+<li><strong>224.0.0.6</strong> &ndash; ALL DR/BDR Routers &ndash; Used by ALL routers except DR/BDR to send LS-Updates and LS-Acks to DR/BDR</li>
+</ul>
+</li>
+<li><strong>Point-to-Point Networks:</strong>
+
+<ul>
+<li><strong>224.0.0.5</strong> &ndash; Used by ALL for ALL OSPF &ldquo;messages&rdquo;</li>
+</ul>
+</li>
+<li><strong>Non-Broadcast Networks:</strong>
+
+<ul>
+<li><strong>NO</strong> multicast &ndash; Destination IP of Hello / Link State packets is unicast IP of a specific neighbor.</li>
+<li><strong>Neighbor IP</strong> is a required part of OSPF configuration for Non-Broadcast links.</li>
+</ul>
+</li>
+<li>OSPFv2 Supports <strong>cleartext</strong> and <strong>MD5</strong> authentication</li>
+<li>Supports MPLS-TE via &ldquo;Opaque&rdquo; LSA&rsquo;s (9-link-local, 10-area-local, 11-AS)</li>
+<li>If equal cost routes exist, uses CEF load balancing.</li>
+<li><strong>Neighbors MUST agree on following to become adjacent:</strong>
+
+<ul>
+<li>Area Number</li>
+<li>Authentication</li>
+<li>Hello and Dead intervals</li>
+<li>Stub area flag</li>
+</ul>
+</li>
+<li>Neigbors MUST be on same subnet to form adjacencies. ONLY on Point-to-Point links rule does not apply. (<code>ip unnumbered</code>)</li>
+</ul>
+
+
 <h3>Path Selection:</h3>
 
 <p>These rules apply in THIS order even if the OSPF link metric (Cost value) is changed.</p>
@@ -165,9 +207,11 @@
 
 <p><strong>Interface cost is derived from the bandwidth. The formula is:</strong></p>
 
-<p>Cost = Reference / Bandwidth. (Rounded down to the closest integer)</p>
+<p>By default, Reference = 100000 (Kb/s) (100 Mbps)</p>
 
-<p>By default, Reference = 100000 (Kb/s)</p>
+<p>Cost = Reference bandwidth / Interface bandwidth. (Rounded down to the closest integer)</p>
+
+<p>Can be modified: <code>ospf auto-cost reference-bandwidth</code></p>
 
 <p><strong>NOTES:</strong>
 &ndash; Changing cost values, you need to use the <code>ip ospf cost &lt;COST_VALUE&gt;</code> command on the interface and NOT the <code>bandwidth</code> statement. The <code>bandwidth</code> command is also used for other traffic minipulation techniques like QoS and will break those.</p>
