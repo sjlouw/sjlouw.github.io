@@ -178,16 +178,19 @@
 <li>OSPFv2 Supports <strong>cleartext</strong> and <strong>MD5</strong> authentication</li>
 <li>Supports MPLS-TE via &ldquo;Opaque&rdquo; LSA&rsquo;s (9-link-local, 10-area-local, 11-AS)</li>
 <li>If equal cost routes exist, uses CEF load balancing.</li>
-<li><strong>Neighbors MUST agree on following to become adjacent:</strong>
+</ul>
+
+
+<p><strong>Neighbors MUST agree on following to become adjacent:</strong></p>
 
 <ul>
 <li>Area Number</li>
 <li>Authentication</li>
 <li>Hello and Dead intervals</li>
 <li>Stub area flag</li>
-</ul>
-</li>
-<li>Neigbors MUST be on same subnet to form adjacencies. ONLY on Point-to-Point links rule does not apply. (<code>ip unnumbered</code>)</li>
+<li>MTU</li>
+<li>Neighbors MUST use compatible network types</li>
+<li>MUST be on same subnet. ONLY on Point-to-Point links rule does not apply. (<code>ip unnumbered</code>)</li>
 </ul>
 
 

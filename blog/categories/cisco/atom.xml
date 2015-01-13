@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cisco | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/cisco/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2015-01-08T13:26:51+02:00</updated>
+  <updated>2015-01-13T15:14:44+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -970,7 +970,7 @@
 
 <p>Show labels assigned to routes:</p>
 
-<p><code>show mpls ldp binings</code></p>
+<p><code>show mpls ldp bindings</code></p>
 
 <p>Show local labels ONLY:</p>
 
