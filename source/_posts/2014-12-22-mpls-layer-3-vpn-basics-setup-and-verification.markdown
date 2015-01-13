@@ -74,7 +74,7 @@ When MPLS is enabled globally, it creates local labels for each route in it's ro
 
 Show labels assigned to routes:
 
-`show mpls ldp binings`
+`show mpls ldp bindings`
 
 Show local labels ONLY:
 

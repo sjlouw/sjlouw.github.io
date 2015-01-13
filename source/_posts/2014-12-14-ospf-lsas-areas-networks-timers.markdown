@@ -68,11 +68,11 @@ Anything that says **"total"** must get the `"no-summary"` on the CLI.
 3. If the Forwarding Address (FA) for an external prefix is NOT reachable/filtered, the router will NOT install it into the route table nor will it translate Type7 to Type5 LSA's. This can be "fixed" by `area <AREA_NUM> nssa suppress-fa` on the ABR, thus setting the FA to itself (0.0.0.0).
 
 ###OSPF Network Types:
-* Broadcast
-* Non-broadcast
-* Point-to-Point
-* Point-to-Multipoint
-* Point-to-Multipoint (Non-broadcast)
+* Broadcast - Multicast Hellos
+* Non-broadcast - **Unicast** Hellos - `neighbor` statement
+* Point-to-Point - Multicast Hellos
+* Point-to-Multipoint - Multicast Hellos
+* Point-to-Multipoint (Non-broadcast) - **Unicast** Hellos - `neighbor` statement
 
 **Mixing network types, combinations that will work:**
 >Reason why some network types are not compatible with other is Network Types that use DR election will only be compatible with other types that also elects/requires DR election.

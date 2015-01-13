@@ -29,12 +29,16 @@ This is part 1 of 2. My shortish summarized version of OSPF Path Selection Order
 * OSPFv2 Supports **cleartext** and **MD5** authentication
 * Supports MPLS-TE via "Opaque" LSA's (9-link-local, 10-area-local, 11-AS)
 * If equal cost routes exist, uses CEF load balancing.
-* **Neighbors MUST agree on following to become adjacent:**
-  * Area Number
-  * Authentication
-  * Hello and Dead intervals
-  * Stub area flag
-* Neigbors MUST be on same subnet to form adjacencies. ONLY on Point-to-Point links rule does not apply. (`ip unnumbered`)
+
+**Neighbors MUST agree on following to become adjacent:**
+  
+* Area Number
+* Authentication
+* Hello and Dead intervals
+* Stub area flag
+* MTU
+* Neighbors MUST use compatible network types
+* MUST be on same subnet. ONLY on Point-to-Point links rule does not apply. (`ip unnumbered`)
 
 ###Path Selection:
 
