@@ -53,14 +53,21 @@ These rules apply in THIS order even if the OSPF link metric (Cost value) is cha
 
 **Interface cost is derived from the bandwidth. The formula is:**
 
-By default, Reference = 100000 (Kb/s) (100 Mbps)
+Cisco default, Reference = 100000 (Kb/s), 100 (Mbps)
 
 Cost = Reference bandwidth / Interface bandwidth. (Rounded down to the closest integer)
 
-Can be modified: `ospf auto-cost reference-bandwidth`
+Modify reference bandwidth: `ospf auto-cost reference-bandwidth`
+
+Verify reference bandwidth: `show ip ospf | include Reference`
+
+Verify interface cost: `show ip ospf interface Gi0/0 | include Cost`
 
 **NOTES:**
+- SPF calculations are **ONLY** performed for Intra-Area routing. ABR advertised information is trusted for Inter-Area and External calculations.
 - Changing cost values, you need to use the `ip ospf cost <COST_VALUE>` command on the interface and NOT the `bandwidth` statement. The `bandwidth` command is also used for other traffic minipulation techniques like QoS and will break those.
+- **ONLY** point-to-multipoint and point-to-multipoint non-broadcast support OSPF cost value on a per-neighbor basis. (`neighbor x.x.x.x cost x`)
+- Hello messages can **ONLY** be suppressed on **point-to-point** and **point-to-multipoint** network types. (`ip ospf demand-circuit`)
 
 On FastE, GigE, TenGigE and 100GigE the default OSPF cost will be "1", so you WILL want to change this!
 

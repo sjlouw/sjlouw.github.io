@@ -52,12 +52,14 @@ LSA |    Area    | Indentifier
 {% youtube nayaSlYkQp0 %}
 
 <br>
-- **stub** = 1, 2, 3 + 0.0.0.0 default route
-- **total stub** = 1, 2 + 0.0.0.0 default route
-- **NSSA** = 1, 2, 3, 7  (0.0.0.0 default route is not automatically created although you can add it)
-- **total NSSA** = 1, 2, 7 + 0.0.0.0 default route
+**All devices in an area MUST agree on the `stub` or `nssa` parameter for adjacencies to establish!!**
 
-Anything that says **"total"** must get the `"no-summary"` on the CLI.
+- **stub** = 1, 2, 3 + 0.0.0.0 default route (`area <X> stub`)
+- **total stub** = 1, 2 + 0.0.0.0 default route (`area <X> stub no-summary`)
+- **NSSA** = 1, 2, 3, 7  (0.0.0.0 default route is not automatically created although you can add it) (`area <X> nssa`)
+- **total NSSA** = 1, 2, 7 + 0.0.0.0 default route (`area <X> nssa no-summary`)
+
+Anything that says **"total"** must get the `no-summary` on the CLI.
 
 **NOTES:**
 
@@ -65,7 +67,9 @@ Anything that says **"total"** must get the `"no-summary"` on the CLI.
 
 2. If multiple ABR's only one will perform NSSA Type7 to Type5 translation, based on ABR with highest **Router-ID**.
 
-3. If the Forwarding Address (FA) for an external prefix is NOT reachable/filtered, the router will NOT install it into the route table nor will it translate Type7 to Type5 LSA's. This can be "fixed" by `area <AREA_NUM> nssa suppress-fa` on the ABR, thus setting the FA to itself (0.0.0.0).
+3. If the Forwarding Address (FA) = 0.0.0.0, it means traffic MUST be sent towards **Advertising Router** address to reach destination.
+
+4. If the Forwarding Address (FA) for an external prefix is NOT reachable/filtered, the router will NOT install it into the route table nor will it translate Type7 to Type5 LSA's. This can be "fixed" by `area <AREA_NUM> nssa suppress-fa` on the ABR, thus setting the FA to itself (0.0.0.0).
 
 ###OSPF Network Types:
 * Broadcast - Multicast Hellos
