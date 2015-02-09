@@ -291,7 +291,7 @@
 
 <ol>
 <li><p>If the NSSA ASBR is also an ABR, <strong>Type7</strong> LSA&rsquo;s will be originated into the NSSA and <strong>Type5</strong> LSA&rsquo;s will be originated into <strong>Area 0</strong>. <strong>Type7</strong> LSA origination into the NSSA, in this case, can be suppressed with <code>area &lt;AREA_NUM&gt; nssa no-redistribution</code>.</p></li>
-<li><p>If multiple ABR&rsquo;s only one will perform NSSA Type7 to Type5 translation, based on ABR with highest <strong>Router-ID</strong>.</p></li>
+<li><p>If NSSA has multiple ABR&rsquo;s only one will perform Type7 to Type5 translation, based on ABR with highest <strong>Router-ID</strong>.</p></li>
 <li><p>If the Forwarding Address (FA) = 0.0.0.0, it means traffic MUST be sent towards <strong>Advertising Router</strong> address to reach destination.</p></li>
 <li><p>If the Forwarding Address (FA) for an external prefix is NOT reachable/filtered, the router will NOT install it into the route table nor will it translate Type7 to Type5 LSA&rsquo;s. This can be &ldquo;fixed&rdquo; by <code>area &lt;AREA_NUM&gt; nssa suppress-fa</code> on the ABR, thus setting the FA to itself (0.0.0.0).</p></li>
 </ol>

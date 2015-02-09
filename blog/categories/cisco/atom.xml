@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cisco | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/cisco/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2015-01-23T15:46:21+02:00</updated>
+  <updated>2015-02-09T12:07:38+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -1458,6 +1458,7 @@
 <li>iBGP, use <strong>loopbacks</strong> to form neighbor relationships.</li>
 <li>By default sends BGP messages to eBGP neighbors with a TTL of 1</li>
 <li>Supports up to 6 paths load-balanced.</li>
+<li>If BGP <code>synchronization</code> enabled, there must be a match for the prefix in the IP routing table to be considered valid path.</li>
 </ul>
 
 

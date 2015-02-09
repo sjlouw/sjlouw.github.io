@@ -165,9 +165,9 @@
 <p><strong>Route Reflectors process updates as follows:</strong></p>
 
 <ul>
-<li>Updates received from <strong>eBGP</strong> peers: Forward to all <strong>iBGP and eBGP</strong> peers.</li>
-<li>Updates received from <strong>iBGP (non-client)</strong> peers: Forward to all <strong>eBGP and Client</strong> peers.</li>
-<li>Updates received from <strong>iBGP (client)</strong> peers: Forward to <strong>all</strong> peers <strong>except sender</strong>.</li>
+<li>Routes learned from <strong>eBGP</strong> peers: Sent to all <strong>iBGP</strong>, <strong>eBGP</strong>, <strong>Clients</strong> and <strong>Non-Client</strong> peers.</li>
+<li>Routes learned from <strong>iBGP (non-client)</strong> peers: Sent to all <strong>eBGP</strong> and <strong>Client</strong> peers.</li>
+<li>Routes learned from <strong>iBGP (client)</strong> peers: Sent to <strong>all</strong> peers <strong>except sender</strong>.</li>
 </ul>
 
 
@@ -193,9 +193,10 @@
 <li>An AS inside an AS</li>
 <li>Uses <strong>INTRA-AS</strong> numbers which are stripped before sending updates via eBGP.</li>
 <li>Inter-Confederation peers are treated as eBGP to establish, but as iBGP relating to attributes.</li>
+<li>Public AS split into smaller Sub Autonomous Systems (Sub-ASs).</li>
 <li>Breaks iBGP AS into smaller Autonomous Systems.</li>
-<li>Use private AS numbers (64512 &ndash; 65535)</li>
-<li>Full iBGP mesh required <strong>within confederation AS</strong> (RR also an option within confederation)</li>
+<li>Typically use private AS numbers (64512 &ndash; 65535)</li>
+<li>Full iBGP mesh required <strong>within confederation AS / Sub-AS</strong> (RR also an option within confederation)</li>
 </ul>
 
 
@@ -211,15 +212,17 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 64512
-</span><span class='line'>  bgp confederation identifier 500
-</span><span class='line'>  bgp confederation peers 64513 64514
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>router bgp 64512 (Private AS)
+</span><span class='line'>  bgp confederation identifier 500 (Public AS)
+</span><span class='line'>  bgp confederation peers 64513 64514 (eBGP peer ASs)
 </span><span class='line'>  neighbor x.x.x.x remote-as 64512 (will be iBGP)
 </span><span class='line'>  neighbor y.y.y.y remote-as 64513 (will be eBGP)
 </span><span class='line'>  neighbor y.y.y.y ebgp-multihop &lt;HOP_COUNT>
 </span><span class='line'>  neighbor z.z.z.z remote-as 64514 (will be eBGP)
 </span><span class='line'>  neighbor z.z.z.z ebgp-multihop &lt;HOP_COUNT>
 </span><span class='line'>
+</span><span class='line'>show ip bgp summary
 </span><span class='line'>show ip bgp neighbors</span></code></pre></td></tr></table></div></figure>
 
 </div>
