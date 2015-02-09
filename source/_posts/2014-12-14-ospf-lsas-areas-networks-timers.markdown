@@ -65,7 +65,7 @@ Anything that says **"total"** must get the `no-summary` on the CLI.
 
 1. If the NSSA ASBR is also an ABR, **Type7** LSA's will be originated into the NSSA and **Type5** LSA's will be originated into **Area 0**. **Type7** LSA origination into the NSSA, in this case, can be suppressed with `area <AREA_NUM> nssa no-redistribution`.
 
-2. If multiple ABR's only one will perform NSSA Type7 to Type5 translation, based on ABR with highest **Router-ID**.
+2. If NSSA has multiple ABR's only one will perform Type7 to Type5 translation, based on ABR with highest **Router-ID**.
 
 3. If the Forwarding Address (FA) = 0.0.0.0, it means traffic MUST be sent towards **Advertising Router** address to reach destination.
 

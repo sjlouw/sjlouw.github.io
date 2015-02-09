@@ -33,6 +33,7 @@ This is part 1 of 4. My shortish summarized version of Cisco BGP Basics and Best
 - iBGP, use **loopbacks** to form neighbor relationships.
 - By default sends BGP messages to eBGP neighbors with a TTL of 1
 - Supports up to 6 paths load-balanced.
+- If BGP `synchronization` enabled, there must be a match for the prefix in the IP routing table to be considered valid path.
 
 ###Best Path Algorithm:
 
