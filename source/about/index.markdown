@@ -7,7 +7,7 @@ footer: true
 ---
 {% img left /images/avatar.png %}
 
-My name is S.J. Louw. This blog is my personal scratch pad of stuff I want to remember or refer back to. Below are some of the technologies and brands I have worked and played with.
+My name is S.J. This blog is my personal scratch pad of stuff I want to remember or refer back to. Below are some of the technologies and brands I have worked and played with.
 <br>
 <br>
 <br>
