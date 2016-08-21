@@ -63,11 +63,11 @@ default_asides: [custom/asides/adsensetop.html, asides/recent_posts.html, custom
 # ----------------------- #
 
 # Github repositories
-#github_user: sjlouw
-#github_repo_count: 5
-#github_show_profile_link: false
-#github_skip_forks: false
-#github_skip_repos: [sjlouw.github.io]
+github_user: sjlouw
+github_repo_count: 5
+github_show_profile_link: false
+github_skip_forks: false
+github_skip_repos: [sjlouw.github.io]
 
 # Twitter
 twitter_user: sjlouw
