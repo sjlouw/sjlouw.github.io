@@ -4,7 +4,7 @@
   <title><![CDATA[Category: other | Random Notes]]></title>
   <link href="http://devrandom.za.net/blog/categories/other/atom.xml" rel="self"/>
   <link href="http://devrandom.za.net/"/>
-  <updated>2016-08-21T22:34:16+02:00</updated>
+  <updated>2016-08-26T22:39:39+02:00</updated>
   <id>http://devrandom.za.net/</id>
   <author>
     <name><![CDATA[S.J. Louw]]></name>
@@ -39,7 +39,7 @@
 
 <p>First give your PC a static IP address 192.168.1.2 / 255.255.255.0</p>
 
-<p>Download and install <a href="http://www.jounin.net/tftpd32.html">Tftpd32</a></p>
+<p>Download and install <a href="http://www.jounin.net/tftpd32_download.html">Tftpd32</a></p>
 
 <p>Download the generic binary firmware file from <a href="http://www.mediafire.com/download/ku9yo2wsl577npf/MST_TG589vnv3_R10.5.2.F_BN.bin">here</a>, and put it under &ldquo;C:\Program Files\Tftpd32\&rdquo; or wherever your TFTP root is.</p>
 
@@ -84,8 +84,6 @@
 <li><a href="http://www.mediafire.com/view/vtdihfhs73ce5gb/command_mlp_v2.txt">command_mlp_v2.txt</a></li>
 </ul>
 
-
-<p>NOTE: Documentation mirrored from original site: <a href="http://download.modem-help.co.uk/mfcs-A/Alcatel/Modems/TG589vn/v3/">modem-help.co.uk</a></p>
 
 <p>You can also install some PINS on the router&rsquo;s mainboard and get serial console access, by following the below guide posted on youtube by someone else&hellip;
 <iframe width="640" height="360" src="http://www.youtube.com/embed/FwiosVp4Ra0 " frameborder="0" allowfullscreen></iframe></p>
