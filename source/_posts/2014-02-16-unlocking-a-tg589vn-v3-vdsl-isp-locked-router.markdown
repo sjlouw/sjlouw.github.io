@@ -16,7 +16,7 @@ Unlocking a locked ISP, TG589vn v3 VDSL router by installing generic Technicolor
 
 First give your PC a static IP address 192.168.1.2 / 255.255.255.0
 
-Download and install [Tftpd32](http://www.jounin.net/tftpd32.html)
+Download and install [Tftpd32](http://www.jounin.net/tftpd32_download.html)
 
 Download the generic binary firmware file from [here](http://www.mediafire.com/download/ku9yo2wsl577npf/MST_TG589vnv3_R10.5.2.F_BN.bin), and put it under "C:\Program Files\Tftpd32\" or wherever your TFTP root is.
 
@@ -51,8 +51,6 @@ You should be able to SSH to your router now with full root access. Username: Ad
 * [TG589vn-v3_EN_r10.4.B.B_mh.pdf](http://www.mediafire.com/view/8hiaraeqx31d8hj/TG589vn-v3_EN_r10.4.B.B_mh.pdf)
 * [command_list_v2.txt](http://www.mediafire.com/view/3j6s1mmloottjbi/command_list_v2.txt)
 * [command_mlp_v2.txt](http://www.mediafire.com/view/vtdihfhs73ce5gb/command_mlp_v2.txt)
-
-NOTE: Documentation mirrored from original site: [modem-help.co.uk](http://download.modem-help.co.uk/mfcs-A/Alcatel/Modems/TG589vn/v3/)
 
 You can also install some PINS on the router's mainboard and get serial console access, by following the below guide posted on youtube by someone else...
 {% youtube FwiosVp4Ra0 %}
