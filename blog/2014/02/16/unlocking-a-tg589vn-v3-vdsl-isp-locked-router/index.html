@@ -152,19 +152,24 @@
 <br>
 
 
-<p>First give your PC a static IP address 192.168.1.2 / 255.255.255.0</p>
+<br>
 
-<p>Download and install <a href="http://www.jounin.net/tftpd32_download.html">Tftpd32</a></p>
 
-<p>Download the generic binary firmware file from <a href="http://www.mediafire.com/download/ku9yo2wsl577npf/MST_TG589vnv3_R10.5.2.F_BN.bin">here</a>, and put it under &ldquo;C:\Program Files\Tftpd32\&rdquo; or wherever your TFTP root is.</p>
+<ol>
+<li><p>First give your PC a static IP address 192.168.1.2 / 255.255.255.0</p></li>
+<li><p>Download and install <a href="http://www.jounin.net/tftpd32_download.html">Tftpd32</a></p></li>
+<li><p>Download the generic binary firmware file from <a href="http://www.mediafire.com/download/ku9yo2wsl577npf/MST_TG589vnv3_R10.5.2.F_BN.bin">here</a>, and put it under &ldquo;C:\Program Files\Tftpd32\&rdquo; or wherever your TFTP root is.</p></li>
+</ol>
+
 
 <h3>Configure the TFTP software as below:</h3>
 
 <p><img class="center" src="/images/blog_posts/tftpd32_1.png">
 <img class="center" src="/images/blog_posts/tftpd32_2.png"></p>
 
-<p>Plug the router in the ethernet port as shown below:
-<img class="center" src="/images/blog_posts/tg589vnv3_ports.png"></p>
+<p>Plug the router in the ethernet port as shown below:</p>
+
+<p><img class="center" src="/images/blog_posts/tg589vnv3_ports.png"></p>
 
 <h3>Make sure you can ping the router IP address from your PC.</h3>
 
@@ -188,8 +193,9 @@
 
 <p>Open your browser and and go to <a href="http://192.168.1.254,">http://192.168.1.254,</a> go to advanced settings and change the Administrator password.</p>
 
-<p>You should be able to SSH to your router now with full root access. Username: Administrator and password will be the one you set above. You will also see in the web interface that the branded ISP logo is gone and the generic Technicolor logo will show.
-<img class="center" src="/images/blog_posts/tg589vnv3_ssh.png">
+<p>You should be able to SSH to your router now with full root access. Username: Administrator and password will be the one you set above. You will also see in the web interface that the branded ISP logo is gone and the generic Technicolor logo will show.</p>
+
+<p><img class="center" src="/images/blog_posts/tg589vnv3_ssh.png">
 <img class="center" src="/images/blog_posts/tg589vnv3_web.png"></p>
 
 <h3>Here is some advanced CLI documentation for this router:</h3>
